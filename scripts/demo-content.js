@@ -2,9 +2,10 @@ const db = require('../functions/db-connect');
 const path = require('path');
 const mongoose = require('mongoose');
 const loadVars = require('../functions/vars');
+const passwordUtils = require('../functions/password-utils');
 
 const pathToModels = path.join(__dirname, '..', 'models');
-const pathToData = path.join(__dirname, '..', 'data', 'dummy-data');
+const pathToData = path.join(__dirname, '..', 'data', 'demo-data');
 
 loadVars();
 
@@ -112,11 +113,25 @@ async function insert_user_data() {
     });
 
     try {
-        await model.insertMany(data);
-        console.log(`inserted ${data.length} users`);
+        // Hash the passwords for all users
+        const hashedUsers = await Promise.all(data.map(async (user) => {
+            const hashedPassword = await passwordUtils.hashPassword(user.account_details.password);
+            user.account_details.password = hashedPassword;
+            return user;
+        }));
+        
+        await model.insertMany(hashedUsers);
+        console.log(`Inserted ${hashedUsers.length} users`);
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
+
+    // try {
+    //     await model.insertMany(data);
+    //     console.log(`inserted ${data.length} users`);
+    // } catch (error) {
+    //     console.log(error);
+    // }
 }
 
 async function insert_notification_data() {

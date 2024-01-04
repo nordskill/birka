@@ -10,7 +10,7 @@
         "watch:cms-sass": "node-sass -w ./src/sass/cms/ -o ./public/css/cms/ --output-style compressed --source-map true",
         "prod": "cross-env NODE_ENV=production node ./bin/www",
         "build": "webpack --config webpack.config.js --mode production",
-        "insert-data": "node ./scripts/insert-data-to-db.js",
+        "demo-content": "node ./scripts/demo-content.js",
         "prebuild": "node ./scripts/prebuild.js"
     },
     "dependencies": {
