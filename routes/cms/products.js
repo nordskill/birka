@@ -35,7 +35,7 @@ router.get('/', async (req, res, next) => {
         active: `${SLUG}s`,
         products,
         categories,
-        product_images: '/demo_files/images/products/',
+        product_images: '/demo/images/products/',
         breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'
