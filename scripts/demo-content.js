@@ -1,11 +1,13 @@
+const fs = require('fs').promises;
 const db = require('../functions/db-connect');
 const path = require('path');
 const mongoose = require('mongoose');
 const loadVars = require('../functions/vars');
 const passwordUtils = require('../functions/password-utils');
+const generateHash = require('../functions/generate-hash');
 
 const pathToModels = path.join(__dirname, '..', 'models');
-const pathToData = path.join(__dirname, '..', 'data', 'demo-data');
+const pathToData = path.join(__dirname, '..', 'data', 'demo');
 
 loadVars();
 
@@ -84,22 +86,40 @@ async function insert_email_template_data() {
 
 async function insert_file_data() {
     const { File } = require(path.join(pathToModels, 'file.js'));
-    const data = require(path.join(pathToData, 'file.json'));
+    const data = JSON.parse(await fs.readFile(path.join(pathToData, 'file.json'), 'utf-8'));
 
     const randomTags = await getTags();
 
-    data.forEach(object => {
+    for (const object of data) {
         object.tags = randomTags();
-    })
 
+        let originalFilePath = path.join('./data/demo/files', `${object.file_name}.${object.extension}`);
 
-    try {
-        await File.insertMany(data);
-        console.log(`inserted ${data.length} files`);
-    } catch (error) {
-        console.log(error);
+        try {
+            await fs.access(originalFilePath);
+        } catch (error) {
+            // File doesn't exist, log a warning and skip to the next one
+            console.warn(`File not found: ${originalFilePath}, skipping.`);
+            continue;
+        }
+
+        const hash = await generateHash(originalFilePath);
+        const newFolderPath = path.join('./public/files', hash.substring(0, 2));
+        const newFilePath = path.join(newFolderPath, `${object.file_name}.${object.extension}`);
+
+        await fs.mkdir(newFolderPath, { recursive: true });
+        await fs.copyFile(originalFilePath, newFilePath);
+
+        object.hash = hash;
     }
 
+    // Insert data into the database
+    try {
+        await File.insertMany(data);
+        console.log(`Inserted ${data.length} files`);
+    } catch (error) {
+        console.error('Error inserting files:', error);
+    }
 }
 
 async function insert_user_data() {
@@ -119,19 +139,13 @@ async function insert_user_data() {
             user.account_details.password = hashedPassword;
             return user;
         }));
-        
+
         await model.insertMany(hashedUsers);
         console.log(`Inserted ${hashedUsers.length} users`);
     } catch (error) {
         console.error(error);
     }
 
-    // try {
-    //     await model.insertMany(data);
-    //     console.log(`inserted ${data.length} users`);
-    // } catch (error) {
-    //     console.log(error);
-    // }
 }
 
 async function insert_notification_data() {
