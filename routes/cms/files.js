@@ -22,8 +22,6 @@ router.get('/', async (req, res, next) => {
             .populate('tags')
             .lean();
 
-
-
         for(const file of filesData){
             if(files.length <= AMOUNT_OF_FILES_PER_PAGE){
                 const folderName = file.hash.slice(0, 2);
@@ -47,27 +45,27 @@ router.get('/', async (req, res, next) => {
             }
         };
 
+        res.render('cms/files', {
+            title: 'Files',
+            template_name: 'files',
+            active: 'files',
+            files,
+            pageAmount: Math.ceil((imagesAmount + videosAmount)/AMOUNT_OF_FILES_PER_PAGE),
+            imagesAmount,
+            videosAmount,
+            breadcrumbs: [
+                { name: 'CMS', href: '/cms' },
+                { name: 'Files', href: '/cms/files' }
+            ],
+            scripts: [
+                'files.js'
+            ]
+        });
+
     } catch (err) {
-        next(err);
+        return next(err);
     }
 
-
-    res.render('cms/files', {
-        title: 'Files',
-        template_name: 'files',
-        active: 'files',
-        files,
-        pageAmount: Math.ceil((imagesAmount + videosAmount)/AMOUNT_OF_FILES_PER_PAGE),
-        imagesAmount,
-        videosAmount,
-        breadcrumbs: [
-            { name: 'CMS', href: '/cms' },
-            { name: 'Files', href: '/cms/files' }
-        ],
-        scripts: [
-            'files.js'
-        ]
-    });
 });
 
 
