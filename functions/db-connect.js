@@ -5,7 +5,7 @@ module.exports = {
 
         const host = process.env.DB_HOST || '127.0.0.1';
         const port = process.env.DB_PORT || 27017;
-        const dbName = process.env.DB_NAME || 'birka';
+        const dbName = process.env.DB_NAME = process.env.DB_NAME || 'birka';
         const user = process.env.DB_USER;
         const password = process.env.DB_PASSWORD;
         
@@ -14,8 +14,6 @@ module.exports = {
         if (user && password) {
             dbLink = `mongodb://${user}:${password}@${host}:${port}/${dbName}`;
         }
-
-        // mongoose.set('useFindAndModify', false);
 
         try {
             await mongoose.connect(dbLink);
