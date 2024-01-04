@@ -1,0 +1,78 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+                    <div class="row">
+                        <div class="col-12 col-lg">
+                            <form action="#" class="needs-validation" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-12 col-lg-6">
+                                        <label for="p1" class="form-label">Name:</label>
+                                        <input type="text" class="form-control" id="p1" value="<%= notification.name %>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="p15" class="form-label">Slug:</label>
+                                        <input type="text" class="form-control" id="p15" value="<%= notification.slug %>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Slug.
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="details" class="form-label">Description:</label>
+                                        <textarea class="form-control" id="details">
+                                            <%= notification.description %>
+                                        </textarea>
+                                        <div class="invalid-feedback">
+                                            Please enter a message in the textarea.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex">
+                                        <button class="btn btn-primary btn-sm me-2">Update</button>
+                                        <button class="btn btn-danger btn-sm ">Delete Status</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-12 col-lg-3 mt-5 mt-lg-0">
+                            <div class="card">
+                                <div class="card-header fs-6">Notify Users</div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="validationCustom04" class="form-label">Email Template</label>
+                                        <select class="form-select" id="validationCustom04" required>
+                                            <%- email_templates.map(template => {
+                                                const selected = notification.email_template.file_name === template.file_name ? 'selected' : '';
+                                                return `<option value="${template._id}" ${selected}>${template.file_name}</option>`
+                                            }).join('') %>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a valid Email Template.
+                                        </div>
+                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex p-0">
+                                            <label class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                <input class="form-check-input" type="checkbox" <%= notify_customer ? 'checked' : '' %>>
+                                                <span class="ms-2">Notify customer</span>
+                                            </label>
+                                        </li>
+                                        <% for (const user of users) { %>
+                                            <li class="list-group-item d-flex p-0">
+                                                <label class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                    <input class="form-check-input" type="checkbox" <%= user.selected ? 'checked' : '' %>>
+                                                    <span class="ms-2"><%= user.account_details.username %></span>
+                                                </label>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </main>
+    <%- include('partials/footer') %>

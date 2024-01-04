@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div>
+                    <div class="pb-3">
+                        <button class="btn btn-primary">Create User</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped  align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Public Name</th>
+                                    <th scope="col">E-mail</th>
+                                    <th scope="col">Orders</th>
+                                    <th scope="col">Total Spent</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Post Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% users.forEach(function(item){ %>
+
+                                    <tr>
+                                        <td>
+                                            <a href="<%= `${active}/${item._id}` %>">
+                                                <%= item.account_details.username %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <%= item.account_details.email %>
+                                        </td>
+                                        <td>
+                                            -0-
+                                        </td>
+                                        <td>
+                                            -0-
+                                        </td>
+                                        <td>
+                                            <%= item.shipping[0].city %>
+                                        </td>
+                                        <td>
+                                            <%= item.shipping[0].zip_code %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Page navigation" class="pt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link">Previous</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <pre><code>
+                        <%= JSON.stringify(users, null, 2) %>
+                    </code></pre>
+                </div>
+    </main>
+    <%- include('partials/footer') %>

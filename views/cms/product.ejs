@@ -1,0 +1,407 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+                    <form action="#" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-12 col-lg">
+                                <div class="row g-3">
+                                    <div class="col-12 col-lg-6">
+                                        <label for="pn" class="form-label">Product Name:</label>
+                                        <input type="text" class="form-control" id="pn" required=""
+                                            value="<%=product.title%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Product Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="sl" class="form-label">Slug:</label>
+                                        <input type="text" class="form-control" id="sl" required=""
+                                            value="<%=product.slug%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Slug.
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="sb" class="form-label">Subtitle:</label>
+                                        <input type="text" class="form-control" id="sb" required="" value="">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Subtitle.
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-lg-4">
+                                        <label for="sk" class="form-label">SKU:</label>
+                                        <input type="text" class="form-control" id="sk" required=""
+                                            value="<%=product.sku%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid SKU.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="btn-group pt-4" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="btnradio" id="purchase_el"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-secondary" for="purchase_el">Purchase</label>
+
+                                    <input type="radio" class="btn-check" name="btnradio" id="subscription_el"
+                                        autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="subscription_el">Subscription</label>
+                                </div>
+                                <!-- purchase -->
+                                <div class="pt-4 pb-3" data-purchase>
+                                    <div class="row g-3">
+                                        <div class="col-5 col-lg-2">
+                                            <label for="price_1" class="form-label">Price:</label>
+                                            <input type="number" class="form-control" id="price_1" required
+                                                value="<%=product.price?.regular%>">
+                                            <div class="invalid-feedback">
+                                                Please provide a valid Price.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/ purchase -->
+                                <div class="py-4 d-none" data-subscription>
+                                    <div class="row  g-3">
+                                        <div class="col-5 col-lg-2">
+                                            <div class="mb-3">
+                                                <label for="price_2" class="form-label">Fixed Price:</label>
+                                                <input type="number" class="form-control" id="price_2" required="">
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid Fixed Price.
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="sel_data" class="form-label">Frequency (cycle):</label>
+                                                <select class="form-select" required="" id="sel_data">
+                                                    <option value="">Week</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                                <div class="invalid-feedback">Example invalid select feedback</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-6">
+                                                    <h3>Options</h3>
+                                                    <ul class="list-group">
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">Every week</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">Every 2 weeks</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">Every 4 weeks</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">Every 12 weeks</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="row gx-2 align-items-end pt-3">
+                                                        <div class="col-4">
+                                                            <label for="interval_1" class="form-label">Interval:</label>
+                                                            <input type="number" class="form-control" id="interval_1"
+                                                                required="">
+                                                            <div class="invalid-feedback">
+                                                                Please provide a valid Interval.
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-primary">Add
+                                                                Option</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-lg-6">
+                                                    <h3>Duration</h3>
+                                                    <ul class="list-group">
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">4 weeks</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">52 weeks</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">Until cancaled</span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="row gx-2 align-items-end pt-3">
+                                                        <div class="col-4">
+                                                            <label for="interval_2" class="form-label">Interval:</label>
+                                                            <input type="number" class="form-control" id="interval_2"
+                                                                required="">
+                                                            <div class="invalid-feedback">
+                                                                Please provide a valid Interval.
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-primary">Add
+                                                                Option</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pb-5">
+                                    <div class="mb-3">
+                                        <label for="textarea" class="form-label">Description:</label>
+                                        <textarea class="form-control" id="textarea"
+                                            required><%=product.description%></textarea>
+                                        <div class="invalid-feedback">
+                                            Please enter a message in the textarea.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="card h-100">
+                                            <div class="card-header fs-6">
+                                                Attributes
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row gx-2">
+                                                    <div class="col">
+                                                        <input list="attName" class="form-control" id="InputattName"
+                                                            required="" name="InputattName">
+                                                        <datalist id="attName">
+                                                            <option value="Chrome"></option>
+                                                            <option value="Firefox"></option>
+                                                            <option value="Opera"></option>
+                                                            <option value="Safari"></option>
+                                                            <option value="Microsoft Edge"></option>
+                                                        </datalist>
+                                                        <div class="invalid-feedback">
+                                                            Please provide a valid Name.
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="text" class="form-control" id="attValue"
+                                                            required="" placeholder="Value">
+                                                        <div class="invalid-feedback">
+                                                            Please provide a valid Value.
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button class="btn btn-primary">Add</button>
+                                                    </div>
+                                                </div>
+                                                <ul class="list-group mt-3">
+
+                                                    <% product.attributes.forEach(function(att){ %>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span class="pe-2">
+                                                                <%=att.name%>: <%=att.value%>
+                                                            </span>
+                                                            <span
+                                                                class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                        </li>
+                                                        <% }); %>
+                                                            <!-- <li
+                                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                                <span class="pe-2">Size: Medium</span>
+                                                                <span
+                                                                    class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                            </li>
+                                                            <li
+                                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                                <span class="pe-2">Weight: 12 oz</span>
+                                                                <span
+                                                                    class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                            </li> -->
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <%- include('partials/tags-block', { additionalClass: 'h-100' ,
+                                            array:product.tags }) %>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header fs-6">
+                                                Cross-sells
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="button-addon2">Add</button>
+                                                </div>
+                                                <ul class="list-group">
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">Product Name</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">Product Name</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">Product Name</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%if(product.variants && product.variants.length> 0){%>
+                                    <div class="table-responsive mt-5">
+                                        <table class="table table-striped  align-middle table-hover table_edit">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Image</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">SKU</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% product.variants.forEach(function(variant){ %>
+                                                    <tr <%-variant.published ? '' : ' class="unpublished"' %> >
+                                                        <td>
+                                                            <% if (product.thumbnail) { %>
+                                                            <img src="<%=folder_path + variant?.thumbnail?.file_name+'.'+variant?.thumbnail?.extension%>"
+                                                                alt="img">
+                                                            <% } %>
+                                                        </td>
+                                                        <td>
+                                                            <% if(!variant.published){%>
+                                                                <span
+                                                                    class="text-success fs_smaller text-uppercase pe-2">unpublished</span>
+                                                                <% }%>
+                                                                    <a href="<%=variant._id%>">
+                                                                        <%=variant.title%>
+                                                                    </a>
+                                                        </td>
+                                                        <td>
+                                                            <%=variant.sku%>
+                                                        </td>
+                                                        <td>
+                                                            <%=variant.price?.regular%>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-link btn-sm">
+                                                                <svg class="icon">
+                                                                    <use xlink:href="#trash"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <% } else{%>
+                                        <div class="alert alert-danger mt-5">
+                                            this product has no variants
+                                        </div>
+                                        <%}%>
+
+                                            <div class="row align-items-center g-3">
+                                                <div class="col-auto">
+                                                    <button class="btn btn-primary">Add Variation</button>
+
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            id="clone" checked>
+                                                        <label class="form-check-label" for="clone">
+                                                            Clone data from the current product
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            </div>
+                            <div class="col-12 col-lg-3 mt-5 mt-lg-0">
+                                <div class="card meta_block mb-4">
+                                    <%- include('partials/img-edit',{img_path:thumbnail}) %>
+                                        <div class="card-body">
+                                            <label class="form-check-label d-flex user-select-none mb-3">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    <%=product.published===true ? 'checked' : '' %>>
+                                                <span class="ms-2">Published</span>
+                                            </label>
+                                            <dl class="d-table mb-3">
+                                                <div class="d-table-row">
+                                                    <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                                    <dd class="d-table-cell">
+                                                        <%=formatDate(product.date_created,'dd mon yyyy')%>
+                                                    </dd>
+                                                </div>
+                                            </dl>
+                                            <div class="d-flex flex-wrap">
+                                                <button class="btn btn-primary me-2 mb-2">Update</button>
+                                                <button class="btn btn-danger mb-2">Delete
+                                                    Product</button>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header fs-6">Categories</div>
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <% categories.forEach(function(category){ %>
+                                                <li class="list-group-item d-flex p-0">
+                                                    <label
+                                                        class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            <%=category.selected ? 'checked' : '' %>>
+                                                        <span class="ms-2">
+                                                            <%=category.name%>
+                                                        </span>
+                                                    </label>
+                                                    <button class="btn btn-link">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#eye"></use>
+                                                        </svg>
+                                                    </button>
+                                                </li>
+                                                <% }); %>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    </main>
+    <%- include('../partials/svg-sprite') %>
+        <%- include('partials/footer') %>

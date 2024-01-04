@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+                    <form action="#" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-12 col-lg">
+                                <div class="pb-3">
+                                    <label for="template" class="form-label">Template:</label>
+                                    <textarea disabled class="form-control code" id="template" rows="20" placeholder="EJS markup"><%= template_content %></textarea>
+                                    <div class="invalid-feedback">
+                                        Please enter a message in the textarea.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3 mt-5 mt-lg-0">
+                                <div class="card meta_block mb-4">
+                                    <div class="card-body">
+                                        <dl class="d-table mb-3">
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                                <dd class="d-table-cell"><%= formatDate(template.date_created, 'dd mon yyyy') %></dd>
+                                            </div>
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
+                                                <dd class="d-table-cell"><%= formatDate(template.date_updated, 'dd mon yyyy') %></dd>
+                                            </div>
+                                        </dl>
+                                        <div class="mb-3">
+                                            <label for="meta_4" class="form-label">Template Name:</label>
+                                            <input type="text" class="form-control form-control-sm" id="meta_4" value="<%= template.name %>" required>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid Template Name.
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="meta_5" class="form-label">Template File</label>
+                                            <select class="form-select form-select-sm" id="meta_5" required>
+                                                <%- templates.map(item => {
+                                                    const selected = template.file_name === item.file_name ? 'selected' : '';
+                                                    return `<option value="${item.file_name}" ${selected}>${item.file_name}</option>`
+                                                }).join('') %>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select Template File.
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="meta_6" class="form-label">Note:</label>
+                                            <textarea class="form-control form-control-sm" id="meta_6" rows="3">
+                                                <%= template.note %>
+                                            </textarea>
+                                            <div class="invalid-feedback">
+                                                Please enter a message in the textarea.
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap">
+                                            <button type="submit" class="btn btn-primary me-2 mb-2">Update</button>
+                                            <button class="btn btn-danger mb-2">Delete Template</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    </main>
+    <%- include('partials/footer') %>

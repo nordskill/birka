@@ -1,0 +1,53 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports = function loadVars() {
+	const languagesPath = path.join(__dirname, '../data/languages.json');
+	const countriesPath = path.join(__dirname, '../data/countries.json');
+	const currenciesPath = path.join(__dirname, '../data/currencies.json');
+	const userRoles = path.join(__dirname, '../data/user-roles.json');
+
+	try {
+		const languages = loadFile(languagesPath);
+		const countries = loadFile(countriesPath);
+		const currencies = loadFile(currenciesPath);
+		const roles = loadFile(userRoles);
+
+		if (languages) {
+			global.languages = deepFreeze(languages);
+		}
+		if (countries) {
+			global.countries = deepFreeze(countries);
+		}
+		if (currencies) {
+			global.currencies = deepFreeze(currencies);
+		}
+		if (roles) {
+			global.user_roles = deepFreeze(roles);
+		}
+	} catch (err) {
+		console.error(`Failed to load vars: ${err.message}`);
+	}
+};
+
+function loadFile(filePath) {
+	if (fs.existsSync(filePath)) {
+		const fileContent = fs.readFileSync(filePath, 'utf8');
+		const parsedContent = JSON.parse(fileContent);
+		return parsedContent;
+	}
+	return null;
+}
+
+function deepFreeze(obj) {
+	Object.freeze(obj);
+	for (const prop of Object.getOwnPropertyNames(obj)) {
+		if (obj.hasOwnProperty(prop)
+			&& obj[prop] !== null
+			&& (typeof obj[prop] === 'object' || typeof obj[prop] === 'function')
+			&& !Object.isFrozen(obj[prop])) {
+			deepFreeze(obj[prop]);
+		}
+	}
+	return obj;
+}

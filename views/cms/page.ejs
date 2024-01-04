@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+                    <form action="#" class="needs-validation">
+                        <div class="row">
+                            <div class="col-12 col-lg">
+                                <h3 class=" border-bottom pt-3 pb-2 mb-3">Page Content</h3>
+                                <div class="pb-3">
+                                    <label for="details" class="form-label">HTML:</label>
+                                    <textarea class="form-control" id="details" rows="30">
+                                        <%= page.content[0].html %>
+                                    </textarea>
+                                    <div class="invalid-feedback">
+                                        Please enter a message in the textarea.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3 mt-5 mt-lg-0">
+                                <div class="card meta_block mb-4">
+                                    <%- include('partials/img-edit') %>
+                                        <div class="card-body">
+                                            <label class="form-check-label d-flex user-select-none mb-3">
+                                                <input class="form-check-input" type="checkbox" <%= page.published ? 'checked' : '' %>>
+                                                <span class="ms-2">Published</span>
+                                            </label>
+                                            <dl class="d-table mb-3">
+                                                <div class="d-table-row">
+                                                    <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                                    <dd class="d-table-cell"><%= formatDate(page.date_created, 'dd mon yyyy') %></dd>
+                                                </div>
+                                                <div class="d-table-row">
+                                                    <dt class="d-table-cell pe-2 fw-normal">Published:</dt>
+                                                    <dd class="d-table-cell"><%= formatDate(page.date_published, 'dd mon yyyy') %></dd>
+                                                </div>
+                                                <div class="d-table-row">
+                                                    <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
+                                                    <dd class="d-table-cell"><%= formatDate(page.date_updated, 'dd mon yyyy') %></dd>
+                                                </div>
+                                                <div class="d-table-row">
+                                                    <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
+                                                    <dd class="d-table-cell">
+                                                        <a href="/cms/customers/<%= page.author._id %>" class="link-underline link-underline-opacity-0"><%= page.author.account_details.username %></a>
+                                                    </dd>
+                                                </div>
+                                            </dl>
+                                            <div class="mb-3">
+                                                <label for="meta_1" class="form-label">Page Name:</label>
+                                                <input type="text" value="<%= page.name %>" class="form-control form-control-sm" id="meta_1" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid Page Name.
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="meta_2" class="form-label">Slug:</label>
+                                                <input type="text" value="<%= page.slug %>" class="form-control form-control-sm" id="meta_2"
+                                                    required="">
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid Slug.
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="meta_3" class="form-label">Excerpt:</label>
+                                                <textarea class="form-control form-control-sm" id="meta_3" rows="3" required>
+                                                    <%= page.excerpt %>
+                                                </textarea>
+                                                <div class="invalid-feedback">
+                                                    Please enter a message in the textarea.
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-wrap">
+                                                <button class="btn btn-primary me-2 mb-2">Update</button>
+                                                <button class="btn btn-danger mb-2">Delete
+                                                    Product</button>
+                                            </div>
+                                        </div>
+                                </div>
+                                <%- include('partials/tags-block', { array: page.tags }) %>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- content -->
+                </div>
+    </main>
+    <%- include('../partials/svg-sprite') %>
+        <%- include('partials/footer') %>

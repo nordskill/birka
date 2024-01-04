@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center p-3 mb-5 bg-light rounded-3">
+    <h2 class="m-0">
+        <%= title %>
+            <%- locals.order ? `<span class="to_copy">${order.number}</span>` : '' %>
+                <% if (typeof badge !=='undefined' && badge) { %>
+                    <span class="badge rounded-pill text-bg-primary fs-6 align-middle ms-3 ">copy</span>
+                    <% } %>
+    </h2>
+
+</div>

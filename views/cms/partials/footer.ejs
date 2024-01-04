@@ -1,0 +1,14 @@
+</div>
+</div>
+
+<script src="/js/cms/bootstrap.bundle.min.js"></script>
+
+<% if (typeof scripts !== 'undefined' && scripts instanceof Array) { %>
+    <% scripts.forEach(function(script) { %>
+        <script src="/js/cms/<%- script %>"></script>
+    <% }); %>
+<% } %>
+
+</body>
+
+</html>

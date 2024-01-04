@@ -1,0 +1,13 @@
+<%- include('./partials/header') -%>
+    <div>
+        <h1>Contact Form Feedback</h1>
+        <p>Hi <%= admin.name %>,</p>
+        <p>A user has submitted the contact form on the site.</p>
+        <p>Here are the details:</p>
+        <ul>
+            <li>Name: <%= user.name %></li>
+            <li>Email: <%= user.email %></li>
+            <li>Message: <%= user.message %></li>
+        </ul>
+    </div>
+<%- include('./partials/footer') -%>

@@ -1,0 +1,53 @@
+.table {
+	&.table_edit {
+		tr {
+			td:last-child {
+				text-align: right;
+			}
+		}
+	}
+
+	img {
+		width: 31px;
+		height: 31px;
+		object-fit: cover;
+	}
+
+	tr {
+		td {
+			.btn {
+				visibility: hidden;
+			}
+		}
+
+		&:hover,
+		&.table-active {
+			td {
+				.btn {
+					visibility: visible;
+				}
+			}
+		}
+	}
+
+	.unpublished {
+
+		img {
+			opacity: .1;
+		}
+
+		.form-check-input {
+			opacity: .4;
+		}
+
+		td,
+		a {
+			--bs-text-opacity: .3;
+			color: rgba(var(--bs-secondary-rgb), var(--bs-text-opacity)) !important;
+		}
+	}
+}
+
+.fs_smaller {
+	font-size: 9px;
+}

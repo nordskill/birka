@@ -1,0 +1,33 @@
+.meta_block {
+	&:not(.active) {
+		.list_meta_icons {
+			opacity: 0;
+			transition: all 0.3s ease;
+
+			@media screen and (max-width: 992px) {
+				opacity: 1;
+			}
+		}
+	}
+
+	.img_holder {
+		&:hover {
+			.list_meta_icons {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+.circle_btn {
+	--s: 2.5rem;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	width: var(--s);
+	height: var(--s);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #707070;
+}

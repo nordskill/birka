@@ -1,0 +1,194 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+
+            <%- include('partials/title', { badge: true }) %>
+
+                <div class="pb-4">
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Small button
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <span class="d-block">ID:
+                                            <b class="font-monospace to_copy"> 655b38e756a6960d66b4cbcc</b>
+                                            <span class="badge rounded-pill text-bg-primary">copy</span>
+                                        </span>
+                                        <span class="d-block">Created: <span
+                                                class="font-monospace d-inline-block">2023-11-15 at
+                                                13:15:58</span></span>
+                                        <span class="d-block">Customer:
+                                            <a href="#"
+                                                class="d-inline-block link-underline link-underline-opacity-0">Public
+                                                Name</a>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header fs-6">Comment to the Order</div>
+                                <div class="card-body">
+                                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                        Amet
+                                        est nesciunt modi
+                                        saepe ratione iure voluptatem, nemo omnis harum accusamus asperiores minima
+                                        corrupti veniam illum fugiat optio quam quos sed.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card">
+                                <div class="card-header fs-6">Shipping Details</div>
+                                <div class="card-body">
+                                    <p><span class="badge rounded-pill text-bg-primary">Express Delivery</span></p>
+                                    <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                        Debitis, recusandae, ab facere temporibus dicta nihil, aut est eligendi quo
+                                        praesentium necessitatibus. Aperiam autem qui veritatis aliquam atque
+                                        cupiditate
+                                        magni magnam.</p>
+                                    <button class="btn btn-primary btn-sm">Print Package Label</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card">
+                                <div class="card-header fs-6">Billing Details</div>
+                                <div class="card-body">
+                                    <p><span class="badge rounded-pill text-bg-primary">PayPal</span></p>
+                                    <p>
+                                        <a href="mailto:some.email@gmail.com"
+                                            class="text-primary link-underline link-underline-opacity-0">some.email@gmail.com</a>
+                                    </p>
+                                    <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                        Debitis, recusandae, ab facere temporibus dicta nihil, aut est eligendi quo
+                                        praesentium necessitatibus. Aperiam autem qui</p>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge rounded-pill text-bg-success">invoice sent</span>
+                                        <a href="#"
+                                            class="btn btn-link link-underline link-underline-opacity-0">Resend</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped  align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card">
+                        <div class="card-body d-flex flex-wrap justify-content-between">
+                            <div class="col-12 col-md-auto">
+                                <button class="btn btn-primary">Print Package Slip</button>
+                            </div>
+                            <div class="col-12 col-md-auto mt-3 mt-md-0">
+                                <dl class="d-table mb-0 fs-6 lh-lg  pe-0 pe-md-5">
+                                    <div class="d-table-row">
+                                        <dt class="d-table-cell pe-3 fw-normal text-start text-md-end">Items
+                                            Subtotal:
+                                        </dt>
+                                        <dd class="d-table-cell fw-bold">98.50 USD</dd>
+                                    </div>
+                                    <div class="d-table-row">
+                                        <dt class="d-table-cell pe-3 fw-normal text-start text-md-end">Shipping:
+                                        </dt>
+                                        <dd class="d-table-cell fw-bold">20 USD</dd>
+                                    </div>
+                                    <div class="d-table-row">
+                                        <dt class="d-table-cell pe-3 fw-normal text-start text-md-end">Total Cost:
+                                        </dt>
+                                        <dd class="d-table-cell fw-bold">118.50 USD</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class=" border-bottom pt-3 pb-2 mb-3">Billing Details</h3>
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped  align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Method</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">IP</th>
+                                    <th scope="col">Invoice Number</th>
+                                    <th scope="col">Invoice Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                                <tr>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                    <td>Body</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </main>
+    <%- include('partials/footer') %>

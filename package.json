@@ -1,0 +1,43 @@
+{
+    "name": "website",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "cross-env NODE_ENV=development npm run prebuild && concurrently -k \"nodemon ./bin/www\" \"npm run watch\" \"npm run watch:sass\" \"npm run watch:cms-sass\" \"npm run watch:js\"",
+        "watch": "browser-sync start --proxy \"localhost:3000\" --files \"public/**/*.*\" \"app.js\" \"routes/*.js\" \"views/**/*.ejs\" \"data/*.js\" \"./public/css/*.css\" --no-ui",
+        "watch:js": "node webpack-watcher.js",
+        "watch:sass": "node-sass -w ./src/sass/ -o ./public/css/ --output-style compressed --source-map true",
+        "watch:cms-sass": "node-sass -w ./src/sass/cms/ -o ./public/css/cms/ --output-style compressed --source-map true",
+        "prod": "cross-env NODE_ENV=production node ./bin/www",
+        "build": "webpack --config webpack.config.js --mode production",
+        "insert-data": "node ./scripts/insert-data-to-db.js",
+        "prebuild": "node ./scripts/prebuild.js"
+    },
+    "dependencies": {
+        "cookie-parser": "~1.4.4",
+        "cookie-session": "^2.0.0",
+        "debug": "~2.6.9",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "file-type": "^18.7.0",
+        "http-errors": "~1.6.3",
+        "mongodb": "^6.2.0",
+        "mongoose": "^8.0.0",
+        "morgan": "~1.9.1",
+        "multer": "^1.4.5-lts.1",
+        "passport": "^0.6.0",
+        "sharp": "^0.32.6"
+    },
+    "devDependencies": {
+        "browser-sync": "^2.29.3",
+        "chokidar": "^3.5.3",
+        "concurrently": "^8.2.1",
+        "cross-env": "^7.0.3",
+        "node-sass": "^9.0.0",
+        "nodemon": "^3.0.1",
+        "sass": "^1.68.0",
+        "terser": "^5.20.0",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
+    }
+}

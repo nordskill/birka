@@ -1,0 +1,21 @@
+{
+    "name": "MyWebPage",
+    "brand_name": "My Brand",
+    "domain": "mywebpage.com",
+    "social_links": [
+        {
+            "name": "Facebook",
+            "url": "https://www.facebook.com/mybrand"
+        },
+        {
+            "name": "Twitter",
+            "url": "https://twitter.com/mybrand"
+        },
+        {
+            "name": "Instagram",
+            "url": "https://instagram.com/mybrand"
+        }
+    ],
+    "custom_html": "",
+    "language": "en"
+}

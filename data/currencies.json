@@ -1,0 +1,1199 @@
+[
+    {
+        "fractional_unit": null,
+        "fraction": null,
+        "name": "Abkhazian apsar",
+        "symbol": "аҧ",
+        "code": null
+    },
+    {
+        "fraction": "100",
+        "name": "Afghan afghani",
+        "code": "AFN",
+        "fractional_unit": "Pul",
+        "symbol": "؋"
+    },
+    {
+        "name": "Albanian lek",
+        "fraction": "100",
+        "code": "ALL",
+        "symbol": "Lek",
+        "fractional_unit": "Qintar"
+    },
+    {
+        "name": "Algerian dinar",
+        "symbol": "DA",
+        "fraction": "100",
+        "fractional_unit": "Santeem",
+        "code": "DZD"
+    },
+    {
+        "name": "Angolan kwanza",
+        "symbol": "Kz",
+        "fractional_unit": "Cêntimo",
+        "fraction": "100",
+        "code": "AOA"
+    },
+    {
+        "name": "Argentine peso",
+        "fraction": "100",
+        "code": "ARS",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "fractional_unit": "Luma",
+        "symbol": "֏",
+        "fraction": "100",
+        "code": "AMD",
+        "name": "Armenian dram"
+    },
+    {
+        "fractional_unit": "Luma",
+        "name": "Artsakh dram",
+        "symbol": "դր.",
+        "fraction": "100",
+        "code": null
+    },
+    {
+        "name": "Aruban florin",
+        "fraction": "100",
+        "code": "AWG",
+        "fractional_unit": "Cent",
+        "symbol": "ƒ"
+    },
+    {
+        "fraction": "100",
+        "code": "AUD",
+        "name": "Australian dollar",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "code": "AZN",
+        "symbol": "₼",
+        "fractional_unit": "Qəpik",
+        "name": "Azerbaijani manat"
+    },
+    {
+        "code": "BSD",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "name": "Bahamian dollar",
+        "symbol": "$"
+    },
+    {
+        "code": "BHD",
+        "symbol": "BD",
+        "name": "Bahraini dinar",
+        "fractional_unit": "Fils",
+        "fraction": "1000"
+    },
+    {
+        "name": "Bangladeshi taka",
+        "fractional_unit": "Poisha",
+        "fraction": "100",
+        "code": "BDT",
+        "symbol": "৳"
+    },
+    {
+        "name": "Barbadian dollar",
+        "code": "BBD",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "name": "Belarusian ruble",
+        "fractional_unit": "Copeck",
+        "code": "BYN",
+        "symbol": "Br"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": "BZD",
+        "name": "Belize dollar",
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "name": "Bermudian dollar",
+        "fractional_unit": "Cent",
+        "code": "BMD",
+        "symbol": "$"
+    },
+    {
+        "name": "Bhutanese ngultrum",
+        "fraction": "100",
+        "code": "BTN",
+        "fractional_unit": "Chetrum",
+        "symbol": "Nu"
+    },
+    {
+        "name": "Bitcoin",
+        "symbol": "₿",
+        "fraction": "100000000",
+        "fractional_unit": "Satoshi",
+        "code": null
+    },
+    {
+        "code": "BOB",
+        "fraction": "100",
+        "name": "Bolivian boliviano",
+        "symbol": "Bs",
+        "fractional_unit": "Centavo"
+    },
+    {
+        "fractional_unit": "Fening",
+        "fraction": "100",
+        "code": "BAM",
+        "name": "Bosnia and Herzegovina convertible mark",
+        "symbol": "KM"
+    },
+    {
+        "fractional_unit": "Thebe",
+        "symbol": "P",
+        "fraction": "100",
+        "name": "Botswana pula",
+        "code": "BWP"
+    },
+    {
+        "symbol": "R$",
+        "name": "Brazilian real",
+        "fraction": "100",
+        "code": "BRL",
+        "fractional_unit": "Centavo"
+    },
+    {
+        "code": "BND",
+        "name": "Brunei dollar",
+        "fractional_unit": "Sen",
+        "fraction": "10",
+        "symbol": "$"
+    },
+    {
+        "code": "BGN",
+        "fraction": "100",
+        "name": "Bulgarian lev",
+        "symbol": "Lev",
+        "fractional_unit": "Stotinka"
+    },
+    {
+        "name": "Burmese kyat",
+        "fraction": "100",
+        "fractional_unit": "Pya",
+        "code": "MMK",
+        "symbol": "K or Ks (pl.)"
+    },
+    {
+        "code": "BIF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "name": "Burundian franc"
+    },
+    {
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "code": "XPF",
+        "name": "CFP franc"
+    },
+    {
+        "code": "KHR",
+        "name": "Cambodian riel",
+        "fraction": "100",
+        "symbol": "៛",
+        "fractional_unit": "Sen"
+    },
+    {
+        "code": "CAD",
+        "fraction": "100",
+        "name": "Canadian Dollar",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "name": "Canadian dollar",
+        "code": "CAD",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "name": "Cape Verdean escudo",
+        "fraction": "100",
+        "code": "CVE",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "code": "KYD",
+        "name": "Cayman Islands dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "code": "XAF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "name": "Central African CFA franc"
+    },
+    {
+        "code": "CLP",
+        "fraction": "100",
+        "name": "Chilean peso",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "code": "COP",
+        "name": "Colombian peso",
+        "fraction": "100",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "code": "KMF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "name": "Comorian franc"
+    },
+    {
+        "name": "Congolese franc",
+        "code": "CDF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime"
+    },
+    {
+        "fraction": "100",
+        "code": null,
+        "fractional_unit": "Cent",
+        "name": "Cook Islands dollar",
+        "symbol": "$"
+    },
+    {
+        "symbol": "₡",
+        "fraction": "100",
+        "name": "Costa Rican colón",
+        "code": "CRC",
+        "fractional_unit": "Céntimo"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Centavo",
+        "code": "CUP",
+        "name": "Cuban peso",
+        "symbol": "$"
+    },
+    {
+        "code": "CZK",
+        "fraction": "100",
+        "fractional_unit": "Heller",
+        "symbol": "Kč",
+        "name": "Czech koruna"
+    },
+    {
+        "code": "DKK",
+        "fraction": "100",
+        "fractional_unit": "Øre",
+        "symbol": "kr",
+        "name": "Danish krone"
+    },
+    {
+        "code": "DJF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "name": "Djiboutian franc"
+    },
+    {
+        "name": "Dominican peso",
+        "code": "DOP",
+        "fraction": "100",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "name": "Eastern Caribbean dollar",
+        "code": "XCD",
+        "symbol": "$"
+    },
+    {
+        "fractional_unit": "Piastre",
+        "name": "Egyptian pound",
+        "symbol": "LE",
+        "fraction": "100",
+        "code": "EGP"
+    },
+    {
+        "symbol": "Nkf",
+        "code": "ERN",
+        "fraction": "100",
+        "name": "Eritrean nakfa",
+        "fractional_unit": "Cent"
+    },
+    {
+        "fractional_unit": "Santim",
+        "code": "ETB",
+        "fraction": "100",
+        "name": "Ethiopian birr",
+        "symbol": "Br"
+    },
+    {
+        "symbol": "€",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": "EUR",
+        "name": "Euro"
+    },
+    {
+        "fraction": "100",
+        "code": "FKP",
+        "fractional_unit": "Penny",
+        "name": "Falkland Islands pound",
+        "symbol": "£"
+    },
+    {
+        "fractional_unit": "Oyra",
+        "fraction": "100",
+        "symbol": "kr",
+        "name": "Faroese króna",
+        "code": null
+    },
+    {
+        "fraction": "100",
+        "code": "FJD",
+        "fractional_unit": "Cent",
+        "name": "Fijian dollar",
+        "symbol": "$"
+    },
+    {
+        "name": "Gambian dalasi",
+        "fractional_unit": "Butut",
+        "fraction": "100",
+        "symbol": "D",
+        "code": "GMD"
+    },
+    {
+        "symbol": "₾",
+        "fraction": "100",
+        "fractional_unit": "Tetri",
+        "name": "Georgian lari",
+        "code": "GEL"
+    },
+    {
+        "fractional_unit": "Pesewa",
+        "symbol": "₵",
+        "fraction": "100",
+        "code": "GHS",
+        "name": "Ghanaian cedi"
+    },
+    {
+        "name": "Gibraltar pound",
+        "fraction": "100",
+        "fractional_unit": "Penny",
+        "symbol": "£",
+        "code": "GIP"
+    },
+    {
+        "fraction": "100",
+        "code": "GTQ",
+        "name": "Guatemalan quetzal",
+        "fractional_unit": "Centavo",
+        "symbol": "Q"
+    },
+    {
+        "name": "Guernsey pound",
+        "fraction": "100",
+        "fractional_unit": "Penny",
+        "symbol": "£",
+        "code": null
+    },
+    {
+        "fraction": "100",
+        "symbol": "Fr",
+        "name": "Guinean franc",
+        "fractional_unit": "Centime",
+        "code": "GNF"
+    },
+    {
+        "code": "GYD",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "name": "Guyanese dollar",
+        "symbol": "$"
+    },
+    {
+        "symbol": "G",
+        "fraction": "100",
+        "fractional_unit": "Centime",
+        "name": "Haitian gourde",
+        "code": "HTG"
+    },
+    {
+        "symbol": "L",
+        "fraction": "100",
+        "code": "HNL",
+        "name": "Honduran lempira",
+        "fractional_unit": "Centavo"
+    },
+    {
+        "name": "Hong Kong dollar",
+        "fraction": "100",
+        "code": "HKD",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "code": "HUF",
+        "symbol": "Ft",
+        "fraction": "100",
+        "name": "Hungarian forint",
+        "fractional_unit": "Fillér"
+    },
+    {
+        "name": "Icelandic króna",
+        "fractional_unit": "Eyrir",
+        "fraction": "100",
+        "symbol": "kr",
+        "code": "ISK"
+    },
+    {
+        "name": "Indian rupee",
+        "code": "INR",
+        "fraction": "100",
+        "symbol": "₹",
+        "fractional_unit": "Paisa"
+    },
+    {
+        "name": "Indonesian rupiah",
+        "code": "IDR",
+        "fraction": "100",
+        "fractional_unit": "Sen",
+        "symbol": "Rp"
+    },
+    {
+        "code": "IRR",
+        "name": "Iranian rial",
+        "symbol": "Rl or Rls (pl.)",
+        "fractional_unit": "Rial",
+        "fraction": "1"
+    },
+    {
+        "code": "IQD",
+        "name": "Iraqi dinar",
+        "symbol": "ID",
+        "fractional_unit": "Fils",
+        "fraction": "1000"
+    },
+    {
+        "symbol": "₪",
+        "code": "ILS",
+        "fractional_unit": "Agora",
+        "fraction": "100",
+        "name": "Israeli new shekel"
+    },
+    {
+        "fraction": "100",
+        "code": "JMD",
+        "fractional_unit": "Cent",
+        "name": "Jamaican dollar",
+        "symbol": "$"
+    },
+    {
+        "name": "Japanese yen",
+        "symbol": "¥",
+        "fraction": "100",
+        "fractional_unit": "Sen",
+        "code": "JPY"
+    },
+    {
+        "fraction": "100",
+        "name": "Jersey pound",
+        "fractional_unit": "Penny",
+        "symbol": "£",
+        "code": null
+    },
+    {
+        "fractional_unit": "Piastre",
+        "code": "JOD",
+        "fraction": "100",
+        "name": "Jordanian dinar",
+        "symbol": "JD"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Tıyn",
+        "symbol": "₸",
+        "code": "KZT",
+        "name": "Kazakhstani tenge"
+    },
+    {
+        "code": "KES",
+        "symbol": "Sh or Shs (pl.)",
+        "fraction": "100",
+        "name": "Kenyan shilling",
+        "fractional_unit": "Cent"
+    },
+    {
+        "fraction": "100",
+        "name": "Kiribati dollar",
+        "fractional_unit": "Cent",
+        "code": null,
+        "symbol": "$"
+    },
+    {
+        "name": "Kuwaiti dinar",
+        "symbol": "KD",
+        "fractional_unit": "Fils",
+        "code": "KWD",
+        "fraction": "1000"
+    },
+    {
+        "fractional_unit": "Tyiyn",
+        "fraction": "100",
+        "code": "KGS",
+        "symbol": "som",
+        "name": "Kyrgyz som"
+    },
+    {
+        "fractional_unit": "Att",
+        "fraction": "100",
+        "symbol": "₭",
+        "name": "Lao kip",
+        "code": "LAK"
+    },
+    {
+        "fractional_unit": "Piastre",
+        "name": "Lebanese pound",
+        "code": "LBP",
+        "symbol": "LL",
+        "fraction": "100"
+    },
+    {
+        "name": "Lesotho loti",
+        "fraction": "100",
+        "code": "LSL",
+        "fractional_unit": "Sente",
+        "symbol": "L or M (pl.)"
+    },
+    {
+        "name": "Liberian dollar",
+        "code": "LRD",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "name": "Libyan dinar",
+        "fractional_unit": "Dirham",
+        "symbol": "LD",
+        "fraction": "1000",
+        "code": "LYD"
+    },
+    {
+        "fractional_unit": "Avo",
+        "fraction": "100",
+        "symbol": "MOP$",
+        "name": "Macanese pataca",
+        "code": "MOP"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Deni",
+        "symbol": "DEN",
+        "name": "Macedonian denar",
+        "code": "MKD"
+    },
+    {
+        "code": "MGA",
+        "symbol": "Ar",
+        "fraction": "5",
+        "fractional_unit": "Iraimbilanja",
+        "name": "Malagasy ariary"
+    },
+    {
+        "code": "MWK",
+        "fractional_unit": "Tambala",
+        "fraction": "100",
+        "name": "Malawian kwacha",
+        "symbol": "K"
+    },
+    {
+        "code": "MYR",
+        "fraction": "100",
+        "name": "Malaysian ringgit",
+        "fractional_unit": "Sen",
+        "symbol": "RM"
+    },
+    {
+        "symbol": "Rf",
+        "code": "MVR",
+        "fraction": "100",
+        "fractional_unit": "Laari",
+        "name": "Maldivian rufiyaa"
+    },
+    {
+        "fraction": "100",
+        "name": "Manx pound",
+        "fractional_unit": "Penny",
+        "symbol": "£",
+        "code": null
+    },
+    {
+        "symbol": "UM",
+        "fraction": "5",
+        "name": "Mauritanian ouguiya",
+        "fractional_unit": "Khoums",
+        "code": "MRU"
+    },
+    {
+        "name": "Mauritian rupee",
+        "fraction": "100",
+        "code": "MUR",
+        "symbol": "Re or Rs (pl.)",
+        "fractional_unit": "Cent"
+    },
+    {
+        "fraction": "100",
+        "name": "Mexican peso",
+        "code": "MXN",
+        "fractional_unit": "Centavo",
+        "symbol": "$"
+    },
+    {
+        "code": "MDL",
+        "fractional_unit": "Ban",
+        "name": "Moldovan leu",
+        "symbol": "Leu or Lei (pl.)",
+        "fraction": "100"
+    },
+    {
+        "code": "MNT",
+        "symbol": "₮",
+        "fraction": "100",
+        "fractional_unit": "Möngö",
+        "name": "Mongolian tögrög"
+    },
+    {
+        "symbol": "DH",
+        "fraction": "100",
+        "fractional_unit": "Centime",
+        "name": "Moroccan dirham",
+        "code": "MAD"
+    },
+    {
+        "fraction": "100",
+        "symbol": "Mt",
+        "code": "MZN",
+        "fractional_unit": "Centavo",
+        "name": "Mozambican metical"
+    },
+    {
+        "fraction": "100",
+        "name": "Namibian dollar",
+        "fractional_unit": "Cent",
+        "code": "NAD",
+        "symbol": "$"
+    },
+    {
+        "name": "Nepalese rupee",
+        "fraction": "100",
+        "symbol": "Re or Rs (pl.)",
+        "code": "NPR",
+        "fractional_unit": "Paisa"
+    },
+    {
+        "code": "ANG",
+        "fraction": "100",
+        "name": "Netherlands Antillean guilder",
+        "fractional_unit": "Cent",
+        "symbol": "ƒ"
+    },
+    {
+        "code": "TWD",
+        "name": "New Taiwan dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "code": "NZD",
+        "fraction": "100",
+        "name": "New Zealand dollar",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "name": "Nicaraguan córdoba",
+        "symbol": "C$",
+        "fraction": "100",
+        "code": "NIO",
+        "fractional_unit": "Centavo"
+    },
+    {
+        "code": "NGN",
+        "symbol": "₦",
+        "fraction": "100",
+        "name": "Nigerian naira",
+        "fractional_unit": "Kobo"
+    },
+    {
+        "name": "Niue dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": null,
+        "symbol": "$"
+    },
+    {
+        "name": "North Korean won",
+        "code": "KPW",
+        "fraction": "100",
+        "fractional_unit": "Chon",
+        "symbol": "₩"
+    },
+    {
+        "code": "NOK",
+        "name": "Norwegian krone",
+        "fraction": "100",
+        "fractional_unit": "Øre",
+        "symbol": "kr"
+    },
+    {
+        "name": "Omani rial",
+        "code": "OMR",
+        "fractional_unit": "Baisa",
+        "fraction": "1000",
+        "symbol": "RO"
+    },
+    {
+        "name": "Pakistani rupee",
+        "fraction": "100",
+        "symbol": "Re or Rs (pl.)",
+        "fractional_unit": "Paisa",
+        "code": "PKR"
+    },
+    {
+        "fractional_unit": "Centésimo",
+        "code": "PAB",
+        "fraction": "100",
+        "name": "Panamanian balboa",
+        "symbol": "B/"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Toea",
+        "code": "PGK",
+        "symbol": "K",
+        "name": "Papua New Guinean kina"
+    },
+    {
+        "fraction": "100",
+        "name": "Paraguayan guaraní",
+        "symbol": "₲",
+        "fractional_unit": "Céntimo",
+        "code": "PYG"
+    },
+    {
+        "name": "Peruvian sol",
+        "fraction": "100",
+        "symbol": "S/",
+        "code": "PEN",
+        "fractional_unit": "Céntimo"
+    },
+    {
+        "symbol": "₱",
+        "name": "Philippine peso",
+        "fraction": "100",
+        "fractional_unit": "Sentimo",
+        "code": "PHP"
+    },
+    {
+        "name": "Pitcairn Islands dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": null,
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "name": "Polish złoty",
+        "fractional_unit": "Grosz",
+        "symbol": "zł",
+        "code": "PLN"
+    },
+    {
+        "fraction": "100",
+        "code": "QAR",
+        "name": "Qatari riyal",
+        "symbol": "QR",
+        "fractional_unit": "Dirham"
+    },
+    {
+        "name": "Renminbi",
+        "code": "CNY",
+        "symbol": "¥",
+        "fraction": "10",
+        "fractional_unit": "Jiao"
+    },
+    {
+        "fractional_unit": "Ban",
+        "symbol": "Leu or Lei (pl.)",
+        "fraction": "100",
+        "code": "RON",
+        "name": "Romanian leu"
+    },
+    {
+        "name": "Russian ruble",
+        "fractional_unit": "Kopeck",
+        "fraction": "100",
+        "code": "RUB",
+        "symbol": "₽"
+    },
+    {
+        "code": "RWF",
+        "fraction": "100",
+        "symbol": "Fr",
+        "fractional_unit": "Centime",
+        "name": "Rwandan franc"
+    },
+    {
+        "name": "Sahrawi peseta",
+        "fraction": "100",
+        "symbol": "Pta or Pts (pl.)",
+        "fractional_unit": "Centime",
+        "code": null
+    },
+    {
+        "fraction": "100",
+        "name": "Saint Helena pound",
+        "fractional_unit": "Penny",
+        "code": "SHP",
+        "symbol": "£"
+    },
+    {
+        "code": "WST",
+        "fraction": "100",
+        "name": "Samoan tālā",
+        "fractional_unit": "Sene",
+        "symbol": "$"
+    },
+    {
+        "name": "Saudi riyal",
+        "symbol": "Rl or Rls (pl.)",
+        "fraction": "100",
+        "code": "SAR",
+        "fractional_unit": "Halala"
+    },
+    {
+        "name": "Serbian dinar",
+        "fraction": "100",
+        "fractional_unit": "Para",
+        "code": "RSD",
+        "symbol": "DIN"
+    },
+    {
+        "name": "Seychellois rupee",
+        "fraction": "100",
+        "code": "SCR",
+        "symbol": "Re or Rs (pl.)",
+        "fractional_unit": "Cent"
+    },
+    {
+        "name": "Sierra Leonean leone",
+        "fraction": "100",
+        "symbol": "Le",
+        "fractional_unit": "Cent",
+        "code": "SLE"
+    },
+    {
+        "code": "SGD",
+        "fraction": "10",
+        "fractional_unit": "Cent",
+        "name": "Singapore dollar",
+        "symbol": "$"
+    },
+    {
+        "fraction": "100",
+        "code": "SBD",
+        "name": "Solomon Islands dollar",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "code": "SOS",
+        "fraction": "100",
+        "symbol": "Sh or Shs (pl.)",
+        "name": "Somali shilling",
+        "fractional_unit": "Cent"
+    },
+    {
+        "fraction": "100",
+        "symbol": "Sh or Shs (pl.)",
+        "fractional_unit": "Cent",
+        "code": null,
+        "name": "Somaliland shilling"
+    },
+    {
+        "name": "South African rand",
+        "fraction": "100",
+        "code": "ZAR",
+        "fractional_unit": "Cent",
+        "symbol": "R"
+    },
+    {
+        "fraction": "100",
+        "name": "South Korean won",
+        "code": "KRW",
+        "symbol": "₩",
+        "fractional_unit": "Jeon"
+    },
+    {
+        "name": "South Sudanese pound",
+        "symbol": null,
+        "fraction": "100",
+        "code": "SSP",
+        "fractional_unit": "Piaster"
+    },
+    {
+        "fraction": "100",
+        "symbol": "Re or Rs (pl.)",
+        "code": "LKR",
+        "fractional_unit": "Cent",
+        "name": "Sri Lankan rupee"
+    },
+    {
+        "code": "GBP",
+        "name": "Sterling",
+        "fraction": "100",
+        "fractional_unit": "Penny",
+        "symbol": "£"
+    },
+    {
+        "fractional_unit": "Piastre",
+        "name": "Sudanese pound",
+        "symbol": "LS",
+        "fraction": "100",
+        "code": "SDG"
+    },
+    {
+        "fraction": "100",
+        "name": "Surinamese dollar",
+        "fractional_unit": "Cent",
+        "code": "SRD",
+        "symbol": "$"
+    },
+    {
+        "code": "SZL",
+        "fraction": "100",
+        "symbol": "L or E (pl.)",
+        "name": "Swazi lilangeni",
+        "fractional_unit": "Cent"
+    },
+    {
+        "fractional_unit": "Öre",
+        "code": "SEK",
+        "fraction": "100",
+        "symbol": "kr",
+        "name": "Swedish krona"
+    },
+    {
+        "code": "CHF",
+        "name": "Swiss franc",
+        "fractional_unit": "Rappen",
+        "fraction": "100",
+        "symbol": "Fr"
+    },
+    {
+        "fractional_unit": "Piastre",
+        "symbol": "LS",
+        "code": "SYP",
+        "fraction": "100",
+        "name": "Syrian pound"
+    },
+    {
+        "symbol": "Db",
+        "name": "São Tomé and Príncipe dobra",
+        "fractional_unit": "Cêntimo",
+        "fraction": "100",
+        "code": "STN"
+    },
+    {
+        "symbol": "SM",
+        "name": "Tajikistani somoni",
+        "fraction": "100",
+        "fractional_unit": "Diram",
+        "code": "TJS"
+    },
+    {
+        "name": "Tanzanian shilling",
+        "fraction": "100",
+        "symbol": "Sh or Shs (pl.)",
+        "fractional_unit": "Cent",
+        "code": "TZS"
+    },
+    {
+        "symbol": "฿",
+        "code": "THB",
+        "fraction": "100",
+        "fractional_unit": "Satang",
+        "name": "Thai baht"
+    },
+    {
+        "symbol": "T$",
+        "fractional_unit": "Seniti",
+        "fraction": "100",
+        "name": "Tongan paʻanga",
+        "code": "TOP"
+    },
+    {
+        "symbol": "р",
+        "fractional_unit": "Kopeck",
+        "fraction": "100",
+        "name": "Transnistrian ruble",
+        "code": null
+    },
+    {
+        "name": "Trinidad and Tobago dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": "TTD",
+        "symbol": "$"
+    },
+    {
+        "fractional_unit": "Millime",
+        "code": "TND",
+        "name": "Tunisian dinar",
+        "symbol": "DT",
+        "fraction": "1000"
+    },
+    {
+        "name": "Turkish lira",
+        "fraction": "100",
+        "symbol": "₺",
+        "fractional_unit": "Kuruş",
+        "code": "TRY"
+    },
+    {
+        "name": "Turkmenistani manat",
+        "fraction": "100",
+        "code": "TMT",
+        "fractional_unit": "Tenge",
+        "symbol": "m"
+    },
+    {
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "name": "Tuvaluan dollar",
+        "code": null,
+        "symbol": "$"
+    },
+    {
+        "name": "Ugandan shilling",
+        "code": "UGX",
+        "fractional_unit": null,
+        "symbol": "Sh or Shs (pl.)",
+        "fraction": null
+    },
+    {
+        "code": "UAH",
+        "symbol": "₴",
+        "fractional_unit": "Kopeck",
+        "fraction": "100",
+        "name": "Ukrainian hryvnia"
+    },
+    {
+        "symbol": "Dh or Dhs (pl.)",
+        "code": "AED",
+        "fraction": "100",
+        "fractional_unit": "Fils",
+        "name": "United Arab Emirates dirham"
+    },
+    {
+        "name": "United States dollar",
+        "fraction": "100",
+        "code": "USD",
+        "fractional_unit": "Cent",
+        "symbol": "$"
+    },
+    {
+        "fractional_unit": "Centésimo",
+        "fraction": "100",
+        "name": "Uruguayan peso",
+        "code": "UYU",
+        "symbol": "$"
+    },
+    {
+        "code": "UZS",
+        "name": "Uzbekistani sum",
+        "fractional_unit": "Tiyin",
+        "fraction": "100",
+        "symbol": "soum"
+    },
+    {
+        "name": "Vanuatu vatu",
+        "fraction": "100",
+        "symbol": "VT",
+        "fractional_unit": "Cent",
+        "code": "VUV"
+    },
+    {
+        "code": "VED",
+        "fraction": "100",
+        "name": "Venezuelan digital bolívar",
+        "symbol": "Bs.D",
+        "fractional_unit": "Céntimo"
+    },
+    {
+        "code": "VES",
+        "name": "Venezuelan sovereign bolívar",
+        "symbol": "Bs.S",
+        "fractional_unit": "Céntimo",
+        "fraction": "1"
+    },
+    {
+        "name": "Vietnamese đồng",
+        "symbol": "₫",
+        "fraction": "10",
+        "fractional_unit": "Hào",
+        "code": "VND"
+    },
+    {
+        "name": "West African CFA franc",
+        "fraction": "100",
+        "symbol": "Fr",
+        "code": "XOF",
+        "fractional_unit": "Centime"
+    },
+    {
+        "symbol": "Rl or Rls (pl.)",
+        "fraction": "100",
+        "name": "Yemeni rial",
+        "code": "YER",
+        "fractional_unit": "Fils"
+    },
+    {
+        "fractional_unit": "Ngwee",
+        "name": "Zambian kwacha",
+        "fraction": "100",
+        "symbol": "K",
+        "code": "ZMW"
+    },
+    {
+        "name": "Zimbabwean dollar",
+        "fraction": "100",
+        "fractional_unit": "Cent",
+        "code": null,
+        "symbol": "$"
+    }
+]

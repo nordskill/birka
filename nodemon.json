@@ -1,0 +1,12 @@
+{
+    "delay": "1000",
+    "watch": [
+        "app.js",
+        "routes/",
+        "data/"
+    ],
+    "ignore": [
+        "node_modules/"
+    ],
+    "ext": "js"
+}

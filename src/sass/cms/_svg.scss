@@ -1,0 +1,12 @@
+svg.icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	stroke-width: 0;
+	stroke: currentColor !important;
+	fill: currentColor !important;
+
+	path {
+		fill: currentColor !important;
+	}
+}

@@ -1,0 +1,256 @@
+<% const acc_det=user_page.account_details;%>
+    <% const billing=user_page.billing;%>
+        <% const shipping=user_page.shipping;%>
+            <%- include('partials/header') %>
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <%- include('partials/breadcrumbs') %>
+                        <%- include('partials/title') %>
+                            <div>
+                                <h3 class=" border-bottom pt-3 pb-2 mb-3">Account Details</h3>
+                                <form action="#" class="needs-validation" novalidate>
+                                    <div class="row">
+                                        <div class="col-6 col-lg-4">
+                                            <div class="pb-3">
+                                                <label for="p1" class="form-label">Public Name:</label>
+                                                <input type="text" class="form-control" id="p1"
+                                                    aria-describedby="p1_03Feedback" required=""
+                                                    value="<%=acc_det.username %>">
+                                                <div id="p1_03Feedback" class="invalid-feedback">
+                                                    Please provide a valid Public Name.
+                                                </div>
+                                            </div>
+                                            <div class="pb-3">
+                                                <label for="pt2" class="form-label">Role</label>
+                                                <select class="form-select" id="pt2" aria-describedby="pt2_04Feedback">
+
+                                                    <% user_roles.forEach(function(roleItem) { %>
+                                                        <% if (roleItem===acc_det.role) { %>
+                                                            <option selected="" value="<%= acc_det.role %>">
+                                                                <%= roleItem %>
+                                                            </option>
+                                                            <% } else { %>
+                                                                <option value="<%= roleItem %>">
+                                                                    <%= roleItem %>
+                                                                </option>
+                                                                <% } %>
+                                                                    <% }); %>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="pb-3">
+                                                <label for="p3" class="form-label">E-mail:</label>
+                                                <input type="email" class="form-control" id="p3"
+                                                    aria-describedby="p3_03Feedback" required=""
+                                                    value="<%= acc_det.email %>">
+                                                <div id="p3_03Feedback" class="invalid-feedback">
+                                                    Please provide a valid Public Name.
+                                                </div>
+                                            </div>
+                                            <div class="pb-3 pt-4 mt-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value=""
+                                                        id="email_notifications" <%=acc_det.email_notifications===true
+                                                        ? 'checked' : '' %>>
+
+                                                    <label class="form-check-label user-select-none"
+                                                        for="email_notifications">
+                                                        E-mail notifications
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 col-lg-4 d-flex justify-content-between">
+                                            <button class="btn btn-primary btn-sm" type="submit">Update Account
+                                                Details</button>
+                                            <button class="btn btn-danger btn-sm">Delete User</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row pt-5">
+                                    <div class="col-6">
+                                        <h3 class=" border-bottom pt-3 pb-2 mb-3">Billing Details</h3>
+                                        <div class="row">
+                                            <div class="col-12 col-lg-8">
+                                                <form action="#" class="needs-validation" novalidate>
+                                                    <label for="b1" class="form-label">Billing e-mail for
+                                                        invoices:</label>
+                                                    <input type="email" class="form-control" id="b1"
+                                                        aria-describedby="b1_03Feedback" required=""
+                                                        value="<%= billing.email %>">
+                                                    <div id="b1_03Feedback" class="invalid-feedback">
+                                                        Please provide a valid E-mail.
+                                                    </div>
+                                                    <div class="form-check pt-2">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            id="purchase" <%=billing.business===true ? 'checked' : ''
+                                                            %>>
+                                                        <label class="form-check-label user-select-none" for="purchase">
+                                                            Purchase as business
+                                                        </label>
+                                                    </div>
+                                                    <div class="mt-3" data-details>
+                                                        <label for="details" class="form-label">Company details for
+                                                            invoice:</label>
+                                                        <textarea class="form-control" id="details" placeholder=""
+                                                            required=""><%= billing.details %></textarea>
+                                                        <div class="invalid-feedback">
+                                                            Please enter a message in the textarea.
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm mt-3" type="submit">Update
+                                                        Billing Details</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3 class=" border-bottom pt-3 pb-2 mb-3">Shipping Details</h3>
+                                        <% shipping.forEach(function(item,i) { %>
+                                            <div class="card mb-4">
+                                                <div class="card-header fs-6">
+                                                    <div class="row">
+                                                        <div class="col-auto ">
+                                                            <% if (item.name){ %>
+                                                                <%= item.name%>
+                                                                    <%}else {%>
+                                                                        Name field is not in BD
+                                                                        <%}%>
+                                                        </div>
+                                                        <div class="col-auto ms-auto">
+                                                            <%if(item.default){%>
+                                                                <span class="badge rounded-pill bg-info">Default</span>
+                                                                <%}%>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <pre><code>
+                                                        <%= JSON.stringify(item, null, 2) %>
+                                                    </code></pre>
+                                                    <p class="card-text fs-6">
+                                                        <%= `${item.street_address_1 ? `${item.street_address_1},` : ''
+                                                            } ${item.street_address_2 ? `${item.street_address_2},` : ''
+                                                            } ${item.city}, ${item.country.code} ${item.zip_code},
+                                                            ${item.country.name}` %>.
+                                                    </p>
+
+
+                                                    <a href="<%= `${user_page._id}/${i}` %>"
+                                                        class="btn btn-primary">Edit</a>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <h3 class=" border-bottom pt-3 pb-2 mb-3">Cart</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped  align-middle table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Product</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Quantity</th>
+                                                    <th scope="col">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <h3 class=" border-bottom pt-3 pb-2 mb-3">Order History</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped  align-middle table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Customer</th>
+                                                    <th scope="col">Total Sum</th>
+                                                    <th scope="col">Location</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                    <td>Body</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <pre><code>
+                    <%= JSON.stringify(user_page, null, 2) %>
+                </code></pre>
+                </main>
+
+                <%- include('partials/footer') %>

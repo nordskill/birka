@@ -1,0 +1,82 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+                    <div class="row">
+                        <div class="col-12 col-lg">
+                            <form class="needs-validation" novalidate>
+                                <div class="row  g-4">
+                                    <div class="col-12 col-lg-6">
+                                        <label for="pn" class="form-label">Name:</label>
+                                        <input type="text" class="form-control" id="pn" required=""
+                                            value="<%=status_page.name%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="pn1" class="form-label">Slug:</label>
+                                        <input type="text" class="form-control" id="pn1" required=""
+                                            value="<%=status_page.slug%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Slug.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="textarea" class="form-label">Description:</label>
+                                        <textarea class="form-control" id="textarea"
+                                            required=""><%=status_page.description%></textarea>
+                                        <div class="invalid-feedback">
+                                            Please enter a message in the textarea.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="pn4" class="form-label">Order:</label>
+                                        <input type="text" class="form-control w-25" id="pn4" required
+                                            value="<%=status_page.sorting_order%>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Order.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex align-items-center">
+                                        <button class="btn btn-primary me-2 btn-sm">Update</button>
+                                        <button class="btn btn-danger btn-sm">Delete Status</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0">
+                            <div class="card">
+                                <div class="card-header fs-6">Notifications</div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex p-0">
+                                            <label class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                <input class="form-check-input" type="checkbox" value="" checked="">
+                                                <span class="ms-2">--0--</span>
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item d-flex p-0">
+                                            <label class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <span class="ms-2">--0--</span>
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item d-flex p-0">
+                                            <label class="form-check-label d-flex user-select-none col px-3 py-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <span class="ms-2">--0--</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pre><code>
+                    <%= JSON.stringify(status_page, null, 2) %>
+                </code></pre>
+    </main>
+    <%- include('partials/footer') %>

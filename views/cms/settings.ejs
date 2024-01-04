@@ -1,0 +1,480 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div class="pb-4">
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="identity-tab" data-bs-toggle="tab"
+                                data-bs-target="#identity-tab-pane" type="button" role="tab"
+                                aria-controls="identity-tab-pane" aria-selected="true">Identity</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="operation-tab" data-bs-toggle="tab"
+                                data-bs-target="#operation-tab-pane" type="button" role="tab"
+                                aria-controls="operation-tab-pane" aria-selected="false">Operation</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="performance-tab" data-bs-toggle="tab"
+                                data-bs-target="#performance-tab-pane" type="button" role="tab"
+                                aria-controls="performance-tab-pane" aria-selected="false">Performance</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="seo-tab" data-bs-toggle="tab" data-bs-target="#seo-tab-pane"
+                                type="button" role="tab" aria-controls="seo-tab-pane" aria-selected="false"
+                                disabled>SEO</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content  pt-4" id="myTabContent">
+                        <div class="tab-pane fade show active" id="identity-tab-pane" role="tabpanel"
+                            aria-labelledby="identity-tab" tabindex="0">
+                            <form action="#" novalidate class="needs-validation">
+                                <div class="row g-4">
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="pn" class="form-label">Shop Name:</label>
+                                        <input type="text" class="form-control" id="pn" required=""
+                                            value="<%= SS.name %>">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Shop Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="brand" class="form-label">Brand Name:</label>
+                                        <input type="text" value="<%= SS.brand_name %>" class="form-control" id="brand"
+                                            required="">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Brand Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="domain" class="form-label">Domain Name:</label>
+                                        <input type="text" value="<%= SS.domain %>" class="form-control" id="domain"
+                                            required="">
+                                        <div class="invalid-feedback">
+                                            Please provide a valid Domain Name.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="language" class="form-label">Language</label>
+                                        <select class="form-select" id="language" required="">
+                                            <option selected="" value="<%= SS.language %>">
+                                                <%= SS.language %>
+                                            </option>
+                                            <option value="">De</option>
+                                            <option value="">De2</option>
+                                            <option value="">De3</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select Language.
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <h3 class=" border-bottom pt-3 pb-2 mb-3">Social Media Links</h3>
+                            <div class="table-responsive mt-4">
+                                <table class="table table-striped  align-middle table-hover table_edit">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Url</th>
+                                            <th scope="col">Icon</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% SS.social_links.forEach(function(link){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= link.name %>
+                                                </td>
+                                                <td>
+                                                    <%= link.url %>
+                                                </td>
+                                                <td>
+                                                    <img src="https://picsum.photos/300/300" alt="">
+                                                    <button class="btn circle_btn bg-white rounded-circle">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#upload"></use>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn circle_btn bg-white rounded-circle">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#circle-arrows"></use>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn circle_btn bg-white rounded-circle">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#trash"></use>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-link btn-sm">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#pencil"></use>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn btn-link btn-sm">
+                                                        <svg class="icon">
+                                                            <use xlink:href="#trash"></use>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <tr>
+                                                    <td>TEST static</td>
+                                                    <td>link TEST static</td>
+                                                    <td>
+                                                        <img src="https://picsum.photos/300/300" alt="">
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#upload"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#circle-arrows"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#trash"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-link btn-sm">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#pencil"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn btn-link btn-sm">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#trash"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr class="table-active">
+                                                    <td>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="TEST static">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            placeholder="TEST static">
+                                                    </td>
+                                                    <td>
+                                                        <img src="https://picsum.photos/300/300" alt="">
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#upload"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#circle-arrows"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn circle_btn bg-white rounded-circle">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#trash"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-link btn-sm">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#cancel"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn btn-link btn-sm">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#pencil"></use>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="btn btn-link btn-sm">
+                                                            <svg class="icon">
+                                                                <use xlink:href="#trash"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pt-1">
+                                <button class="btn btn-primary">Add Link</button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="operation-tab-pane" role="tabpanel"
+                            aria-labelledby="operation-tab" tabindex="0">
+                            <form action="#" novalidate class="needs-validation">
+                                <div class="row g-4">
+                                    <div class="col-12 col-lg-4 col-xl-4">
+                                        <div class="card">
+                                            <div class="card-header fs-6">
+                                                Working Hours
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Mon:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Tue:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Wed:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Thu:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Fri:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Sat:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row align-items-center gx-2 py-1">
+                                                    <div class="col-2">
+                                                        <label class="form-label mb-0">Sun:</label>
+                                                    </div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                    <div class="col-auto">-</div>
+                                                    <div class="col minw_0">
+                                                        <input type="time" class="form-control form-control-sm"
+                                                            required="" placeholder="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-4 col-xl-4">
+                                        <div class="card">
+                                            <div class="card-header fs-6">
+                                                Holidays
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row gx-2">
+                                                    <div class="col">
+                                                        <input type="number" min="1" max="31" step="1"
+                                                            class="form-control" id="attDvalue" required=""
+                                                            placeholder="DD">
+                                                        <div class="invalid-feedback">
+                                                            Please provide a valid Day.
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="number" min="1" max="12" step="1"
+                                                            class="form-control" id="attMvalue" required=""
+                                                            placeholder="MM">
+                                                        <div class="invalid-feedback">
+                                                            Please provide a valid Month.
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button class="btn btn-primary">Add</button>
+                                                    </div>
+                                                </div>
+                                                <ul class="list-group mt-3">
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">1 Jan</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">12 Jan</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span class="pe-2">4 Jul</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-4 col-xl-4">
+                                        <div class="card">
+                                            <div class="card-header fs-6">
+                                                Delivery
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="delivery" class="form-label">Fastest
+                                                        Delivery(days)</label>
+                                                    <input type="number" class="form-control" id="delivery" required=""
+                                                        placeholder="">
+                                                    <div class="invalid-feedback">
+                                                        Please provide a valid Delivery.
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 w-50">
+                                                    <label for="tm" class="form-label">Order Before:</label>
+                                                    <input type="time" class="form-control" id="tm" required=""
+                                                        placeholder="" min="09:00" max="18:00">
+                                                    <div class="invalid-feedback">
+                                                        Please provide a valid Order Before.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="country" class="form-label">Country</label>
+                                        <select class="form-select" id="country">
+                                            <option selected value=""></option>
+                                            <%- countries.data.map(country => `<option value="${country.code}">${country.name}</option>`).join('') %>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select Language.
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label for="currency" class="form-label">Currency</label>
+                                        <select class="form-select" id="currency">
+                                            <option selected value=""></option>(
+                                            <%- currencies.map(currency => `<option value="${currency.code}">${currency.name} (${currency.code}, ${currency.symbol})</option>`).join('') %>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select Language.
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="performance-tab-pane" role="tabpanel"
+                            aria-labelledby="performance-tab" tabindex="0">
+                            <div class="row g-4">
+                                <div class="col-12 col-lg-4 col-xl-3">
+                                    <div class="card">
+                                        <div class="card-header fs-6">
+                                            Responsive Image Sizes
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row gx-2">
+                                                <div class="col">
+                                                    <input type="number" class="form-control" id="attValue" required=""
+                                                        placeholder="Width">
+                                                    <div class="invalid-feedback">
+                                                        Please provide a valid Width.
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button class="btn btn-primary">Add</button>
+                                                </div>
+                                            </div>
+                                            <ul class="list-group mt-3">
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span class="pe-2">256</span>
+                                                    <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span class="pe-2">1024</span>
+                                                    <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span class="pe-2">2560</span>
+                                                    <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="seo-tab-pane" role="tabpanel" aria-labelledby="seo-tab"
+                            tabindex="0">seo</div>
+                    </div>
+                    <pre><code>
+                        <%= JSON.stringify(SS, null, 2) %>
+                    </code></pre>
+                </div>
+    </main>
+    <%- include('../partials/svg-sprite') %>
+        <%- include('partials/footer') %>

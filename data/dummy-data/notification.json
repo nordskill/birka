@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Welcome Notification to user",
+        "slug": "welcome-notification-user",
+        "description": "Welcome message for new users.",
+        "send_email": true,
+        "notify_customer": true
+    },
+    {
+        "name": "Welcome Notification to admin",
+        "slug": "welcome-notification-admin",
+        "description": "Welcome message for admin about new users.",
+        "send_email": true,
+        "notify_customer": false
+    },
+    {
+        "name": "Order Confirmation to user",
+        "slug": "order-confirmation-user",
+        "description": "Confirmation message to user after an order is placed.",
+        "send_email": true,
+        "notify_customer": true
+    },
+    {
+        "name": "Order Confirmation to admin",
+        "slug": "order-confirmation-admin",
+        "description": "Confirmation message to admin after an order is placed.",
+        "send_email": true,
+        "notify_customer": false
+    },
+    {
+        "name": "Survey Invite",
+        "slug": "survey-invite",
+        "description": "Invitation to participate in a survey.",
+        "send_email": false,
+        "notify_customer": false
+    }
+  ]

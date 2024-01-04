@@ -1,0 +1,74 @@
+<ul class="nav flex-column">
+    <li class="nav-item">
+        <a href="/cms" class="nav-link <%= active === 'dashboard' ? 'active' : '' %>">
+            <%- icon({ name: 'dashboard' }) %>
+            Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/files" class="nav-link <%= active === 'files' ? 'active' : '' %>">
+            <%- icon({ name: 'file' }) %>
+            Files
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/tags" class="nav-link <%= active === 'tags' ? 'active' : '' %>">
+            <%- icon({ name: 'tag' }) %>
+            Tags
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/customers" class="nav-link <%= active === 'customers' ? 'active' : '' %>">
+            <%- icon({ name: 'user' }) %>
+            Customers
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/products" class="nav-link <%= active === 'products' ? 'active' : '' %>">
+            <%- icon({ name: 'product' }) %>
+            Products
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/orders" class="nav-link <%= active === 'orders' ? 'active' : '' %>">
+            <%- icon({ name: 'order' }) %>
+            Orders
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/statuses" class="nav-link <%= active === 'statuses' ? 'active' : '' %>">
+            <%- icon({ name: 'status' }) %>
+            Statuses
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/pages" class="nav-link <%= active === 'pages' ? 'active' : '' %>">
+            <%- icon({ name: 'page' }) %>
+            Pages
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/blog" class="nav-link <%= active === 'blog' ? 'active' : '' %>">
+            <%- icon({ name: 'blog' }) %>
+            Blog
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/notifications" class="nav-link <%= active === 'notifications' ? 'active' : '' %>">
+            <%- icon({ name: 'notification' }) %>
+            Notifications
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/email-templates" class="nav-link <%= active === 'email-templates' ? 'active' : '' %>">
+            <%- icon({ name: 'email' }) %>
+            Email Templates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/cms/settings" class="nav-link <%= active === 'settings' ? 'active' : '' %>">
+            <%- icon({ name: 'settings' }) %>
+            Settings
+        </a>
+    </li>
+</ul>

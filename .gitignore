@@ -1,0 +1,8 @@
+node_modules/
+public/files/
+.vars
+.DS_Store
+public/js/main.js
+public/js/main.js.map
+public/css/style.css
+public/css/style.css.map

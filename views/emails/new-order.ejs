@@ -1,0 +1,20 @@
+<%- include('./partials/header') -%>
+    <div>
+        <h1>New Order</h1>
+        <p>Hi <%= admin.name %>,</p>
+        <p>A new order has been placed on the site.</p>
+        <p>Here are the details:</p>
+        <ul>
+            <li>Name: <%= user.name %></li>
+            <li>Email: <%= user.email %></li>
+            <li>Address: <%= user.address %></li>
+            <li>City: <%= user.city %></li>
+            <li>State: <%= user.state %></li>
+            <li>Zip: <%= user.zip %></li>
+            <li>Country: <%= user.country %></li>
+            <li>Order ID: <%= order.id %></li>
+            <li>Order Date: <%= order.date %></li>
+            <li>Order Total: <%= order.total %></li>
+        </ul>
+    </div>
+<%- include('./partials/footer') -%>

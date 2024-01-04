@@ -1,0 +1,29 @@
+<div class="card tags_block <%= typeof additionalClass !='undefined' ? additionalClass : '' %>">
+
+    <div class="card-header fs-6">
+        Tags
+    </div>
+    <div class="card-body">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add</button>
+        </div>
+        <div class="d-flex flex-wrap gap-1">
+            <% if (typeof array !=='undefined' && array) { %>
+                <% array.forEach(function(tag){ %>
+                    <span class="badge_tag">
+                        <span class="text-truncate">
+                            <%= tag.name%>
+                        </span>
+                        <a href="#" class="btn-close bg-transparent"></a>
+                    </span>
+                    <% }); %>
+                        <% }else{ %>
+                            <p class="text-danger fw-bolder">---No input array---</p>
+                            <% }%>
+
+
+        </div>
+
+    </div>
+</div>
