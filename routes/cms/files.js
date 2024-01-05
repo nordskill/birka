@@ -3,56 +3,45 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs').promises;
 const { File } = require('../../models/file');
-const { generateImageMarkup, generateSVGMarkup, generateVideoMarkup} = require('../../public/js/cms/generateFileMarkup');
+const { generateImageMarkup, generateSVGMarkup, generateVideoMarkup } = require('../../public/js/cms/generateFileMarkup');
 
 const AMOUNT_OF_FILES_PER_PAGE = 10;
 
-// CMS Files
-router.get('/', async (req, res, next) => {
-    let filesData = [];
-    let files = [];
-    let imagesAmount = videosAmount = 0;
+// GET /cms/files?page=1
+router.get('/', async (req, res) => {
+
+    // Get counts of each file type
+    const countsByType = await File.aggregate([
+        {
+            $group: {
+                _id: '$type',
+                count: { $sum: 1 }
+            }
+        }
+    ]).exec();
+
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const skip = (page - 1) * AMOUNT_OF_FILES_PER_PAGE;
 
     try {
-        filesData = await File.find()
-            .sort({
-                date_created: 'desc'
-            })
-            .select('-__v -__t')
-            .populate('tags')
-            .lean();
+        const files = await File.find()
+            .skip(skip)
+            .limit(AMOUNT_OF_FILES_PER_PAGE)
+            .exec();
 
-        for(const file of filesData){
-            if(files.length <= AMOUNT_OF_FILES_PER_PAGE){
-                const folderName = file.hash.slice(0, 2);
-                const pathToFile = path.join('/files', folderName, `${file.file_name}.${file.extension}`);
-
-                if(file.mime_type == 'image/svg+xml'){
-                    files.push(await generateSVGMarkup(file, pathToFile));
-
-                } else if (file.mime_type.startsWith('video/')) {
-                    files.push(generateVideoMarkup(file));
-
-                } else {
-                    files.push(generateImageMarkup(file, pathToFile));
-                }
-            }
-
-            if(file.mime_type.startsWith('image/')){
-                imagesAmount++;
-            } else if (file.mime_type.startsWith('video/')) {
-                videosAmount++;
-            }
-        };
+        // Get total number of files to calculate total pages
+        const totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
+        const totalPages = Math.ceil(totalCount / AMOUNT_OF_FILES_PER_PAGE);
 
         res.render('cms/files', {
             title: 'Files',
             template_name: 'files',
             active: 'files',
             files,
-            pageAmount: Math.ceil((imagesAmount + videosAmount)/AMOUNT_OF_FILES_PER_PAGE),
-            imagesAmount,
-            videosAmount,
+            totalPages,
+            total_count: totalCount,
+            type_counts: countsByType,
+            currentPage: page,
             breadcrumbs: [
                 { name: 'CMS', href: '/cms' },
                 { name: 'Files', href: '/cms/files' }
@@ -61,13 +50,10 @@ router.get('/', async (req, res, next) => {
                 'files.js'
             ]
         });
-
-    } catch (err) {
-        return next(err);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
-
 });
-
 
 
 module.exports = router;

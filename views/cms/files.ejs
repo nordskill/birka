@@ -21,31 +21,38 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom">
-                        <button class="btn btn-light me-2">All <span class="text-black-50 all_files_amount"><%- imagesAmount + videosAmount -%></span></button>
-                        <button class="btn btn-light me-2">Images <span class="text-black-50 images_amount"><%- imagesAmount -%></span></button>
-                        <button class="btn btn-light me-2">Videos <span class="text-black-50 videos_amount"><%- videosAmount -%></span></button>
+                        <button class="btn btn-light me-2">All <span class="text-black-50 all_files_amount"><%= total_count %></span></button>
+                        <!-- loop through type_counts array -->
+                        <% type_counts.forEach(type => { %>
+                            <button class="btn btn-light me-2"><%= type._id %><span class="text-black-50"><%= type.count %></span></button>
+                        <% }); %>
                     </div>
                 </div>
                 <div class="pb-4">
                     <div class="files">
                         <% files.forEach(function(file){ %>
-                            <%- file %>
+                            <div class="file" data-id="<%= file._id %>" data-type="<%= file.type %>">
+                                <div class="shadow-inner d-none"></div>
+                                <img src="<%= `/files/${file.hash.slice(0, 2)}/${file.file_name}.${file.extension}` %>" alt="<%= file.alt || '' %>">
+                            </div>
                         <% }); %>
                     </div>
                 </div>
             </div>
             <nav aria-label="Page navigation" class="pt-3">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled previous-page">
-                        <a class="page-link" href="#">Previous</a>
+                    <li class="page-item previous-page <%= currentPage === 1 ? 'disabled' : '' %>">
+                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage - 1) %>" rel="previous-page">Previous</a>
                     </li>
 
-                    <% for(let i = 1; i <= pageAmount; i++){ %>
-                        <li class="page-item"><a class="page-link" href="#" data-page-num="<%- i-1 -%>"><%- i -%></a></li>
+                    <% for(let i = 1; i <= totalPages; i++){ %>
+                        <li class="page-item">
+                            <a class="page-link <%= currentPage === i ? 'active' : '' %>" href="<%= breadcrumbs.at(-1).href + '/?page=' + i %>"><%- i -%></a>
+                        </li>
                     <% }; %>
 
-                    <li class="page-item next-page">
-                        <a class="page-link" href="#">Next</a>
+                    <li class="page-item next-page <%= currentPage === totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage + 1) %>" rel="next-page">Next</a>
                     </li>
                 </ul>
             </nav>

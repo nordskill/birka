@@ -1,6 +1,5 @@
 initFilesUpload();
 initFilesSelection();
-initPagination();
 
 function initFilesUpload() {
 
@@ -209,59 +208,4 @@ function initFilesSelection() {
         deleteBtn.innerHTML = `Delete ${amountOfSelectedFiles} selected ${amountOfSelectedFiles == 1 ? 'file' : 'files'}`;
     }
 
-}
-
-function initPagination(){
-    const pageItems = document.querySelectorAll('.page-item');
-    const [previousPageBtn, ...pages] = pageItems;
-    const nextPageBtn = pages.pop();
-    const pagesAmount = pages.length;
-
-    if (pagesAmount == 0) return;
-
-    let currentPageIndex = 0;
-
-    pages[0].classList.add('active');
-
-    if(pages.length == 1) nextPageBtn.classList.add('disabled');
-
-    const paginationContainer = document.querySelector('.pagination');
-
-    paginationContainer.onclick = async ({target}) => {
-        if (!target.closest('.page-item') || target.closest('.page-item').classList.contains('disabled')) return
-
-        if (target.closest('.previous-page')) {
-
-            activatePage(pages[currentPageIndex], currentPageIndex - 1);
-            currentPageIndex--;
-
-        } else if (target.closest('.next-page')) {
-
-            activatePage(pages[currentPageIndex], currentPageIndex + 1)
-            currentPageIndex++;
-
-        } else {
-            const selectedPageIndex = target.dataset.pageNum;
-            activatePage(pages[currentPageIndex], selectedPageIndex);
-            currentPageIndex = selectedPageIndex;
-        }
-
-        disableOrEnableButtons();
-    }
-
-    function activatePage(page, index){
-        page.classList.remove('active');
-        pages[index].classList.add('active');
-    }
-
-    function disableOrEnableButtons(){
-        nextPageBtn.classList.remove('disabled');
-        previousPageBtn.classList.remove('disabled');
-
-        if (currentPageIndex == pagesAmount - 1) {
-            nextPageBtn.classList.add('disabled');
-        } else if (currentPageIndex == 0) {
-            previousPageBtn.classList.add('disabled');
-        }
-    }
 }
