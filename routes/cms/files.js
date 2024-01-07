@@ -7,7 +7,7 @@ const { generateImageMarkup, generateSVGMarkup, generateVideoMarkup } = require(
 
 const AMOUNT_OF_FILES_PER_PAGE = 10;
 
-// GET /cms/files?page=1
+// GET /cms/files?page=1&type=video
 router.get('/', async (req, res) => {
 
     // Get counts of each file type
@@ -27,10 +27,8 @@ router.get('/', async (req, res) => {
     try {
 
         let condition = {};
-        if (fileType) { // If type is provided, add it to the condition
-            condition.type = fileType;
-        }
-        // Get files sorted by date created, descending
+        if (fileType) condition.type = fileType;
+
         const files = await File.find(condition)
             .skip(skip)
             .limit(AMOUNT_OF_FILES_PER_PAGE)
