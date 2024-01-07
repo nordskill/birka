@@ -78,7 +78,7 @@ async function insert_email_template_data() {
 
     try {
         await model.insertMany(data);
-        console.log(`inserted ${data.length} email temapltes`);
+        console.log(`inserted ${data.length} email templates`);
     } catch (error) {
         console.log(error);
     }
