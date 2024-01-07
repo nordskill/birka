@@ -112,8 +112,9 @@ async function insert_file_data() {
         await fs.copyFile(originalFilePath, newFilePath);
 
         if (object.mime_type === 'image/png') {
-            const result = await resizeImage(newFilePath, [300, 600, 1024, 1500, 2048, 2560], newFolderPath);
+            const result = await resizeImage(newFilePath, [150, 300, 600, 1024, 1500, 2048, 2560], newFolderPath);
             console.log(object.file_name, ':', Math.round(result.time), 'ms');
+            object.status = 'optimized';
             object.sizes = result.sizes;
             object.optimized_format = result.format;
         }

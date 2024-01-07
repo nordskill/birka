@@ -1,5 +1,5 @@
 initFilesUpload();
-document.addEventListener('DOMContentLoaded', initFilesSelection);
+document.addEventListener('DOMContentLoaded', initFiles);
 
 function initFilesUpload() {
 
@@ -86,7 +86,8 @@ function initFilesUpload() {
                 .then(res => res.json())
                 .then(res => {
                     if (res.success) {
-                        location.reload();
+                        addFile(res.file);
+                        checkState(res.file._id);
                     } else {
                         console.error(res.message);
                     }
@@ -119,7 +120,7 @@ class FilesSelectionManager {
     }
 
     onFileClick(event) {
-        
+
         if (!event.target.classList.contains('file')) return;
 
         const isModifierPressed = event.ctrlKey || event.metaKey;
@@ -223,10 +224,88 @@ class FilesSelectionManager {
     }
 }
 
-function initFilesSelection() {
+function initFiles() {
+    detectProcessingFiles();
     new FilesSelectionManager();
 }
 
 function open(id) {
     console.log(`Opening`, id);
+}
+
+function addFile(file) {
+
+    const filesContainer = document.querySelector('.files');
+    const { _id, type } = file;
+
+    const html = `
+        <div class="file" data-id="${_id}" data-type="${type}">
+            <div class="spinner"></div>
+        </div>`;
+
+    filesContainer.insertAdjacentHTML('afterbegin', html);
+
+}
+
+function checkState(id) {
+
+    const fileElement = document.querySelector(`.file[data-id="${id}"]`);
+
+    const interval = setInterval(() => {
+        fetch(`/api/files/${id}`)
+            .then(res => res.json())
+            .then(file => {
+                if (file.status == 'optimized') {
+                    clearInterval(interval);
+                    addFilePreview(fileElement, file);
+                }
+            })
+            .catch(err => console.error(err));
+    }, 2000);
+
+}
+
+function addFilePreview(targetElement, file) {
+    
+        const { type, file_name, hash, optimized_format } = file;
+
+        const folder = `/files/${hash.slice(0, 2)}/`;
+        const IMG_SIZE = 300;
+        const fileName = file_name + '.' + optimized_format;
+        const filePath = folder + IMG_SIZE + '/' + fileName;
+
+        let html;
+    
+        switch (type) {
+            case 'image':
+                html = `<img src="${filePath}" alt="">`;
+                break;
+    
+            case 'video':
+                html = `
+                <svg viewBox="0 0 32 24">
+                    <g>
+                        <path d="M13.58 6.186a1 1 0 0 0-1.58.811v10a1 1 0 0 0 1.58.814l7-5a1 1 0 0 0 0-1.628Z"></path>
+                        <path d="M0 4a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4Zm30 0a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2Z"></path>
+                    </g>
+                </svg>
+                `;
+                break;
+    
+            default: break;
+        }
+    
+        targetElement.innerHTML = html;
+}
+
+function detectProcessingFiles() {
+
+    const files = document.querySelectorAll('.file');
+
+    files.forEach(file => {
+        if (file.querySelector('.spinner')) {
+            checkState(file.dataset.id);
+        }
+    });
+
 }

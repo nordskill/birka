@@ -32,7 +32,11 @@
                         <% files.forEach(file =>{ %>
                             <div class="file" data-id="<%= file._id %>" data-type="<%= file.type %>">
                                 <% if(file.type === 'image'){ %>
-                                    <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file.alt || '' %>">
+                                    <% if(file.status === 'processing'){ %>
+                                        <div class="spinner"></div>
+                                    <% } else { %>
+                                        <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file.alt || '' %>">
+                                    <% } %>
                                 <% } else if(file.type === 'video') { %>
                                     <%- icon({ name: 'video' }) %>
                                 <% } %>

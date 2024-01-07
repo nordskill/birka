@@ -11,6 +11,8 @@ const Tag = require('../../models/tag');
 const OperationalError = require('../../functions/operational-error');
 const generateHash = require('../../functions/generate-hash');
 const slugify = require('../../functions/slugify');
+const resizeImage = require('../../functions/image-resizer');
+const { optimize } = require('webpack');
 
 const tempFilesDirectory = path.join('public', 'files', '_temp');
 
@@ -50,9 +52,9 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
 
-        const file = await File.findById('655b38e756a6960d66b4cb67')
+        const file = await File.findById(req.params.id)
             .select('-__v')
-            .populate('tags', '-_id -__v')
+            .populate('tags', '-__v')
             .lean();
 
         if (!file) {
@@ -95,9 +97,15 @@ router.post('/', upload.single('file'), async (req, res, next) => {
 
     try {
         const fileName = await moveFile(file, hash);
-        await processFile(file, fileType, fileAdditionalData, hash, fileName);
+        let fileData = await saveFile(file, fileType, fileAdditionalData, hash, fileName);
 
-        res.json({ success: true });
+        if (fileData.type === 'image') {
+            fileData.status = 'processing';
+            await fileData.save();
+            optimizeImage(fileData);
+        }
+
+        res.json({ success: true, file: fileData });
     } catch (err) {
         next(err);
     }
@@ -196,7 +204,7 @@ router.delete('/:id', async (req, res, next) => {
 router.delete('/', async (req, res, next) => {
     const IDs = req.body;
 
-    if (!Array.isArray(IDs) || IDs.length === 0){
+    if (!Array.isArray(IDs) || IDs.length === 0) {
         return next(new OperationalError('You need to provide an array of IDs.', 400));
     }
 
@@ -253,7 +261,7 @@ async function deleteFilesFromTemp() {
     }
 }
 
-async function processFile(file, fileType, fileAdditionalData, hash, fileName) {
+async function saveFile(file, fileType, fileAdditionalData, hash, fileName) {
 
     const { mimetype, size } = file;
     const { ext: fileExtension, name: basename } = path.parse(fileName);
@@ -268,15 +276,17 @@ async function processFile(file, fileType, fileAdditionalData, hash, fileName) {
         tags: [],
     };
 
+    let savedFile;
+
     switch (fileType) {
         case 'image':
             if (mimetype === 'image/svg+xml') {
-                await new SVG({
+                savedFile = await new SVG({
                     ...fileProps,
-                    title: 'svg file'
+                    title: ''
                 }).save();
             } else {
-                await new Image({
+                savedFile = await new Image({
                     ...fileProps,
                     alt: '',
                     height: fileAdditionalData.height,
@@ -285,15 +295,17 @@ async function processFile(file, fileType, fileAdditionalData, hash, fileName) {
             }
             break;
         case 'video':
-            await new Video({
+            savedFile = await new Video({
                 ...fileProps,
                 height: fileAdditionalData.height,
                 width: fileAdditionalData.width,
                 duration: fileAdditionalData.duration,
-                title: 'Video',
+                title: '',
             }).save();
             break;
     }
+
+    return savedFile;
 
 }
 
@@ -348,4 +360,18 @@ function addUniqueSuffix(filename) {
     const parsedName = path.parse(filename).name;
     const extension = path.extname(filename);
     return `${parsedName}-${uniqueSuffix}${extension}`;
+}
+
+async function optimizeImage(file) {
+
+    const IMAGE_SIZES = [150, 300, 600, 1024, 1500, 2048, 2560];
+    const folder = path.join('public', 'files', file.hash.substring(0, 2));
+
+    const optimization = await resizeImage(`${folder}/${file.file_name}.${file.extension}`, IMAGE_SIZES, folder);
+    console.log(file.file_name, ':', Math.round(optimization.time), 'ms');
+    file.status = 'optimized';
+    file.sizes = optimization.sizes;
+    file.optimized_format = optimization.format;
+    await file.save();
+    
 }
