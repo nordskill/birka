@@ -30,10 +30,11 @@ router.get('/', async (req, res) => {
         if (fileType) { // If type is provided, add it to the condition
             condition.type = fileType;
         }
-
+        // Get files sorted by date created, descending
         const files = await File.find(condition)
             .skip(skip)
             .limit(AMOUNT_OF_FILES_PER_PAGE)
+            .sort({ date_created: -1 })
             .exec();
 
         // Get total number of files to calculate total pages
@@ -44,6 +45,7 @@ router.get('/', async (req, res) => {
         } else {
             totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
         }
+
         const totalPages = Math.ceil(totalCount / AMOUNT_OF_FILES_PER_PAGE);
 
         // sort countsByType by _id
