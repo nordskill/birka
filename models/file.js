@@ -21,19 +21,20 @@ const FileSchema = new Schema({
 const File = mongoose.model('File', FileSchema);
 
 const ImageSchema = new Schema({
-    height: Number,
-    width: Number,
-    alt: String,
-    sizes: Array,
-    optimized_format: String
+    height:             Number,
+    width:              Number,
+    alt:                String,
+    sizes:              Array,
+    optimized_format:   String,
+    status:             { type: String, required: true, default: 'uploaded' }
 });
 
 const VideoSchema = new Schema({
-    height: Number,
-    width: Number,
-    fps: Number,
-    duration: Number,
-    title: String
+    height:     Number,
+    width:      Number,
+    fps:        Number,
+    duration:   Number,
+    title:      String
 });
 
 const SvgSchema = new Schema({
