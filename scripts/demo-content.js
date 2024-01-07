@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const loadVars = require('../functions/vars');
 const passwordUtils = require('../functions/password-utils');
 const generateHash = require('../functions/generate-hash');
+const resizeImage = require('../functions/image-resizer');
+const readline = require('readline');
 
 const pathToModels = path.join(__dirname, '..', 'models');
 const pathToData = path.join(__dirname, '..', 'data', 'demo');
@@ -85,7 +87,7 @@ async function insert_email_template_data() {
 }
 
 async function insert_file_data() {
-    const { File } = require(path.join(pathToModels, 'file.js'));
+    const { File, Image, Video } = require(path.join(pathToModels, 'file.js'));
     const data = JSON.parse(await fs.readFile(path.join(pathToData, 'file.json'), 'utf-8'));
 
     const randomTags = await getTags();
@@ -93,12 +95,11 @@ async function insert_file_data() {
     for (const object of data) {
         object.tags = randomTags();
 
-        let originalFilePath = path.join('./data/demo/files', `${object.file_name}.${object.extension}`);
+        const originalFilePath = path.join('./data/demo/files', `${object.file_name}.${object.extension}`);
 
         try {
             await fs.access(originalFilePath);
         } catch (error) {
-            // File doesn't exist, log a warning and skip to the next one
             console.warn(`File not found: ${originalFilePath}, skipping.`);
             continue;
         }
@@ -110,20 +111,30 @@ async function insert_file_data() {
         await fs.mkdir(newFolderPath, { recursive: true });
         await fs.copyFile(originalFilePath, newFilePath);
 
+        if (object.mime_type === 'image/png') {
+            const result = await resizeImage(newFilePath, [300, 600, 1024, 1500, 2048, 2560], newFolderPath);
+            console.log(object.file_name, ':', Math.round(result.time), 'ms');
+            object.sizes = result.sizes;
+            object.optimized_format = result.format;
+        }
+
         object.hash = hash;
     }
 
     // Insert data into the database
     try {
-        await File.insertMany(data);
-        console.log(`Inserted ${data.length} files`);
+        const images = data.filter(doc => doc.type === 'Image');
+        const videos = data.filter(doc => doc.type === 'Video');
+        const insertedImages = await Image.insertMany(images);
+        const insertedVideos = await Video.insertMany(videos);
+        console.log(`Inserted ${insertedImages.length} images and ${insertedVideos.length} videos`);
     } catch (error) {
         console.error('Error inserting files:', error);
     }
 }
 
 async function insert_user_data() {
-    const { File } = require(path.join(pathToModels, 'file.js'));
+    const { File, Image, Video } = require(path.join(pathToModels, 'file.js'));
     const { model, data } = load_files('user');
     const avatarData = await File.findOne({ file_name: 'default_avatar' }, '_id').exec();
     const id = avatarData._id.toString();
