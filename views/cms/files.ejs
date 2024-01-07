@@ -30,12 +30,12 @@
                 </div>
                 <div class="pb-4">
                     <div class="files">
-                        <% files.forEach(function(file){ %>
+                        <% files.forEach(file =>{ %>
                             <div class="file" data-id="<%= file._id %>" data-type="<%= file.type %>">
                                 <div class="shadow-inner d-none"></div>
-                                <% if(file.type === 'Image'){ %>
+                                <% if(file.type === 'image'){ %>
                                     <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file.alt || '' %>">
-                                <% } else if(file.type === 'Video') { %>
+                                <% } else if(file.type === 'video') { %>
                                     <%- icon({ name: 'video' }) %>
                                 <% } %>
                             </div>

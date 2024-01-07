@@ -123,8 +123,8 @@ async function insert_file_data() {
 
     // Insert data into the database
     try {
-        const images = data.filter(doc => doc.type === 'Image');
-        const videos = data.filter(doc => doc.type === 'Video');
+        const images = data.filter(doc => doc.type === 'image');
+        const videos = data.filter(doc => doc.type === 'video');
         const insertedImages = await Image.insertMany(images);
         const insertedVideos = await Video.insertMany(videos);
         console.log(`Inserted ${insertedImages.length} images and ${insertedVideos.length} videos`);
