@@ -22,16 +22,36 @@ router.get('/', async (req, res) => {
 
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const skip = (page - 1) * AMOUNT_OF_FILES_PER_PAGE;
+    const fileType = req.query.type;
 
     try {
-        const files = await File.find()
+
+        let condition = {};
+        if (fileType) { // If type is provided, add it to the condition
+            condition.type = fileType;
+        }
+
+        const files = await File.find(condition)
             .skip(skip)
             .limit(AMOUNT_OF_FILES_PER_PAGE)
             .exec();
 
         // Get total number of files to calculate total pages
-        const totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
+        let totalCount;
+        if (fileType) {
+            const fileTypeCount = countsByType.find(count => count._id === fileType);
+            totalCount = fileTypeCount ? fileTypeCount.count : 0;
+        } else {
+            totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
+        }
         const totalPages = Math.ceil(totalCount / AMOUNT_OF_FILES_PER_PAGE);
+
+        // sort countsByType by _id
+        countsByType.sort((a, b) => {
+            if (a._id < b._id) return -1;
+            if (a._id > b._id) return 1;
+            return 0;
+        });
 
         res.render('cms/files', {
             title: 'Files',
@@ -42,6 +62,7 @@ router.get('/', async (req, res) => {
             total_count: totalCount,
             type_counts: countsByType,
             currentPage: page,
+            type: fileType,
             breadcrumbs: [
                 { name: 'CMS', href: '/cms' },
                 { name: 'Files', href: '/cms/files' }

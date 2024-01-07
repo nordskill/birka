@@ -21,10 +21,10 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom">
-                        <button class="btn btn-light me-2">All <span class="text-black-50 all_files_amount"><%= total_count %></span></button>
+                        <a href="<%= breadcrumbs.at(-1).href %>" class="btn btn-light me-2">All <span class="text-black-50 all_files_amount"><%= total_count %></span></a>
                         <!-- loop through type_counts array -->
                         <% type_counts.forEach(type => { %>
-                            <button class="btn btn-light me-2"><%= type._id %><span class="text-black-50"><%= type.count %></span></button>
+                            <a href="<%= breadcrumbs.at(-1).href + '/?type=' + type._id %>" class="btn btn-light me-2"><%= type._id %>s <span class="text-black-50"><%= type.count %></span></a>
                         <% }); %>
                     </div>
                 </div>
@@ -33,7 +33,11 @@
                         <% files.forEach(function(file){ %>
                             <div class="file" data-id="<%= file._id %>" data-type="<%= file.type %>">
                                 <div class="shadow-inner d-none"></div>
-                                <img src="<%= `/files/${file.hash.slice(0, 2)}/${file.file_name}.${file.extension}` %>" alt="<%= file.alt || '' %>">
+                                <% if(file.type === 'Image'){ %>
+                                    <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file.alt || '' %>">
+                                <% } else if(file.type === 'Video') { %>
+                                    <%- icon({ name: 'video' }) %>
+                                <% } %>
                             </div>
                         <% }); %>
                     </div>
@@ -42,17 +46,17 @@
             <nav aria-label="Page navigation" class="pt-3">
                 <ul class="pagination justify-content-center">
                     <li class="page-item previous-page <%= currentPage === 1 ? 'disabled' : '' %>">
-                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage - 1) %>" rel="previous-page">Previous</a>
+                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage - 1) + (typeof type !== 'undefined' ? '&type=' + type : '') %>" rel="previous-page">Previous</a>
                     </li>
 
                     <% for(let i = 1; i <= totalPages; i++){ %>
                         <li class="page-item">
-                            <a class="page-link <%= currentPage === i ? 'active' : '' %>" href="<%= breadcrumbs.at(-1).href + '/?page=' + i %>"><%- i -%></a>
+                            <a class="page-link <%= currentPage === i ? 'active' : '' %>" href="<%= breadcrumbs.at(-1).href + '/?page=' + i + (typeof type !== 'undefined' ? '&type=' + type : '') %>"><%- i -%></a>
                         </li>
                     <% }; %>
 
                     <li class="page-item next-page <%= currentPage === totalPages ? 'disabled' : '' %>">
-                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage + 1) %>" rel="next-page">Next</a>
+                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage + 1) + (typeof type !== 'undefined' ? '&type=' + type : '') %>" rel="next-page">Next</a>
                     </li>
                 </ul>
             </nav>
