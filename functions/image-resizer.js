@@ -16,6 +16,8 @@ async function resizeImage(originalPath, widths, targetPath) {
             widths.push(metadata.width);
         }
 
+        let convertedSizes = [];
+
         const resizeTasks = widths.map(async (width) => {
             if (metadata.width >= width) {
                 const sizeFolderPath = path.join(targetPath, String(width));
@@ -32,6 +34,7 @@ async function resizeImage(originalPath, widths, targetPath) {
                 if (!isWebP) {
                     image.toFormat(FORMAT);
                 }
+                convertedSizes.push(width);
                 return image.toFile(outputPath);
             }
         });
@@ -43,7 +46,7 @@ async function resizeImage(originalPath, widths, targetPath) {
         return {
             success: true,
             time: duration,
-            sizes: widths,
+            sizes: convertedSizes,
             format: FORMAT
         };
     } catch (error) {
