@@ -2,15 +2,16 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const FileSchema = new Schema({
-    type: String,
-    date_created: { type: Date, required: true, default: Date.now },
-    description: String,
-    size: Number,
-    file_name: String,
-    mime_type: String,
-    extension: String,
-    hash: String,
-    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+    type:           String,
+    date_created:   { type: Date, required: true, default: Date.now },
+    title:          String, // for SVGs
+    description:    String,
+    size:           Number,
+    file_name:      String,
+    mime_type:      String,
+    extension:      String,
+    hash:           String,
+    tags:           [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     used: {
         type: Number,
         default: 0
@@ -22,7 +23,9 @@ const File = mongoose.model('File', FileSchema);
 const ImageSchema = new Schema({
     height: Number,
     width: Number,
-    alt: String
+    alt: String,
+    sizes: Array,
+    optimized_format: String
 });
 
 const VideoSchema = new Schema({
@@ -40,11 +43,9 @@ const SvgSchema = new Schema({
 
 File.discriminator('Image', ImageSchema);
 File.discriminator('Video', VideoSchema);
-File.discriminator('SVG', SvgSchema);
 
 module.exports = {
     File,
     Image: mongoose.model('Image'),
-    Video: mongoose.model('Video'),
-    SVG: mongoose.model('SVG')
+    Video: mongoose.model('Video')
 };
