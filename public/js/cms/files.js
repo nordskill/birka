@@ -1,5 +1,5 @@
 initFilesUpload();
-initFilesSelection();
+document.addEventListener('DOMContentLoaded', initFilesSelection);
 
 function initFilesUpload() {
 
@@ -85,7 +85,7 @@ function initFilesUpload() {
             })
                 .then(res => res.json())
                 .then(res => {
-                    if(res.success){
+                    if (res.success) {
                         location.reload();
                     } else {
                         console.error(res.message);
@@ -98,114 +98,135 @@ function initFilesUpload() {
 
 }
 
-function initFilesSelection() {
+class FilesSelectionManager {
+    constructor() {
+        this.btnDelete = document.querySelector('.delete-btn');
+        this.delNumber = this.btnDelete.querySelector('var');
+        this.btnDeselect = document.querySelector('.deselect-btn');
+        this.filesContainer = document.querySelector('.files');
+        this.lastSelected = null;
+        this.selectedItems = new Set();
 
-    const fileContainer = document.querySelector('.files');
-    const deleteBtn = document.querySelector('.delete-btn');
-    const deselectBtn = document.querySelector('.deselect-btn');
+        this.attachEventListeners();
+    }
 
+    attachEventListeners() {
+        this.filesContainer.addEventListener('click', this.onFileClick.bind(this));
+        this.filesContainer.addEventListener('dblclick', this.onFileDoubleClick.bind(this));
+        this.btnDeselect.addEventListener('click', this.deselectAll.bind(this));
+        this.btnDelete.addEventListener('click', this.deleteSelected.bind(this));
+        window.addEventListener('keydown', this.onKeyDown.bind(this));
+    }
 
-    let isCtrlPressed = false;
-    let amountOfSelectedFiles = 0;
+    onFileClick(event) {
+        
+        if (!event.target.classList.contains('file')) return;
 
-    window.addEventListener('keydown', ({key}) => {
-        if(key == 'Control') isCtrlPressed = true;
-    })
+        const isModifierPressed = event.ctrlKey || event.metaKey;
+        const isShiftPressed = event.shiftKey;
+        const clickedItem = event.target;
 
-    window.addEventListener('keyup', ({key}) => {
-        if(key == 'Control') isCtrlPressed = false;
-    })
+        if (isShiftPressed && this.lastSelected) {
+            let inRange = false;
+            for (const item of this.filesContainer.querySelectorAll('.file')) {
+                if (item === this.lastSelected || item === clickedItem) {
+                    inRange = !inRange;
+                    item.classList.add('selected');
+                    this.selectedItems.add(item);
+                }
 
-    fileContainer.addEventListener('click', ({target}) => {
-        const container = target.closest('.file');
-
-        if (!container) {
-            return
+                if (inRange) {
+                    item.classList.add('selected');
+                    this.selectedItems.add(item);
+                }
+            }
+        } else if (isModifierPressed) {
+            clickedItem.classList.toggle('selected');
+            if (clickedItem.classList.contains('selected')) {
+                this.selectedItems.add(clickedItem);
+            } else {
+                this.selectedItems.delete(clickedItem);
+            }
+        } else {
+            this.selectedItems.forEach(item => item.classList.remove('selected'));
+            this.selectedItems.clear();
+            clickedItem.classList.add('selected');
+            this.selectedItems.add(clickedItem);
         }
 
-        if(!isCtrlPressed){
-            const selectedFiles = fileContainer.querySelectorAll('.selected');
-            selectedFiles.forEach(file => {
-                toggleClassAndChangeAmount(file);
-            })
+        this.lastSelected = clickedItem;
+        if (this.selectedItems.size > 0) {
+            this.showControlButtons();
+        } else {
+            this.hideControlButtons();
         }
-        toggleClassAndChangeAmount(container);
-        changeNumberOfSelectedFilesDisplayed();
-    })
 
-    fileContainer.addEventListener('dblclick', ({target}) => {
-        const parentContainer = target.parentNode;
+    }
 
-        if (!parentContainer.classList.contains('file')) {
-            return
-        }
-        console.log('dbl click')
-    })
+    onFileDoubleClick(event) {
+        if (!event.target.classList.contains('file')) return;
+        open(event.target.dataset.id);
+    }
 
-    deselectBtn.addEventListener('click', () => {
-        const selectedFiles = fileContainer.querySelectorAll('.selected');
+    deselectAll() {
+        this.selectedItems.forEach(item => item.classList.remove('selected'));
+        this.selectedItems.clear();
+        this.hideControlButtons();
+    }
 
-        if (!selectedFiles.length) return;
+    deleteSelected() {
+        this.btnDelete.setAttribute('disabled', '');
 
-        selectedFiles.forEach(file => {
-            toggleClassAndChangeAmount(file);
-        })
-        changeNumberOfSelectedFilesDisplayed();
-    })
-
-    deleteBtn.addEventListener('click', () => {
-        const selectedFiles = fileContainer.querySelectorAll('.selected');
-        const ids = Array.from(selectedFiles).map(file => file.dataset.id);
+        const ids = [];
+        this.selectedItems.forEach(item => ids.push(item.dataset.id));
 
         fetch('/api/files', {
             method: 'DELETE',
-            body: JSON.stringify(ids),
             headers: {
-                'Content-Type': 'application/json',
-            }
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ids)
         })
-        .then(res => res.json())
-        .then(res => {
-            if(res.success){
-                const deletedFiles = res.deletedFiles;
-                let deletedImages = 0, deletedVideos = 0;
-
-                deletedFiles.forEach(id => {
-                    const deletedFile = fileContainer.querySelector(`div[data-id="${id}"`);
-
-                    if(deletedFile.dataset.type === "image") deletedImages++;
-                    else deletedVideos++;
-
-                    deletedFile.remove();
-                });
-
-                const imagesAmount = document.querySelector('.images_amount');
-                const videosAmount = document.querySelector('.videos_amount');
-                const all_files_amount = document.querySelector('.all_files_amount');
-
-                imagesAmount.innerHTML = `${+imagesAmount.innerHTML - deletedImages}`;
-                videosAmount.innerHTML = `${+videosAmount.innerHTML - deletedVideos}`;
-                all_files_amount.innerHTML = `${+all_files_amount.innerHTML - deletedVideos - deletedImages}`;
-
-            } else {
-                console.error(res.message);
-            }
-        })
-        .catch(err => console.log(err));
-    });
-
-
-
-    function toggleClassAndChangeAmount(target) {
-        if (target.classList.contains('selected')) amountOfSelectedFiles--;
-        else amountOfSelectedFiles++;
-
-        target.classList.toggle('selected');
-        target.querySelector('.shadow-inner').classList.toggle('d-none');
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    location.reload();
+                } else {
+                    console.error(res.message);
+                }
+            })
+            .catch(err => console.error(err));
     }
 
-    function changeNumberOfSelectedFilesDisplayed(){
-        deleteBtn.innerHTML = `Delete ${amountOfSelectedFiles} selected ${amountOfSelectedFiles == 1 ? 'file' : 'files'}`;
+    showControlButtons() {
+        this.delNumber.innerText = this.selectedItems.size;
+        this.btnDelete.removeAttribute('hidden');
+        this.btnDeselect.removeAttribute('hidden');
     }
 
+    hideControlButtons() {
+        this.btnDelete.setAttribute('hidden', '');
+        this.btnDeselect.setAttribute('hidden', '');
+    }
+
+    onKeyDown(event) {
+        if (event.key == 'Delete') this.deleteSelected();
+        if (event.key == 'Escape') this.deselectAll();
+        if (event.key == 'a' && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault();
+            this.filesContainer.querySelectorAll('.file').forEach(item => {
+                item.classList.add('selected');
+                this.selectedItems.add(item);
+            });
+            this.showControlButtons();
+        }
+    }
+}
+
+function initFilesSelection() {
+    new FilesSelectionManager();
+}
+
+function open(id) {
+    console.log(`Opening`, id);
 }
