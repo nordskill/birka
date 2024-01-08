@@ -99,6 +99,54 @@ function initFilesUpload() {
 
 }
 
+class Debouncer {
+    constructor(fieldElement, endpoint) {
+        this.fieldElement = fieldElement;
+        this.endpoint = endpoint;
+        this.debounceTimer = null;
+        this.init();
+    }
+
+    init() {
+        this.fieldElement.addEventListener('input', () => {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => this.sendRequest(), 500);
+        });
+    }
+
+    async sendRequest() {
+        const value = this.fieldElement.value;
+        const name = this.fieldElement.name;
+        try {
+            const response = await fetch(this.endpoint, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [name]: value })
+            });
+
+            if (response.ok) {
+                this.handleSuccess();
+            } else {
+                const errorData = await response.json();
+                this.handleError(errorData.message);
+            }
+        } catch (error) {
+            this.handleError(error.message);
+        }
+    }
+
+    handleSuccess() {
+        const parentDiv = this.fieldElement.closest('div');
+        parentDiv.classList.add('ok');
+    }
+
+    handleError(errorMessage) {
+        const invalidFeedback = this.fieldElement.nextElementSibling;
+        invalidFeedback.style.display = 'block';
+        invalidFeedback.textContent = errorMessage;
+    }
+}
+
 class FileDetailsModal {
 
     constructor() {
@@ -128,6 +176,7 @@ class FileDetailsModal {
             const data = await response.json();
             const html = this._compileTemplate(data);
             this.win.innerHTML = html;
+            this._initFieldUpdates(id);
         } catch (error) {
             console.error('Error fetching file details:', error);
         }
@@ -169,7 +218,8 @@ class FileDetailsModal {
                 altField = `
                     <div class="pb-2">
                         <label for="file_title" class="form-label">Image title:</label>
-                        <input type="text" class="form-control" id="file_title" value="${title ?? ''}">
+                        <input type="text" class="form-control" id="file_title" name="title" value="${title ?? ''}">
+                        <div class="invalid-feedback"></div>
                     </div>`;
 
             } else {
@@ -177,7 +227,8 @@ class FileDetailsModal {
                 altField = `
                 <div class="pb-2">
                     <label for="file_alt" class="form-label">Image alt:</label>
-                    <input type="text" class="form-control" id="file_alt" value="${alt ?? ''}">
+                    <input type="text" class="form-control" id="file_alt" name="alt" value="${alt ?? ''}">
+                    <div class="invalid-feedback"></div>
                 </div>`;
 
             }
@@ -223,10 +274,19 @@ class FileDetailsModal {
                     ${altField}
                     <div class="pb-2">
                         <label for="file_description" class="form-label">Description:</label>
-                        <textarea class="form-control" id="file_description" rows="3">${data.description ?? ''}</textarea>
+                        <textarea class="form-control" id="file_description" rows="3" name="description">${data.description ?? ''}</textarea>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </main>
             </section>`;
+    }
+
+    _initFieldUpdates(id) {
+
+        const inputField = document.querySelector('#file_alt');
+        const endpoint = `/api/files/${id}`;
+        new Debouncer(inputField, endpoint);
+
     }
 
 }
@@ -361,11 +421,6 @@ const fileDetailsModal = new FileDetailsModal();
 function initFiles() {
     detectProcessingFiles();
     new FilesSelectionManager();
-}
-
-function open(id) {
-    console.log(`Opening`, id);
-
 }
 
 function addFile(file) {
