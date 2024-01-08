@@ -596,7 +596,7 @@
         "alt": "Satellite internet for camping"
     },
     {
-        "type": "svg",
+        "type": "image",
         "description": "Backpack for camping",
         "size": 1024,
         "file_name": "backpack",
@@ -607,7 +607,7 @@
         "title": "Backpack for camping"
     },
     {
-        "type": "svg",
+        "type": "image",
         "description": "Campsite for camping",
         "size": 1024,
         "file_name": "camp",
@@ -618,7 +618,7 @@
         "title": "Campsite for camping"
     },
     {
-        "type": "svg",
+        "type": "image",
         "description": "Logo for camping company",
         "size": 1024,
         "file_name": "logo",
