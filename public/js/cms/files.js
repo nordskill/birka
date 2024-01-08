@@ -99,6 +99,138 @@ function initFilesUpload() {
 
 }
 
+class FileDetailsModal {
+
+    constructor() {
+        this.modal = document.createElement('div');
+        this.modal.className = 'file_details';
+        this.win = document.createElement('div');
+        this.win.className = 'window';
+        this.modal.appendChild(this.win);
+        this.modal.style.display = 'none'; // Initially hidden
+        document.body.appendChild(this.modal);
+
+        // Close window
+        this.modal.addEventListener('click', event => {
+            if (event.target.closest('.closer') || event.target === this.modal) {
+                this.close();
+            }
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key == 'Escape') this.close();
+        });
+    }
+
+    async open(id) {
+        try {
+            this.modal.style.display = 'block'; // Show the modal
+            const response = await fetch(`/api/files/${id}`);
+            const data = await response.json();
+            const html = this._compileTemplate(data);
+            this.win.innerHTML = html;
+        } catch (error) {
+            console.error('Error fetching file details:', error);
+        }
+    }
+
+    close() {
+        this.modal.style.display = 'none';
+        this.win.innerHTML = '';
+    }
+
+    _compileTemplate(data) {
+
+        const { type, file_name, extension, hash } = data;
+
+        let filePath = '';
+        let media = '';
+        let fileName = `${file_name}.${extension}`;
+        let altField = '';
+        let dimensions = `
+            <div>
+                <span>Dimensions:</span>
+                <pre>${data.width} × ${data.height} px</pre>
+            </div>`;
+
+        const folder = `/files/${hash.slice(0, 2)}/`;
+
+        if (type == 'image') {
+
+            const { optimized_format, alt, title } = data;
+            const IMG_SIZE = Math.max(...data.sizes);
+            fileName = file_name + '.' + optimized_format;
+            filePath = folder + IMG_SIZE + '/' + fileName;
+            media = `<img src="${filePath}" alt="${alt}">`;
+
+            if (data.mime_type === 'image/svg+xml') {
+
+                dimensions = '';
+
+                altField = `
+                    <div class="pb-2">
+                        <label for="file_title" class="form-label">Image title:</label>
+                        <input type="text" class="form-control" id="file_title" value="${title ?? ''}">
+                    </div>`;
+
+            } else {
+
+                altField = `
+                <div class="pb-2">
+                    <label for="file_alt" class="form-label">Image alt:</label>
+                    <input type="text" class="form-control" id="file_alt" value="${alt ?? ''}">
+                </div>`;
+
+            }
+
+        } else {
+
+            filePath = folder + fileName;
+            media = `<video src="${filePath}" controls></video>`;
+
+        }
+
+        return `
+            <div class="media">
+               ${media}
+            </div>
+            <section class="info">
+                <header>
+                    <h5>${fileName}</h5>
+                    <svg class="closer" viewBox="0 0 14 14">
+                        <path d="m8.746 7.001 4.888-4.888A1.236 1.236 0 0 0 11.888.364L7.001 5.25 2.112.362a1.237 1.237 0 1 0-1.75 1.75L5.25 7.001.362 11.888a1.237 1.237 0 0 0 1.749 1.749l4.89-4.888 4.888 4.888a1.237 1.237 0 0 0 1.749-1.749Z"></path>
+                    </svg>
+                </header>
+                <div class="meta">
+                    <div>
+                        <span>Id.:</span>
+                        <pre>${data._id}</pre>
+                    </div>
+                    <div>
+                        <span>Uploaded:</span>
+                        <pre>${data.date_created}</pre>
+                    </div>
+                    <div>
+                        <span>Size:</span>
+                        <pre>${data.size}</pre>
+                    </div>
+                    <div>
+                        <span>MIME type:</span>
+                        <pre>${data.mime_type}</pre>
+                    </div>
+                    ${dimensions}
+                </div>
+                <main>
+                    ${altField}
+                    <div class="pb-2">
+                        <label for="file_description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="file_description" rows="3">${data.description ?? ''}</textarea>
+                    </div>
+                </main>
+            </section>`;
+    }
+
+}
+
 class FilesSelectionManager {
     constructor() {
         this.btnDelete = document.querySelector('.delete-btn');
@@ -166,7 +298,7 @@ class FilesSelectionManager {
 
     onFileDoubleClick(event) {
         if (!event.target.classList.contains('file')) return;
-        open(event.target.dataset.id);
+        fileDetailsModal.open(event.target.dataset.id);
     }
 
     deselectAll() {
@@ -224,6 +356,8 @@ class FilesSelectionManager {
     }
 }
 
+const fileDetailsModal = new FileDetailsModal();
+
 function initFiles() {
     detectProcessingFiles();
     new FilesSelectionManager();
@@ -231,6 +365,7 @@ function initFiles() {
 
 function open(id) {
     console.log(`Opening`, id);
+
 }
 
 function addFile(file) {
@@ -266,23 +401,23 @@ function checkState(id) {
 }
 
 function addFilePreview(targetElement, file) {
-    
-        const { type, file_name, hash, optimized_format } = file;
 
-        const folder = `/files/${hash.slice(0, 2)}/`;
-        const IMG_SIZE = 300;
-        const fileName = file_name + '.' + optimized_format;
-        const filePath = folder + IMG_SIZE + '/' + fileName;
+    const { type, file_name, hash, optimized_format } = file;
 
-        let html;
-    
-        switch (type) {
-            case 'image':
-                html = `<img src="${filePath}" alt="">`;
-                break;
-    
-            case 'video':
-                html = `
+    const folder = `/files/${hash.slice(0, 2)}/`;
+    const IMG_SIZE = 300;
+    const fileName = file_name + '.' + optimized_format;
+    const filePath = folder + IMG_SIZE + '/' + fileName;
+
+    let html;
+
+    switch (type) {
+        case 'image':
+            html = `<img src="${filePath}" alt="">`;
+            break;
+
+        case 'video':
+            html = `
                 <svg viewBox="0 0 32 24">
                     <g>
                         <path d="M13.58 6.186a1 1 0 0 0-1.58.811v10a1 1 0 0 0 1.58.814l7-5a1 1 0 0 0 0-1.628Z"></path>
@@ -290,12 +425,12 @@ function addFilePreview(targetElement, file) {
                     </g>
                 </svg>
                 `;
-                break;
-    
-            default: break;
-        }
-    
-        targetElement.innerHTML = html;
+            break;
+
+        default: break;
+    }
+
+    targetElement.innerHTML = html;
 }
 
 function detectProcessingFiles() {
@@ -309,3 +444,4 @@ function detectProcessingFiles() {
     });
 
 }
+
