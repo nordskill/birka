@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const multer = require('multer');
 const crypto = require('crypto');
 
-const { File, Image, SVG, Video } = require('../../models/file');
+const { File, Image, Video } = require('../../models/file');
 const Tag = require('../../models/tag');
 
 const OperationalError = require('../../functions/operational-error');
@@ -122,10 +122,20 @@ router.put('/:id', async (req, res, next) => {
     }
 
     try {
-        const updatedFile = await File.findByIdAndUpdate(
-            id,
-            contentToUpdate
-        );
+
+        let updatedFile;
+
+        if ('alt' in contentToUpdate) {
+            updatedFile = await Image.findByIdAndUpdate(
+                id,
+                contentToUpdate
+            );
+        } else {
+            updatedFile = await File.findByIdAndUpdate(
+                id,
+                contentToUpdate
+            );
+        }
 
         if (!updatedFile) {
             throw new OperationalError('File not found.', 404);
@@ -373,5 +383,5 @@ async function optimizeImage(file) {
     file.sizes = optimization.sizes;
     file.optimized_format = optimization.format;
     await file.save();
-    
+
 }
