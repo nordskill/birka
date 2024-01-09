@@ -33,8 +33,7 @@ const VideoSchema = new Schema({
     height:     Number,
     width:      Number,
     fps:        Number,
-    duration:   Number,
-    title:      String
+    duration:   Number
 });
 
 const SvgSchema = new Schema({
