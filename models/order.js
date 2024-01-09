@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const OrderSchema = new Schema({
-    date_created:       { type: Date, required: true, default: Date.now },
+    date_created:       {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
     status:             { ref: 'Status', type: Schema.Types.ObjectId },
     customer:           { ref: 'User', type: Schema.Types.ObjectId },
     shipping_details:   { ref: 'UserShipping', type: Schema.Types.ObjectId },
@@ -20,28 +24,58 @@ const OrderSchema = new Schema({
     transactions: [{
         payment_method: { ref: 'PaymentMethod', type: Schema.Types.ObjectId },
         date: Date,
-        ip: String,
-        invoice: String,
-        invoice_number: String
+        ip: {
+            type: String,
+            trim: true
+        },
+        invoice: {
+            type: String,
+            trim: true
+        },
+        invoice_number: {
+            type: String,
+            trim: true
+        }
     }],
     subtotal: Number,
     shipping_cost: Number,
     tax: Number,
     total_cost: Number,
-    currency: String,
+    currency: {
+        type: String,
+        trim: true
+    },
     coupons: [{ // TBD as separate model
         discount: Number,
-        code: String,
-        name: String,
-        description: String
+        code: {
+            type: String,
+            trim: true
+        },
+        name: {
+            type: String,
+            trim: true
+        },
+        description: {
+            type: String,
+            trim: true
+        }
     }],
     status_history: [{
-        previous_status: String,
-        new_status: String,
+        previous_status: {
+            type: String,
+            trim: true
+        },
+        new_status: {
+            type: String,
+            trim: true
+        },
         date: Date,
         user: { ref: 'User', type: Schema.Types.ObjectId }
     }],
-    note: String
+    note: {
+        type: String,
+        trim: true
+    }
 });
 
 const Order = mongoose.model('Order', OrderSchema);

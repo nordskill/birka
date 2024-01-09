@@ -4,11 +4,13 @@ const { Schema } = mongoose;
 const TagSchema = new Schema([{
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     slug: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
     used: {
         type: Number,

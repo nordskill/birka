@@ -2,17 +2,40 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const SettingsSchema = new Schema({
-    name: String,
-    brand_name: String,
-    domain: String,
+    name: {
+        type: String,
+        trim: true
+    },
+    brand_name: {
+        type: String,
+        trim: true
+    },
+    domain: {
+        type: String,
+        trim: true
+    },
     social_links: [{
-        name: String,
-        url: String,
+        name: {
+            type: String,
+            trim: true
+        },
+        url: {
+            type: String,
+            trim: true
+        },
         icon: { ref: 'File', type: Schema.Types.ObjectId }
     }],
     custom_html: String,
-    language: { type: String, required: true, default: 'en' },
-    currency: String,
+    language: {
+        type: String,
+        required: true,
+        trim: true,
+        default: 'en'
+    },
+    currency: {
+        type: String,
+        trim: true
+    },
     // tax: {
     //     rate: Number,
     //     tax_included: Boolean,

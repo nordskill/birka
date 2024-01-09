@@ -19,10 +19,7 @@ const categorySchema = new Schema({
         trim: true
     },
     parent: { ref: 'Category', type: Schema.Types.ObjectId },
-    image: {
-        type: String,
-        trim: true
-    },
+    image:  { ref: 'File', type: Schema.Types.ObjectId },
     isActive: {
         type: Boolean,
         default: true

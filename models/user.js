@@ -5,44 +5,86 @@ const {
 
 const UserSchema = new Schema({
 	account_details: {
-		username: String,
-		password: String,
-		email: String,
-		avatar: {
-			ref: 'File',
-			type: Schema.Types.ObjectId
+		username: {
+			type: String,
+			trim: true
 		},
-		role: String,
+		password: String,
+		email: {
+			type: String,
+			trim: true
+		},
+		avatar: { ref: 'File', type: Schema.Types.ObjectId },
+		role: {
+			type: String,
+			trim: true
+		},
 		email_notifications: Boolean,
 		web_notifications: Boolean
 	},
 	billing: {
-		email: String,
+		email: {
+			type: String,
+			trim: true
+		},
 		business: Boolean,
-		details: String
+		details: {
+			type: String,
+			trim: true
+		}
 	},
 	shipping: [{
-		full_name: String,
-		company_name: String,
-		street_address_1: String,
-		street_address_2: String,
-		zip_code: String,
-		city: String,
-		region: String,
-		default: Boolean,
-		name: String,
-		country: {
-			code: String,
-			name: String
+		full_name: {
+			type: String,
+			trim: true
 		},
-		email: String,
+		company_name: {
+			type: String,
+			trim: true
+		},
+		street_address_1: {
+			type: String,
+			trim: true
+		},
+		street_address_2: {
+			type: String,
+			trim: true
+		},
+		zip_code: {
+			type: String,
+			trim: true
+		},
+		city: {
+			type: String,
+			trim: true
+		},
+		region: {
+			type: String,
+			trim: true
+		},
+		default: Boolean,
+		name: {
+			type: String,
+			trim: true
+		},
+		country: {
+			code: {
+				type: String,
+				trim: true
+			},
+			name: {
+				type: String,
+				trim: true
+			}
+		},
+		email: {
+			type: String,
+			trim: true
+		},
 		phone: Number
 	}],
 	cart: {
-		products: [{
-			ref: 'Product',
-			type: Schema.Types.ObjectId
-		}],
+		products: [{ ref: 'Product', type: Schema.Types.ObjectId }],
 		// expires: Date
 	}
 });

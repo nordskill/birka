@@ -2,9 +2,18 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ProductSchema = new Schema({
-	title: String,
-	slug: String,
-	description: String,
+	title: {
+        type: String,
+        trim: true
+    },
+	slug: {
+        type: String,
+        trim: true
+    },
+	description: {
+        type: String,
+        trim: true
+    },
     date_created: { type: Date, required: true, default: Date.now },
 	price: {
 		regular: Number,
@@ -13,7 +22,10 @@ const ProductSchema = new Schema({
         wholesale: Number
 	},
     subscription: {
-        ebn: String,
+        ebn: {
+            type: String,
+            trim: true
+        },
         period: Number,
         sign_up_fee: Number,
         free_trial: Number,
@@ -32,7 +44,7 @@ const ProductSchema = new Schema({
         image:          { ref: 'File', type: Schema.Types.ObjectId }
     }],
     show_in_cat: Boolean,
-    variants:           [{ ref: 'Product', type: Schema.Types.ObjectId }],
+    variants:          [{ ref: 'Product', type: Schema.Types.ObjectId }],
     thumbnail:          { ref: 'File', type: Schema.Types.ObjectId },
     // gallery:            [{ ref: 'File', type: Schema.Types.ObjectId }],
     // in_scock: Boolean,

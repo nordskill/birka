@@ -4,9 +4,18 @@ const {
 } = mongoose;
 
 const BlogPostSchema = new Schema({
-    title: String,
-    slug: String,
-    excerpt: String,
+    title: {
+        type: String,
+        trim: true
+    },
+    slug: {
+        type: String,
+        trim: true
+    },
+    excerpt: {
+        type: String,
+        trim: true
+    },
     published: Boolean,
     img_preview: {
         ref: 'File',
