@@ -109,6 +109,11 @@ class Debouncer {
 
     init() {
         this.fieldElement.addEventListener('input', () => {
+            
+            this.fieldElement.classList.remove('is-valid', 'is-invalid');
+            const invalidFeedback = this.fieldElement.nextElementSibling;
+            invalidFeedback.style.display = 'none';
+
             clearTimeout(this.debounceTimer);
             this.debounceTimer = setTimeout(() => this.sendRequest(), 500);
         });
@@ -117,6 +122,8 @@ class Debouncer {
     async sendRequest() {
         const value = this.fieldElement.value;
         const name = this.fieldElement.name;
+        console.log(JSON.stringify({ [name]: value }));
+        
         try {
             const response = await fetch(this.endpoint, {
                 method: 'PUT',
@@ -136,11 +143,11 @@ class Debouncer {
     }
 
     handleSuccess() {
-        const parentDiv = this.fieldElement.closest('div');
-        parentDiv.classList.add('ok');
+        this.fieldElement.classList.add('is-valid');
     }
 
     handleError(errorMessage) {
+        this.fieldElement.classList.add('is-invalid');
         const invalidFeedback = this.fieldElement.nextElementSibling;
         invalidFeedback.style.display = 'block';
         invalidFeedback.textContent = errorMessage;
@@ -155,7 +162,7 @@ class FileDetailsModal {
         this.win = document.createElement('div');
         this.win.className = 'window';
         this.modal.appendChild(this.win);
-        this.modal.style.display = 'none'; // Initially hidden
+        this.modal.setAttribute('hidden', '');
         document.body.appendChild(this.modal);
 
         // Close window
@@ -171,7 +178,7 @@ class FileDetailsModal {
 
     async open(id) {
         try {
-            this.modal.style.display = 'block'; // Show the modal
+            this.modal.removeAttribute('hidden');
             const response = await fetch(`/api/files/${id}`);
             const data = await response.json();
             const html = this._compileTemplate(data);
@@ -183,7 +190,7 @@ class FileDetailsModal {
     }
 
     close() {
-        this.modal.style.display = 'none';
+        this.modal.setAttribute('hidden', '');
         this.win.innerHTML = '';
     }
 
@@ -283,10 +290,19 @@ class FileDetailsModal {
 
     _initFieldUpdates(id) {
 
-        const inputField = document.querySelector('#file_alt');
+        const fields = this.win.querySelectorAll('input, textarea');
         const endpoint = `/api/files/${id}`;
-        new Debouncer(inputField, endpoint);
+        console.log(fields);
 
+        fields.forEach(field => {
+            console.log(field);
+            new Debouncer(field, endpoint);
+        });
+
+    }
+
+    get element() {
+        return this.modal;
     }
 
 }
@@ -406,12 +422,16 @@ class FilesSelectionManager {
         if (event.key == 'Delete') this.deleteSelected();
         if (event.key == 'Escape') this.deselectAll();
         if (event.key == 'a' && (event.ctrlKey || event.metaKey)) {
+
+            if (!fileDetailsModal.element.hasAttribute('hidden')) return;
+
             event.preventDefault();
             this.filesContainer.querySelectorAll('.file').forEach(item => {
                 item.classList.add('selected');
                 this.selectedItems.add(item);
             });
             this.showControlButtons();
+
         }
     }
 }
