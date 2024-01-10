@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
         const files = await File.find(condition)
             .skip(skip)
             .limit(AMOUNT_OF_FILES_PER_PAGE)
-            .sort({ date_created: -1 })
+            .sort({ createdAt: -1 })
             .exec();
 
         // Get total number of files to calculate total pages

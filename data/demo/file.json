@@ -339,7 +339,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Facebook icon",
         "size": 1024,
         "file_name": "facebook_icon",
@@ -353,7 +352,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Twitter icon",
         "size": 1024,
         "file_name": "twitter_icon",
@@ -367,7 +365,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Instagram icon",
         "size": 1024,
         "file_name": "instagram_icon",
@@ -381,7 +378,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "About us icon",
         "size": 1024,
         "file_name": "about_icon",
@@ -395,7 +391,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Blog icon",
         "size": 1024,
         "file_name": "blog_icon",
@@ -409,7 +404,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Services icon",
         "size": 1024,
         "file_name": "services_icon",
@@ -423,7 +417,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Outwear category",
         "size": 1024,
         "file_name": "outwear_category",
@@ -437,7 +430,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Tech gadgets category",
         "size": 1024,
         "file_name": "gadgets_category",
@@ -451,7 +443,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Home decor category",
         "size": 1024,
         "file_name": "decor_category",
@@ -465,7 +456,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Sports equipment category",
         "size": 1024,
         "file_name": "equipment_category",
@@ -479,7 +469,6 @@
     },
     {
         "type": "image",
-        "date_created":"2023-11-13T00:00:00Z",
         "description": "Kids' toys",
         "size": 1024,
         "file_name": "toys_category",

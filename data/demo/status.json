@@ -1,38 +1,38 @@
 [
     {
-      "name": "Pending Payment",
-      "slug": "pending-payment",
-      "description": "The payment is yet to be received.",
-      "sorting_order": 1
+        "name": "Pending Payment",
+        "slug": "pending-payment",
+        "description": "The payment is yet to be received.",
+        "sorting_order": 1
     },
     {
-      "name": "Failed",
-      "slug": "failed",
-      "description": "The transaction was not successful.",
-      "sorting_order": 2
+        "name": "Failed",
+        "slug": "failed",
+        "description": "The transaction was not successful.",
+        "sorting_order": 2
     },
     {
-      "name": "Cancelled",
-      "slug": "cancelled",
-      "description": "The order has been cancelled.",
-      "sorting_order": 3
+        "name": "Cancelled",
+        "slug": "cancelled",
+        "description": "The order has been cancelled.",
+        "sorting_order": 3
     },
     {
-      "name": "Processing",
-      "slug": "processing",
-      "description": "The order is being processed.",
-      "sorting_order": 4
+        "name": "Processing",
+        "slug": "processing",
+        "description": "The order is being processed.",
+        "sorting_order": 4
     },
     {
-      "name": "Completed",
-      "slug": "completed",
-      "description": "The order has been completed successfully.",
-      "sorting_order": 5
+        "name": "Completed",
+        "slug": "completed",
+        "description": "The order has been completed successfully.",
+        "sorting_order": 5
     },
     {
-      "name": "Refunded",
-      "slug": "refunded",
-      "description": "The payment has been refunded.",
-      "sorting_order": 6
+        "name": "Refunded",
+        "slug": "refunded",
+        "description": "The payment has been refunded.",
+        "sorting_order": 6
     }
 ]

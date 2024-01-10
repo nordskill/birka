@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const OrderSchema = new Schema({
-    date_created:       {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     status:             { ref: 'Status', type: Schema.Types.ObjectId },
     customer:           { ref: 'User', type: Schema.Types.ObjectId },
     shipping_details:   { ref: 'UserShipping', type: Schema.Types.ObjectId },
@@ -76,7 +71,7 @@ const OrderSchema = new Schema({
         type: String,
         trim: true
     }
-});
+}, { timestamps: true });
 
 const Order = mongoose.model('Order', OrderSchema);
 

@@ -23,19 +23,12 @@ const categorySchema = new Schema({
     isActive: {
         type: Boolean,
         default: true
-    },
-    date_created: {
-        type: Date,
-        default: Date.now
-    },
-    date_updated: {
-        type: Date
     }
-});
+}, { timestamps: true });
 
 // Auto-update the updatedAt field before save
 categorySchema.pre('save', (next) => {
-    this.date_updated = Date.now();
+    this.updatedAt = Date.now();
     next();
 });
 

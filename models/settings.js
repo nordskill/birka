@@ -43,7 +43,7 @@ const SettingsSchema = new Schema({
     //     show_with_tax: Boolean
     // },
     // home_page: { type: Schema.Types.Mixed, required: true, default: {} }
-});
+}, { timestamps: true });
 
 const Settings = mongoose.model('Settings', SettingsSchema);
 module.exports = Settings;

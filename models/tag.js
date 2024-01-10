@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const TagSchema = new Schema([{
+const TagSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -16,7 +16,7 @@ const TagSchema = new Schema([{
         type: Number,
         default: 0
     }
-}]);
+}, { timestamps: true });
 
 const Tag = mongoose.model('Tag', TagSchema);
 

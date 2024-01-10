@@ -1,159 +1,159 @@
 [
-  {
-    "account_details": {
-      "username": "adminUser1",
-      "password": "password123!",
-      "email": "admin1@example.com",
-      "avatar": "",
-      "role": "Administrator",
-      "email_notifications": true,
-      "web_notifications": true
-    },
-    "billing": {
-      "email": "billing-admin1@example.com",
-      "business": true,
-      "details": "Admin User 1 Billing Details"
-    },
-    "shipping": [
-      {
-        "full_name": "Admin User One",
-        "company_name": "AdminCompany",
-        "street_address_1": "",
-        "street_address_2": "",
-        "zip_code": "12345",
-        "city": "Admin City",
-        "region": "Admin Region",
-        "country": {
-          "code": "AD",
-          "name": "Adminland"
+    {
+        "account_details": {
+            "username": "adminUser1",
+            "password": "password123!",
+            "email": "admin1@example.com",
+            "avatar": "",
+            "role": "Administrator",
+            "email_notifications": true,
+            "web_notifications": true
         },
-        "email": "shipping-admin1@example.com",
-        "phone": 1234567890
-      }
-    ],
-    "cart": {}
-  },
-  {
-    "account_details": {
-      "username": "adminUser2",
-      "password": "securepass456!",
-      "email": "admin2@example.com",
-      "avatar": "",
-      "role": "Administrator",
-      "email_notifications": false,
-      "web_notifications": false
-    },
-    "billing": {
-      "email": "billing-admin2@example.com",
-      "business": false,
-      "details": "Admin User 2 Billing Details"
-    },
-    "shipping": [
-      {
-        "full_name": "Admin User Two",
-        "company_name": "AdminCorp",
-        "street_address_1": "234 Admin Ave",
-        "street_address_2": "2 etc street",
-        "zip_code": "23456",
-        "city": "Adminopolis",
-        "region": "Adminshire",
-        "country": {
-          "code": "AD",
-          "name": "Adminland"
+        "billing": {
+            "email": "billing-admin1@example.com",
+            "business": true,
+            "details": "Admin User 1 Billing Details"
         },
-        "email": "shipping-admin2@example.com",
-        "phone": 2345678901
-      }
-    ],
-    "cart": {
-      "products": []
+        "shipping": [
+            {
+                "full_name": "Admin User One",
+                "company_name": "AdminCompany",
+                "street_address_1": "",
+                "street_address_2": "",
+                "zip_code": "12345",
+                "city": "Admin City",
+                "region": "Admin Region",
+                "country": {
+                    "code": "AD",
+                    "name": "Adminland"
+                },
+                "email": "shipping-admin1@example.com",
+                "phone": 1234567890
+            }
+        ],
+        "cart": {}
+    },
+    {
+        "account_details": {
+            "username": "adminUser2",
+            "password": "securepass456!",
+            "email": "admin2@example.com",
+            "avatar": "",
+            "role": "Administrator",
+            "email_notifications": false,
+            "web_notifications": false
+        },
+        "billing": {
+            "email": "billing-admin2@example.com",
+            "business": false,
+            "details": "Admin User 2 Billing Details"
+        },
+        "shipping": [
+            {
+                "full_name": "Admin User Two",
+                "company_name": "AdminCorp",
+                "street_address_1": "234 Admin Ave",
+                "street_address_2": "2 etc street",
+                "zip_code": "23456",
+                "city": "Adminopolis",
+                "region": "Adminshire",
+                "country": {
+                    "code": "AD",
+                    "name": "Adminland"
+                },
+                "email": "shipping-admin2@example.com",
+                "phone": 2345678901
+            }
+        ],
+        "cart": {
+            "products": []
+        }
+    },
+    {
+        "account_details": {
+            "username": "customerUser1",
+            "password": "userpass789!",
+            "email": "customer1@example.com",
+            "avatar": "",
+            "role": "Customer",
+            "email_notifications": true,
+            "web_notifications": true
+        },
+        "billing": {
+            "email": "billing-customer1@example.com",
+            "business": false,
+            "details": "Customer User 1 Billing Details"
+        },
+        "shipping": [
+            {
+                "full_name": "Customer User One",
+                "company_name": "",
+                "street_address_1": "234 Admin Ave",
+                "street_address_2": "2 etc 123213231",
+                "zip_code": "34567",
+                "city": "Customer Town",
+                "region": "Customer Region",
+                "default": true,
+                "name": "my Home",
+                "country": {
+                    "code": "CU",
+                    "name": "Customerland"
+                },
+                "email": "shipping-customer1@example.com",
+                "phone": 3456789012
+            },
+            {
+                "full_name": "Customer User One",
+                "company_name": "",
+                "street_address_1": "234 Admin Ave",
+                "street_address_2": "",
+                "zip_code": "34567",
+                "city": "Customer Town",
+                "region": "Customer Region",
+                "default": false,
+                "name": "my Office",
+                "country": {
+                    "code": "CU",
+                    "name": "Customerland"
+                },
+                "email": "shipping-customer1@example.com",
+                "phone": 3456789012
+            }
+        ],
+        "cart": {}
+    },
+    {
+        "account_details": {
+            "username": "customerUser2",
+            "password": "mypassword234!",
+            "email": "customer2@example.com",
+            "avatar": "",
+            "role": "Customer",
+            "email_notifications": false,
+            "web_notifications": false
+        },
+        "billing": {
+            "email": "billing-customer2@example.com",
+            "business": true,
+            "details": "Customer User 2 Billing Details"
+        },
+        "shipping": [
+            {
+                "full_name": "Customer User Two",
+                "company_name": "CustCorp",
+                "street_address_1": "234 Admin Ave",
+                "street_address_2": "",
+                "zip_code": "45678",
+                "city": "Customer City",
+                "region": "Customer State",
+                "country": {
+                    "code": "CU",
+                    "name": "Customerland"
+                },
+                "email": "shipping-customer2@example.com",
+                "phone": 4567890123
+            }
+        ],
+        "cart": {}
     }
-  },
-  {
-    "account_details": {
-      "username": "customerUser1",
-      "password": "userpass789!",
-      "email": "customer1@example.com",
-      "avatar": "",
-      "role": "Customer",
-      "email_notifications": true,
-      "web_notifications": true
-    },
-    "billing": {
-      "email": "billing-customer1@example.com",
-      "business": false,
-      "details": "Customer User 1 Billing Details"
-    },
-    "shipping": [
-      {
-        "full_name": "Customer User One",
-        "company_name": "",
-        "street_address_1": "234 Admin Ave",
-        "street_address_2": "2 etc 123213231",
-        "zip_code": "34567",
-        "city": "Customer Town",
-        "region": "Customer Region",
-        "default": true,
-        "name": "my Home",
-        "country": {
-          "code": "CU",
-          "name": "Customerland"
-        },
-        "email": "shipping-customer1@example.com",
-        "phone": 3456789012
-      },
-      {
-        "full_name": "Customer User One",
-        "company_name": "",
-        "street_address_1": "234 Admin Ave",
-        "street_address_2": "",
-        "zip_code": "34567",
-        "city": "Customer Town",
-        "region": "Customer Region",
-        "default": false,
-        "name": "my Office",
-        "country": {
-          "code": "CU",
-          "name": "Customerland"
-        },
-        "email": "shipping-customer1@example.com",
-        "phone": 3456789012
-      }
-    ],
-    "cart": {}
-  },
-  {
-    "account_details": {
-      "username": "customerUser2",
-      "password": "mypassword234!",
-      "email": "customer2@example.com",
-      "avatar": "",
-      "role": "Customer",
-      "email_notifications": false,
-      "web_notifications": false
-    },
-    "billing": {
-      "email": "billing-customer2@example.com",
-      "business": true,
-      "details": "Customer User 2 Billing Details"
-    },
-    "shipping": [
-      {
-        "full_name": "Customer User Two",
-        "company_name": "CustCorp",
-        "street_address_1": "234 Admin Ave",
-        "street_address_2": "",
-        "zip_code": "45678",
-        "city": "Customer City",
-        "region": "Customer State",
-        "country": {
-          "code": "CU",
-          "name": "Customerland"
-        },
-        "email": "shipping-customer2@example.com",
-        "phone": 4567890123
-      }
-    ],
-    "cart": {}
-  }
 ]

@@ -3,40 +3,30 @@
         "name": "Men's Outerwear",
         "slug": "mens-outerwear",
         "description": "Cozy and durable jackets and coats for men.",
-        "isActive": true,
-        "date_created": "2023-11-10T08:30:00Z",
-        "date_updated": "2023-11-12T19:15:00Z"
+        "isActive": true
     },
     {
         "name": "Tech Gadgets",
         "slug": "tech-gadgets",
         "description": "The latest in technology and gadgets unveiled.",
-        "isActive": true,
-        "date_created": "2023-10-05T11:00:00Z",
-        "date_updated": "2023-11-01T10:00:00Z"
+        "isActive": true
     },
     {
         "name": "Home Decor",
         "slug": "home-decor",
         "description": "Stylish and modern decoration ideas for your home.",
-        "isActive": false,
-        "date_created": "2023-09-15T14:45:00Z",
-        "date_updated": "2023-10-23T09:25:00Z"
+        "isActive": false
     },
     {
         "name": "Sports Equipment",
         "slug": "sports-equipment",
         "description": "High-quality gear for all your sports needs.",
-        "isActive": true,
-        "date_created": "2023-08-20T17:35:00Z",
-        "date_updated": "2023-11-05T12:48:00Z"
+        "isActive": true
     },
     {
         "name": "Kids' Toys",
         "slug": "kids-toys",
         "description": "Fun and educational toys for children of all ages.",
-        "isActive": true,
-        "date_created": "2023-11-15T21:05:00Z",
-        "date_updated": "2023-11-16T08:20:00Z"
+        "isActive": true
     }
 ]

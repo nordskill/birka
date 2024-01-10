@@ -1,52 +1,52 @@
 [
     {
-      "name": "Technology",
-      "slug": "technology",
-      "used": 45
+        "name": "Technology",
+        "slug": "technology",
+        "used": 45
     },
     {
-      "name": "Programming",
-      "slug": "programming",
-      "used": 60
+        "name": "Programming",
+        "slug": "programming",
+        "used": 60
     },
     {
-      "name": "Health & Wellness",
-      "slug": "health-wellness",
-      "used": 30
+        "name": "Health & Wellness",
+        "slug": "health-wellness",
+        "used": 30
     },
     {
-      "name": "Travel",
-      "slug": "travel",
-      "used": 22
+        "name": "Travel",
+        "slug": "travel",
+        "used": 22
     },
     {
-      "name": "Food & Drink",
-      "slug": "food-drink",
-      "used": 36
+        "name": "Food & Drink",
+        "slug": "food-drink",
+        "used": 36
     },
     {
-      "name": "Education",
-      "slug": "education",
-      "used": 48
+        "name": "Education",
+        "slug": "education",
+        "used": 48
     },
     {
-      "name": "DIY",
-      "slug": "diy",
-      "used": 15
+        "name": "DIY",
+        "slug": "diy",
+        "used": 15
     },
     {
-      "name": "Sports",
-      "slug": "sports",
-      "used": 27
+        "name": "Sports",
+        "slug": "sports",
+        "used": 27
     },
     {
-      "name": "Entertainment",
-      "slug": "entertainment",
-      "used": 53
+        "name": "Entertainment",
+        "slug": "entertainment",
+        "used": 53
     },
     {
-      "name": "Science & Tech",
-      "slug": "science-tech",
-      "used": 40
+        "name": "Science & Tech",
+        "slug": "science-tech",
+        "used": 40
     }
-  ]
+]

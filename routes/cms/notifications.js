@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
     try {
         const notifications = await Notification.find()
             .populate('notify_users email_template')
-            .sort({ 'date_created': -1 })
+            .sort({ 'createdAt': -1 })
             .select('-__v')
             .lean();
 

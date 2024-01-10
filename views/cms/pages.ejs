@@ -49,7 +49,7 @@
                                         <td>
                                             <a href="/cms/pages/<%= page._id %>"><%= page.name %></a>
                                         </td>
-                                        <td><%= formatDate(page.date_created, 'dd mon yyyy') %></td>
+                                        <td><%= formatDate(page.createdAt, 'dd mon yyyy') %></td>
                                         <td><a href="/cms/customers/<%= page.author._id %>"><%= page.author.account_details.username %></a></td>
                                         <td><%- page.tags.map(tag => tag.name).join(', ') %></td>
                                     </tr>

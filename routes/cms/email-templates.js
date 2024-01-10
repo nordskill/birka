@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
 
     try {
         const templates = await EmailTemplate.find()
-            .sort({ date_created: -1 })
+            .sort({ createdAt: -1 })
             .select('-__v')
             .lean();
 

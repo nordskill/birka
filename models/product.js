@@ -14,7 +14,6 @@ const ProductSchema = new Schema({
         type: String,
         trim: true
     },
-    date_created: { type: Date, required: true, default: Date.now },
 	price: {
 		regular: Number,
 		sale: Number,
@@ -70,7 +69,7 @@ const ProductSchema = new Schema({
 	// 	label: String,
     //     value: String
 	// }]
-});
+}, { timestamps: true });
 
 const Product = mongoose.model('Product', ProductSchema);
 

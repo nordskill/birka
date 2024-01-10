@@ -6,11 +6,6 @@ const FileSchema = new Schema({
         type: String,
         trim: true
     },
-    date_created: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     title: {
         type: String,
         trim: true
@@ -41,7 +36,7 @@ const FileSchema = new Schema({
         type: Number,
         default: 0
     }
-});
+}, { timestamps: true });
 
 const File = mongoose.model('File', FileSchema);
 

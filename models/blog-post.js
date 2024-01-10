@@ -22,13 +22,7 @@ const BlogPostSchema = new Schema({
         type: Schema.Types.ObjectId
     },
     // img_cover:      { ref: 'File', type: Schema.Types.ObjectId },
-    date_created: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
     date_published: Date,
-    date_updated: Date,
     author: {
         ref: 'User',
         type: Schema.Types.ObjectId,
@@ -38,7 +32,7 @@ const BlogPostSchema = new Schema({
         ref: 'Tag',
         type: Schema.Types.ObjectId
     }]
-});
+}, { timestamps: true });
 
 const Blog = mongoose.model('Blog', BlogPostSchema);
 

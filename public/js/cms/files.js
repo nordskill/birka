@@ -265,7 +265,7 @@ class FileDetailsModal {
                     </div>
                     <div>
                         <span>Uploaded:</span>
-                        <pre>${data.date_created}</pre>
+                        <pre>${data.createdAt}</pre>
                     </div>
                     <div>
                         <span>Size:</span>

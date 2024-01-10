@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "cross-env NODE_ENV=development npm run prebuild && concurrently -k \"nodemon ./bin/www\" \"npm run watch\" \"npm run watch:sass\" \"npm run watch:cms-sass\" \"npm run watch:js\"",
+        "start": "cross-env NODE_ENV=development npm run prebuild && concurrently -k \"node ./bin/www\" \"npm run watch\" \"npm run watch:sass\" \"npm run watch:cms-sass\" \"npm run watch:js\"",
         "watch": "browser-sync start --proxy \"localhost:3000\" --files \"public/**/*.*\" \"!public/files/**/*.*\" \"app.js\" \"routes/*.js\" \"views/**/*.ejs\" \"data/*.js\" \"./public/css/*.css\" --no-ui",
         "watch:js": "node webpack-watcher.js",
         "watch:sass": "node-sass -w ./src/sass/ -o ./public/css/ --output-style compressed --source-map true",

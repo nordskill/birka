@@ -13,14 +13,8 @@ const EmailTemplateSchema = new Schema({
     note: {
         type: String,
         trim: true
-    },
-    date_updated: Date,
-    date_created: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-});
+    }
+}, { timestamps: true });
 
 const EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
 

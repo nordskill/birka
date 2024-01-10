@@ -16,14 +16,12 @@ const PageSchema = new Schema({
     },
     published: Boolean,
     date_published: Date,
-    date_updated: Date,
-    date_created:   { type: Date, required: true, default: Date.now },
     img_preview:    { ref: 'File', type: Schema.Types.ObjectId },
     author:         { ref: 'User', type: Schema.Types.ObjectId },
     sub_pages: [    { ref: 'Page', type: Schema.Types.ObjectId }],
     tags:   [       { ref: 'Tag', type: Schema.Types.ObjectId }],
     content:        [Schema.Types.Mixed]
-});
+}, { timestamps: true });
 
 const Page = mongoose.model('Page', PageSchema);
 

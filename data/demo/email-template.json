@@ -2,36 +2,26 @@
     {
         "name": "Welcome Email",
         "file_name": "welcome-email.ejs",
-        "note": "Used to welcome newly registered users",
-        "date_updated": "2023-11-10T00:00:00Z",
-        "date_created": "2023-11-10T00:00:00Z"
+        "note": "Used to welcome newly registered users"
     },
     {
         "name": "New Registration",
         "file_name": "new-registration.ejs",
-        "note": "Sent to admins when a new user registers",
-        "date_updated": "2023-11-10T00:00:00Z",
-        "date_created": "2023-11-10T00:00:00Z"
+        "note": "Sent to admins when a new user registers"
     },
     {
         "name": "Order Confirmation Email",
         "file_name": "order-confirmation.ejs",
-        "note": "Sent after a user places an order",
-        "date_updated": "2023-11-10T00:00:00Z",
-        "date_created": "2023-11-10T00:00:00Z"
+        "note": "Sent after a user places an order"
     },
     {
         "name": "New Order Email",
         "file_name": "new-order.ejs",
-        "note": "Sent to admins when a new order is placed",
-        "date_updated": "2023-11-10T00:00:00Z",
-        "date_created": "2023-11-10T00:00:00Z"
+        "note": "Sent to admins when a new order is placed"
     },
     {
         "name": "Contact Form Feedback",
         "file_name": "contact-feedback.ejs",
-        "note": "Sent to admins when a user submits a contact form",
-        "date_updated": "2023-11-10T00:00:00Z",
-        "date_created": "2023-11-10T00:00:00Z"
+        "note": "Sent to admins when a user submits a contact form"
     }
 ]

@@ -111,13 +111,13 @@ async function insert_file_data() {
         await fs.mkdir(newFolderPath, { recursive: true });
         await fs.copyFile(originalFilePath, newFilePath);
 
-        if (object.mime_type.startsWith('image')) {
-            const result = await resizeImage(newFilePath, [150, 300, 600, 1024, 1500, 2048, 2560], newFolderPath);
-            console.log(object.file_name, ':', Math.round(result.time), 'ms');
-            object.status = 'optimized';
-            object.sizes = result.sizes;
-            object.optimized_format = result.format;
-        }
+        // if (object.mime_type.startsWith('image')) {
+        //     const result = await resizeImage(newFilePath, [150, 300, 600, 1024, 1500, 2048, 2560], newFolderPath);
+        //     console.log(object.file_name, ':', Math.round(result.time), 'ms');
+        //     object.status = 'optimized';
+        //     object.sizes = result.sizes;
+        //     object.optimized_format = result.format;
+        // }
 
         object.hash = hash;
     }

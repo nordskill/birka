@@ -87,7 +87,7 @@ const UserSchema = new Schema({
 		products: [{ ref: 'Product', type: Schema.Types.ObjectId }],
 		// expires: Date
 	}
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
