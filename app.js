@@ -68,6 +68,12 @@ function setupApp() {
 }
 
 function setupMiddleware(app) {
+
+    app.use((req, res, next) => {
+        res.locals.env = process.env.NODE_ENV;
+        next();
+    });
+    
     app.use(express.json());
     app.use(express.urlencoded({
         extended: false

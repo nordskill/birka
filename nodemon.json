@@ -6,7 +6,10 @@
         "data/"
     ],
     "ignore": [
-        "node_modules/"
+        "node_modules/",
+        "public/",
+        "src/",
+        "views/"
     ],
-    "ext": "js"
+    "ext": "js,json"
 }

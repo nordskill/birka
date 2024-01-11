@@ -4,5 +4,7 @@ public/files/
 .DS_Store
 public/js/main.js
 public/js/main.js.map
+public/js/style.js
+public/js/style.js.map
 public/css/style.css
 public/css/style.css.map
