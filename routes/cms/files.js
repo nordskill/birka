@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const { File } = require('../../models/file');
 const { generateImageMarkup, generateSVGMarkup, generateVideoMarkup } = require('../../public/js/cms/generateFileMarkup');
 
-const AMOUNT_OF_FILES_PER_PAGE = 10;
+const AMOUNT_OF_FILES_PER_PAGE = 30;
 
 // GET /cms/files?page=1&type=video
 router.get('/', async (req, res) => {
