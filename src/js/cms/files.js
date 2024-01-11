@@ -197,17 +197,17 @@ class FileDetailsModal {
 
         const { type, file_name, extension, hash } = data;
 
+        let fileName = `${file_name}.${extension}`;
+        const folder = `/files/${hash.slice(0, 2)}/`;
+        const originalFile = folder + fileName;
         let filePath = '';
         let media = '';
-        let fileName = `${file_name}.${extension}`;
         let altField = '';
         let dimensions = `
             <div>
                 <span>Dimensions:</span>
                 <pre>${data.width} × ${data.height} px</pre>
             </div>`;
-
-        const folder = `/files/${hash.slice(0, 2)}/`;
 
         if (type == 'image') {
 
@@ -241,8 +241,7 @@ class FileDetailsModal {
 
         } else {
 
-            filePath = folder + fileName;
-            media = `<video src="${filePath}" controls></video>`;
+            media = `<video src="${originalFile}" controls></video>`;
 
         }
 
@@ -275,6 +274,10 @@ class FileDetailsModal {
                         <pre>${data.mime_type}</pre>
                     </div>
                     ${dimensions}
+                    <div>
+                        <span>Original file:</span>
+                        <pre>${originalFile}</pre>
+                    </div>
                 </div>
                 <main>
                     ${altField}

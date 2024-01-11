@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const fs = require('fs').promises;
 const { File } = require('../../models/file');
-const { generateImageMarkup, generateSVGMarkup, generateVideoMarkup } = require('../../public/js/cms/generateFileMarkup');
 
 const AMOUNT_OF_FILES_PER_PAGE = 30;
 
@@ -75,6 +72,5 @@ router.get('/', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
 
 module.exports = router;

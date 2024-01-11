@@ -9,8 +9,12 @@
     <!-- Bootstrap core CSS -->
     <link href="/css/cms/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for CMS -->
-    <link href="/css/cms/style.css" rel="stylesheet">
+    <% if (env === 'production') { %>
+        <link rel="preload" href="/css/cms/cms_style.min.css" as="style">
+        <link href="/css/cms/cms_style.min.css" rel="stylesheet">
+    <% } else { %>
+        <script src="/dev/cms_style.js"></script>
+    <% } %>
 
     <%- SS.custom_html %>
 </head>
