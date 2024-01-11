@@ -122,7 +122,6 @@ class Debouncer {
     async sendRequest() {
         const value = this.fieldElement.value;
         const name = this.fieldElement.name;
-        console.log(JSON.stringify({ [name]: value }));
         
         try {
             const response = await fetch(this.endpoint, {
@@ -292,10 +291,8 @@ class FileDetailsModal {
 
         const fields = this.win.querySelectorAll('input, textarea');
         const endpoint = `/api/files/${id}`;
-        console.log(fields);
 
         fields.forEach(field => {
-            console.log(field);
             new Debouncer(field, endpoint);
         });
 
