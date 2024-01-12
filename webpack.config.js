@@ -1,76 +1,8 @@
-// const path = require('path');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-
-// module.exports = (env, argv) => {
-//     const isProduction = argv.mode === 'production';
-
-//     return {
-//         mode: isProduction ? 'production' : 'development',
-//         entry: {
-//             main: './src/js/main.js',
-//             style: './src/sass/style.scss', // Assuming you have a main.scss entry file
-//             cms_main: './src/js/cms/main.js',
-//             cms_style: './src/sass/cms/style.scss',
-//         },
-//         output: {
-//             filename: (chunkData) => {
-//                 return chunkData.chunk.name.includes('cms_') ? '../js/cms/[name].min.js' : '[name].min.js';
-//             },
-//             path: path.resolve(__dirname, 'public/js')
-//         },
-//         module: {
-//             rules: [
-//                 {
-//                     test: /\.scss$/,
-//                     use: [
-//                         isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-//                         'css-loader',
-//                         'sass-loader'
-//                     ]
-//                 }
-//             ]
-//         },
-//         optimization: {
-//             minimize: isProduction,
-//             usedExports: true
-//         },
-//         performance: {
-//             hints: false
-//         },
-//         devtool: 'source-map',
-//         plugins: [
-//             new MiniCssExtractPlugin({
-//                 filename: (chunkData) => {
-//                     console.log(1);
-
-//                     let name = chunkData.chunk.name.includes('cms_') ? '../css/cms/[name]' : '../css/[name]';
-//                     console.log(isProduction);
-
-//                     name += isProduction ? '.min.css' : '.css';
-//                     return name;
-//                 }
-//             }),            
-//             new BrowserSyncPlugin({
-//                 host: 'localhost',
-//                 port: 3001,
-//                 proxy: 'http://localhost:3000',
-//                 files: [
-//                     'public/**/*.*',
-//                     '!public/files/**/*.*', // Exclude files in public/files
-//                     'views/**/*.ejs',
-//                     'src/**/*.*'
-//                 ]
-//             })
-//         ].filter(Boolean),
-//         watch: !isProduction
-//     };
-// };
-
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -123,7 +55,8 @@ module.exports = (env, argv) => {
                     '!public/files/**/*.*', // Exclude files in public/files
                     'views/**/*.ejs'
                 ]
-            })
+            }),
+            // new BundleAnalyzerPlugin()
         ].filter(Boolean),
         optimization: {
             minimize: isProduction,

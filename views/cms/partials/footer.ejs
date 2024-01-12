@@ -1,12 +1,10 @@
 </div>
 </div>
 
-<script src="/js/cms/bootstrap.bundle.min.js"></script>
-
-<% if (typeof scripts !== 'undefined' && scripts instanceof Array) { %>
-    <% scripts.forEach(function(script) { %>
-        <script src="/js/cms/<%- script %>"></script>
-    <% }); %>
+<% if (env === 'production') { %>
+    <script src="/js/cms_main.min.js"></script>
+<% } else { %>
+    <script type="module" src="/dev/cms_main.js"></script>
 <% } %>
 
 </body>
