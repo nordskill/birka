@@ -36,6 +36,9 @@ const SettingsSchema = new Schema({
         type: String,
         trim: true
     },
+    img_sizes: [{
+        type: Number
+    }],
     // tax: {
     //     rate: Number,
     //     tax_included: Boolean,

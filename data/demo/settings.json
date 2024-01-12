@@ -17,5 +17,14 @@
         }
     ],
     "custom_html": "",
-    "language": "en"
+    "language": "en",
+    "img_sizes": [
+        150,
+        300,
+        600,
+        1024,
+        1500,
+        2048,
+        2560
+    ]
 }
