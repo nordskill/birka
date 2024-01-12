@@ -6,7 +6,6 @@ const loadVars = require('../functions/vars');
 const passwordUtils = require('../functions/password-utils');
 const generateHash = require('../functions/generate-hash');
 const resizeImage = require('../functions/image-resizer');
-const readline = require('readline');
 
 const pathToModels = path.join(__dirname, '..', 'models');
 const pathToData = path.join(__dirname, '..', 'data', 'demo');
@@ -19,6 +18,7 @@ loadVars();
     await insert_tag_data();
     await insert_email_template_data();
     await insert_file_data();
+    await insert_settings_data();
     await insert_user_data();
     await insert_notification_data();
     await insert_status_data();
@@ -26,7 +26,6 @@ loadVars();
     await insert_category_data();
     await insert_product_data();
     await insert_page_data();
-    await insert_settings_data();
     console.log('----------');
     console.log(`Database name: ${process.env.DB_NAME}`);
     console.log('----------');
@@ -112,7 +111,8 @@ async function insert_file_data() {
         await fs.copyFile(originalFilePath, newFilePath);
 
         if (object.mime_type.startsWith('image')) {
-            const result = await resizeImage(newFilePath, [150, 300, 600, 1024, 1500, 2048, 2560], newFolderPath);
+            const SS_IMG_SIZES = [150, 300, 600, 1024, 1500, 2048, 2560];
+            const result = await resizeImage(newFilePath, SS_IMG_SIZES, newFolderPath);
             console.log(object.file_name, ':', Math.round(result.time), 'ms');
             object.status = 'optimized';
             object.sizes = result.sizes;
