@@ -3,6 +3,7 @@ import cms_customer from './pages/customer';
 import cms_product from './pages/product';
 import files from './pages/files';
 
+import 'bootstrap';
 import bootstrapFormsValidation from '../functions/bootstrap-forms-validation';
 
 const currentPage = determineCurrentPage();
