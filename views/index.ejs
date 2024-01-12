@@ -3,11 +3,11 @@
     <head>
         <title><%= title %></title>
         <% if (env === 'production') { %>
+            <link rel="preload" href="/438818947cdb992bd22c.woff2" as="font" type="font/woff2">
             <link rel="preload" href="/css/style.min.css" as="style">
-            <link rel="preload" href="/js/438818947cdb992bd22c.woff2" as="font" type="font/woff2">
-            <link rel="stylesheet" href="/css/style.min.css">
+            <link href="/css/style.min.css" rel="stylesheet">
         <% } else { %>
-            <script src="/js/style.js"></script>
+            <script src="/dev/style.js"></script>
         <% } %>
     </head>
     <body>

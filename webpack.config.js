@@ -69,6 +69,8 @@
 
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -83,7 +85,6 @@ module.exports = (env, argv) => {
         },
         output: {
             filename: (chunkData) => {
-                // let folder = chunkData.chunk.name.startsWith('cms_') ? 'cms/' : '';
                 return isProduction
                     ? `js/[name].min.js`
                     : `dev/[name].js`;
@@ -113,8 +114,44 @@ module.exports = (env, argv) => {
                         : `dev/${folder}[name].js`; // Change to .js for development
                 },
             }),
-        ],
-        
+            new BrowserSyncPlugin({
+                host: 'localhost',
+                port: 3001,
+                proxy: 'http://localhost:3000',
+                files: [
+                    'public/**/*.*',
+                    '!public/files/**/*.*', // Exclude files in public/files
+                    'views/**/*.ejs'
+                ]
+            })
+        ].filter(Boolean),
+        optimization: {
+            minimize: isProduction,
+            minimizer: isProduction ? [new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        drop_console: true, // Remove console logs
+                        dead_code: true, // Remove unreachable code
+                        unused: true, // Remove unused variables and functions
+                        warnings: false, // display warnings when dropping unreachable code or unused declarations etc.
+                        drop_debugger: true,
+                        inline: 2, // Inline functions with arguments used < 2 times
+                    },
+                    output: {
+                        comments: false, // remove all comments
+                    },
+                    ie8: false,
+                    keep_fnames: false,
+                    safari10: false
+                },
+            })] : [],
+            usedExports: true,
+        },
+        performance: {
+            hints: false
+        },
+        watch: !isProduction,
+        // devtool: 'source-map',
     };
 };
 
