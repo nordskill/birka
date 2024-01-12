@@ -24,11 +24,12 @@ class FilesSelectionManager {
 
     onFileClick(event) {
 
-        if (!event.target.classList.contains('file')) return;
+        const wrapper = event.target.closest('.file');
+        if (!wrapper) return;
 
         const isModifierPressed = event.ctrlKey || event.metaKey;
         const isShiftPressed = event.shiftKey;
-        const clickedItem = event.target;
+        const clickedItem = wrapper;
 
         if (isShiftPressed && this.lastSelected) {
             let inRange = false;
@@ -68,8 +69,9 @@ class FilesSelectionManager {
     }
 
     onFileDoubleClick(event) {
-        if (!event.target.classList.contains('file')) return;
-        fileDetails.open(event.target.dataset.id);
+        const wrapper = event.target.closest('.file');
+        if (!wrapper) return;
+        fileDetails.open(wrapper.dataset.id);
     }
 
     selectAll(event) {
