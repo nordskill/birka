@@ -4,6 +4,7 @@ const users = require('./users');
 
 // CMS
 const cmsIndex = require('./cms/index');
+const cmsLogin = require('./cms/login');
 const cmsFiles = require('./cms/files');
 const cmsTags = require('./cms/tags');
 const cmsCustomers = require('./cms/customers');
@@ -28,6 +29,7 @@ module.exports = (app) => {
 
     // CMS
     app.use('/cms', cmsIndex);
+    app.use('/cms/login', cmsLogin);
     app.use('/cms/files', cmsFiles);
     app.use('/cms/tags', cmsTags);
     app.use('/cms/customers', cmsCustomers);
