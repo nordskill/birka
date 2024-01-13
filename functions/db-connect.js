@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 module.exports = {
-    connect: async function () {
+    connect: function () {
 
         const host = process.env.DB_HOST || '127.0.0.1';
         const port = process.env.DB_PORT || 27017;
@@ -16,7 +16,8 @@ module.exports = {
         }
 
         try {
-            await mongoose.connect(dbLink);
+            console.log('Connecting to DB...');
+            mongoose.connect(dbLink);
             console.log('DB Connected.');
             module.exports.connection = mongoose.connection;
         } catch (error) {
@@ -24,7 +25,7 @@ module.exports = {
         }
 
     },
-    disconnect: async function () {
-        await mongoose.connection.close();
+    disconnect: function () {
+        mongoose.connection.close();
     }
 }

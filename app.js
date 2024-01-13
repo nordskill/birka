@@ -1,10 +1,13 @@
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo');
 const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
-const cookieSession = require('cookie-session');
 const logger = require('morgan');
 const passport = require('passport');
+const crypto = require('crypto');
 
 const db = require('./functions/db-connect');
 const loadVars = require('./functions/vars');
@@ -15,9 +18,9 @@ const generateSvgSprites = require('./functions/generate-svg-sprites');
 const formatDate = require('./functions/format-date');
 
 const SiteSettings = require('./models/settings');
-const File = require('./models/file');
 const setupRoutes = require('./routes/_setup');
 const OperationalError = require('./functions/operational-error');
+const ensurePathExists = require('./functions/path-helper');
 
 init();
 
@@ -69,29 +72,54 @@ function setupApp() {
 
 function setupMiddleware(app) {
 
+    // write logs to file
+    const logDirectory = path.join(__dirname, 'logs');
+    ensurePathExists(logDirectory);
+    // if 'access.log' does not exist—create one
+    fs.existsSync(path.join(logDirectory, 'access.log')) || fs.writeFileSync(path.join(logDirectory, 'access.log'), '');
+    const accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' });
+
     app.use((req, res, next) => {
         res.locals.env = process.env.NODE_ENV;
         next();
     });
-    
+
     app.use(express.json());
     app.use(express.urlencoded({
         extended: false
     }));
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
-    app.use(logger('dev'));
+
+    if (process.env.NODE_ENV === 'production') {
+        app.use(logger('combined', {
+            stream: accessLogStream,
+            skip: function (req, res) { return res.statusCode < 400 }
+        }));
+    } else {
+        app.use(logger('dev'));
+    }
 
     app.set('trust proxy', 1);
-    app.use(cookieSession({
-        name: 'session',
-        secret: process.env.SESSION_SECRET || 'super_very_secret',
-        maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true
+    app.use(expressSession({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: db.connection.client.s.url,
+            mongooseConnection: db.connection,
+            collection: 'sessions'
+        }),
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production' ? true : 'auto',
+            httpOnly: true
+        }
     }));
+
+    app.use(csrfToken);
+    app.use(csrfProtection);
 
     // Passport middleware
     app.use(passport.initialize());
@@ -128,4 +156,34 @@ function setupErrorHandler(app) {
             });
         }
     });
+}
+
+function csrfToken(req, res, next) {
+
+    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000;
+    const now = new Date().getTime();
+    const regenerateToken = () => {
+        req.session.csrfTokenTime = now;
+        return crypto.randomBytes(32).toString('hex');
+    };
+
+    if (!req.session.csrfToken || now - req.session.csrfTokenTime > TOKEN_EXPIRY_TIME) {
+        req.session.csrfToken = regenerateToken();
+    }
+
+    res.locals.csrf_token = req.session.csrfToken;
+    next();
+
+}
+
+function csrfProtection(req, res, next) {
+    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+        const clientCsrfToken = req.body._csrf || req.query._csrf || req.headers['x-csrf-token'];
+        if (!clientCsrfToken || req.session.csrfToken !== clientCsrfToken) {
+            console.error(`CSRF token mismatch for request on ${req.path} from IP: ${req.ip}`);
+            const error = new OperationalError('CSRF token mismatch', 403);
+            return next(error);
+        }
+    }
+    next();
 }

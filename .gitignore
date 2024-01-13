@@ -1,5 +1,6 @@
 node_modules/
 public/files/
 public/dev/
+logs/
 .vars
 .DS_Store

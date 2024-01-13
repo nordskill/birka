@@ -7,11 +7,13 @@ const UserSchema = new Schema({
 	account_details: {
 		username: {
 			type: String,
+			unique: true,
 			trim: true
 		},
 		password: String,
 		email: {
 			type: String,
+			unique: true,
 			trim: true
 		},
 		avatar: { ref: 'File', type: Schema.Types.ObjectId },

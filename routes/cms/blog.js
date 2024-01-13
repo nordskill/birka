@@ -4,6 +4,8 @@ const Blog = require('../../models/blog-post');
 const Tag = require('../../models/tag');
 const User = require('../../models/user');
 const formatBody = require('../../functions/format-body');
+const mongoose = require('mongoose');
+const OperationalError = require('../../functions/operational-error');
 
 
 const SLUG = 'blog';
@@ -55,12 +57,20 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id;
+
+    // Check if id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return next(new OperationalError("Blog Post not found", 404));
+    }
+
     try {
         const blogPost = await Blog.findById(id)
             .select('-__v')
             .populate('tags', 'slug name -_id')
             .populate('author img_preview')
             .lean();
+
+        console.log(blogPost);
 
         if (!blogPost) {
             throw new OperationalError("Blog Post not found", 404);

@@ -17,6 +17,15 @@ async function hashPassword(password) {
 
 }
 
+async function verifyPassword(password, hash) {
+
+    const [salt, key] = hash.split(':');
+    const derivedKey = await pbkdf2Async(password, salt, iterations, keylength, digest);
+    return key === derivedKey.toString('hex');
+
+}
+
 module.exports = {
-    hashPassword
+    hashPassword,
+    verifyPassword
 };
