@@ -21,6 +21,7 @@ class Debouncer {
     constructor(fieldElement, endpoint) {
         this.fieldElement = fieldElement;
         this.endpoint = endpoint;
+        this.csrfToken = document.querySelector('meta[name="csrf"]').content;
         this.debounceTimer = null;
         this.init();
     }
@@ -44,7 +45,10 @@ class Debouncer {
         try {
             const response = await fetch(this.endpoint, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': this.csrfToken
+                },
                 body: JSON.stringify({ [name]: value })
             });
 

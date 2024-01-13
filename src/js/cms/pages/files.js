@@ -1,6 +1,7 @@
 import FileDetails from '../../functions/file-details';
 
 const fileDetails = new FileDetails();
+const csrfToken = document.querySelector('meta[name="csrf"]').content;
 
 class FilesSelectionManager {
     constructor() {
@@ -105,7 +106,8 @@ class FilesSelectionManager {
         fetch('/api/files', {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
             },
             body: JSON.stringify(ids)
         })
@@ -225,6 +227,9 @@ function initFilesUpload() {
 
             fetch('/api/files', {
                 method: 'POST',
+                headers: {
+                    'X-CSRF-Token': csrfToken
+                },
                 body: formData
             })
                 .then(res => res.json())

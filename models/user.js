@@ -19,6 +19,8 @@ const UserSchema = new Schema({
 		avatar: { ref: 'File', type: Schema.Types.ObjectId },
 		role: {
 			type: String,
+			required: true,
+			default: 'Customer',
 			trim: true
 		},
 		email_notifications: Boolean,

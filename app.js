@@ -111,7 +111,6 @@ async function setupMiddleware(app) {
             collection: 'sessions'
         }),
         cookie: {
-            maxAge: 24 * 60 * 60 * 1000,
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: process.env.NODE_ENV === 'production' ? true : 'auto',
             httpOnly: true
@@ -124,9 +123,16 @@ async function setupMiddleware(app) {
     // Passport middleware
     app.use(passport.initialize());
     app.use(passport.session());
+
+    // Attach user data to res.locals
+    app.use((req, res, next) => {
+        res.locals.auth_user = req.user;
+        next();
+    });
 }
 
 function setupErrorHandler(app) {
+
     // 404 Not Found Handler
     app.use((req, res, next) => {
         next(createError(404));
@@ -139,7 +145,8 @@ function setupErrorHandler(app) {
 
         const isOperationalError = err instanceof OperationalError;
         const errorResponse = {
-            message: isOperationalError ? err.message : 'Internal Server Error',
+            // message: isOperationalError ? err.message : 'Internal Server Error',
+            message: err.message,
             error: req.app.get('env') === 'development' && !isOperationalError ? err : {}
         };
 
@@ -156,11 +163,12 @@ function setupErrorHandler(app) {
             });
         }
     });
+
 }
 
 function csrfToken(req, res, next) {
 
-    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000;
+    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes
     const now = new Date().getTime();
     const regenerateToken = () => {
         req.session.csrfTokenTime = now;

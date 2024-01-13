@@ -1,3 +1,5 @@
+const express = require('express');
+
 // Navigation
 const index = require('./index');
 const users = require('./users');
@@ -5,6 +7,7 @@ const users = require('./users');
 // CMS
 const cmsIndex = require('./cms/index');
 const cmsLogin = require('./cms/login');
+const cmsLogout = require('./cms/logout');
 const cmsFiles = require('./cms/files');
 const cmsTags = require('./cms/tags');
 const cmsCustomers = require('./cms/customers');
@@ -18,6 +21,7 @@ const cmsEmails = require('./cms/email-templates');
 const cmsSettings = require('./cms/settings');
 
 // JSON API
+const apiAuth = require('./api/auth');
 const apiTag = require('./api/tags');
 const apiFile = require('./api/files');
 
@@ -28,22 +32,38 @@ module.exports = (app) => {
     app.use('/users', users);
 
     // CMS
-    app.use('/cms', cmsIndex);
-    app.use('/cms/login', cmsLogin);
-    app.use('/cms/files', cmsFiles);
-    app.use('/cms/tags', cmsTags);
-    app.use('/cms/customers', cmsCustomers);
-    app.use('/cms/products', cmsProducts);
-    app.use('/cms/orders', cmsOrders);
-    app.use('/cms/statuses', cmsStatuses);
-    app.use('/cms/pages', cmsPages);
-    app.use('/cms/blog', cmsBlog);
-    app.use('/cms/notifications', cmsNotifications);
-    app.use('/cms/email-templates', cmsEmails);
-    app.use('/cms/settings', cmsSettings);
+    app.use('/cms/login', cmsLogin)
+    app.use('/cms/logout', cmsLogout);
+
+    const cmsRoutes = express.Router();
+    cmsRoutes.use(checkAuthentication); // Apply the middleware to all routes under /cmsRoutes
+
+    cmsRoutes.use('/', cmsIndex);
+    cmsRoutes.use('/files', cmsFiles);
+    cmsRoutes.use('/tags', cmsTags);
+    cmsRoutes.use('/customers', cmsCustomers);
+    cmsRoutes.use('/products', cmsProducts);
+    cmsRoutes.use('/orders', cmsOrders);
+    cmsRoutes.use('/statuses', cmsStatuses);
+    cmsRoutes.use('/pages', cmsPages);
+    cmsRoutes.use('/blog', cmsBlog);
+    cmsRoutes.use('/notifications', cmsNotifications);
+    cmsRoutes.use('/email-templates', cmsEmails);
+    cmsRoutes.use('/settings', cmsSettings);
+
+    app.use('/cms', cmsRoutes);
 
     // JSON API
+    app.use('/api/auth', apiAuth);
     app.use('/api/tags', apiTag);
     app.use('/api/files', apiFile);
-    
+
 };
+
+function checkAuthentication(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect('/cms/login');
+    }
+}

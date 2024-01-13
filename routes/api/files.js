@@ -12,7 +12,6 @@ const OperationalError = require('../../functions/operational-error');
 const generateHash = require('../../functions/generate-hash');
 const slugify = require('../../functions/slugify');
 const resizeImage = require('../../functions/image-resizer');
-const { optimize } = require('webpack');
 
 const tempFilesDirectory = path.join('public', 'files', '_temp');
 

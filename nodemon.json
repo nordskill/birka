@@ -1,6 +1,7 @@
 {
     "delay": "1000",
     "watch": [
+        "config/**/*.*",
         "app.js",
         "routes/",
         "data/"

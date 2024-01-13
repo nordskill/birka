@@ -16,7 +16,7 @@
     <%- SS.custom_html %>
     
     <meta name="template" content="<%= template_name %>">
-    <meta name="csrf" content="<%= csrf_token %>">
+    <meta name="csrf" content="<%= locals?.csrf_token %>">
 </head>
 
 <body>
@@ -29,9 +29,12 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-        <div class="navbar-nav">
+        <div class="navbar-nav flex-row">
             <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
+                <a class="nav-link px-3" href="/cms/customers/<%= auth_user?._id %>"><%= auth_user?.account_details?.username %></a>
+            </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="/cms/logout">Sign out</a>
             </div>
         </div>
     </header>
