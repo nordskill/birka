@@ -20,7 +20,6 @@ const formatDate = require('./functions/format-date');
 const SiteSettings = require('./models/settings');
 const setupRoutes = require('./routes/_setup');
 const OperationalError = require('./functions/operational-error');
-const ensurePathExists = require('./functions/path-helper');
 
 init();
 
@@ -70,11 +69,12 @@ function setupApp() {
     module.exports = app;
 }
 
-function setupMiddleware(app) {
+async function setupMiddleware(app) {
 
     // write logs to file
     const logDirectory = path.join(__dirname, 'logs');
-    ensurePathExists(logDirectory);
+    // ensure log directory exists, if it doesn't, create one
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
     // if 'access.log' does not exist—create one
     fs.existsSync(path.join(logDirectory, 'access.log')) || fs.writeFileSync(path.join(logDirectory, 'access.log'), '');
     const accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' });

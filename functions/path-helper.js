@@ -1,5 +1,4 @@
 const fs = require('fs').promises;
-const path = require('path');
 
 /**
  * Asynchronously checks if a path exists, and if it doesn't, creates the folders recursively.
