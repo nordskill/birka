@@ -35,7 +35,7 @@
                                     <% if(file.status === 'processing'){ %>
                                         <div class="spinner"></div>
                                     <% } else { %>
-                                        <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file.alt || '' %>">
+                                        <img src="<%= `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}` %>" alt="<%= file?.alt %>">
                                     <% } %>
                                 <% } else if(file.type === 'video') { %>
                                     <%- icon({ name: 'video' }) %>
