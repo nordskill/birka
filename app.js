@@ -7,6 +7,7 @@ const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 
 const db = require('./functions/db-connect');
@@ -20,6 +21,9 @@ const formatDate = require('./functions/format-date');
 const SiteSettings = require('./models/settings');
 const setupRoutes = require('./routes/_setup');
 const OperationalError = require('./functions/operational-error');
+
+// Object to track exceeded request counts and initial exceedance flag per IP
+let exceededRequests = {};
 
 init();
 
@@ -100,6 +104,43 @@ async function setupMiddleware(app) {
         app.use(logger('dev'));
     }
 
+    setInterval(() => {
+        for (const [ip, data] of Object.entries(exceededRequests)) {
+            if (data.count > 0) {
+                const logMessage = `${new Date().toISOString()} - ${data.count} requests during the last 10 sec. from IP: ${ip}\n`;
+                fs.appendFileSync(path.join(__dirname, 'logs', 'access.log'), logMessage);
+                data.count = 0;
+            } else {
+                delete exceededRequests[ip];
+            }
+        }
+    }, 3000); // 10 seconds
+
+    const limiter = rateLimit({
+        windowMs: 30 * 1000, // 30 seconds
+        max: 3000, // limit each IP to 3000 requests per windowMs
+        handler: function (req, res) {
+            const ip = req.ip;
+            if (!exceededRequests[ip] || !exceededRequests[ip].logged) {
+                let message = `Rate limit exceeded for IP: ${ip} on path: ${req.path}`;
+                exceededRequests[ip] = { count: 1, logged: true };
+                console.error(message);
+                fs.appendFileSync(path.join(__dirname, 'logs', 'access.log'), `${new Date().toISOString()} - ${message}\n`);
+            } else {
+                exceededRequests[ip].count += 1;
+            }
+            res.status(429).json({ message: "Too many requests, please try again later." });
+        },
+        onLimitRemoved: function (req, res) {
+            const ip = req.ip;
+            delete exceededRequests[ip];
+        }
+    });
+
+    // Apply the rate limiting middleware to all requests
+    app.use(limiter);
+
+    // Cookie Session Setup
     app.set('trust proxy', 1);
     app.use(expressSession({
         secret: process.env.SESSION_SECRET,
