@@ -36,7 +36,7 @@ module.exports = (app) => {
     app.use('/cms/logout', cmsLogout);
 
     const cmsRoutes = express.Router();
-    cmsRoutes.use(checkAuthentication); // Apply the middleware to all routes under /cmsRoutes
+    cmsRoutes.use(checkAuthentication);
 
     cmsRoutes.use('/', cmsIndex);
     cmsRoutes.use('/files', cmsFiles);

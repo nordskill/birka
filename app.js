@@ -111,7 +111,7 @@ async function setupMiddleware(app) {
             collection: 'sessions'
         }),
         cookie: {
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
             secure: process.env.NODE_ENV === 'production' ? true : 'auto',
             httpOnly: true
         }
