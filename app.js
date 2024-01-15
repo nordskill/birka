@@ -111,8 +111,8 @@ async function setupMiddleware(app) {
             collection: 'sessions'
         }),
         cookie: {
-            sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-            secure: process.env.NODE_ENV === 'production' ? true : 'auto',
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
             httpOnly: true
         }
     }));
@@ -170,17 +170,20 @@ function csrfToken(req, res, next) {
 
     const TOKEN_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes
     const now = new Date().getTime();
-    const regenerateToken = () => {
-        req.session.csrfTokenTime = now;
-        return crypto.randomBytes(32).toString('hex');
-    };
 
-    if (!req.session.csrfToken || now - req.session.csrfTokenTime > TOKEN_EXPIRY_TIME) {
+    if (!req.session.csrfToken ||
+        !req.session.csrfTokenTime ||
+        now - req.session.csrfTokenTime > TOKEN_EXPIRY_TIME) {
         req.session.csrfToken = regenerateToken();
     }
 
     res.locals.csrf_token = req.session.csrfToken;
     next();
+
+    function regenerateToken() {
+        req.session.csrfTokenTime = now;
+        return crypto.randomBytes(32).toString('hex');
+    };
 
 }
 
