@@ -153,7 +153,7 @@ async function setupMiddleware(app) {
         }),
         cookie: {
             sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV === 'production' && process.env.PRODUCTION_TEST !== 'true',
             httpOnly: true
         }
     }));
@@ -208,25 +208,26 @@ function setupErrorHandler(app) {
 }
 
 function csrfToken(req, res, next) {
-
-    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000; // 30 minutes
+    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000; // 30 min
     const now = new Date().getTime();
 
-    if (!req.session.csrfToken ||
-        !req.session.csrfTokenTime ||
-        now - req.session.csrfTokenTime > TOKEN_EXPIRY_TIME) {
-        req.session.csrfToken = regenerateToken();
+    if (!req.session.csrfToken || 
+        !req.session.csrfTokenExpiry || 
+        now > req.session.csrfTokenExpiry) {
+        regenerateToken();
     }
 
     res.locals.csrf_token = req.session.csrfToken;
     next();
 
     function regenerateToken() {
-        req.session.csrfTokenTime = now;
-        return crypto.randomBytes(32).toString('hex');
+        req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+        req.session.csrfTokenExpiry = now + TOKEN_EXPIRY_TIME;
+        req.session.save();
     };
-
 }
+
+
 
 function csrfProtection(req, res, next) {
     if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
