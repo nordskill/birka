@@ -17,8 +17,9 @@ module.exports = (env, argv) => {
         },
         output: {
             filename: (chunkData) => {
+                let folder = chunkData.chunk.name.includes('cms_') ? 'cms/js/' : 'js/';
                 return isProduction
-                    ? `js/[name].min.js`
+                    ? `${folder}[name].min.js`
                     : `dev/[name].js`;
             },
             path: path.resolve(__dirname, 'public')
@@ -40,10 +41,10 @@ module.exports = (env, argv) => {
         plugins: [
             new MiniCssExtractPlugin({
                 filename: (chunkData) => {
-                    let folder = chunkData.chunk.name.includes('cms_') ? 'cms/' : '';
+                    let folder = chunkData.chunk.name.includes('cms_') ? 'cms/css/' : 'css/';
                     return isProduction
-                        ? `css/${folder}[name].min.css`
-                        : `dev/${folder}[name].js`; // Change to .js for development
+                        ? `${folder}[name].min.css`
+                        : `dev/[name].js`;
                 },
             }),
             new BrowserSyncPlugin({
