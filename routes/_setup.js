@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 // Navigation
 const index = require('./index');
@@ -35,6 +36,9 @@ module.exports = (app) => {
     app.use('/cms/login', cmsLogin)
     app.use('/cms/logout', cmsLogout);
 
+    // protect static folder pubblic/css-assets/ with cmsAuthentication
+    app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../public/cms-assets')));
+
     const cmsRoutes = express.Router();
     cmsRoutes.use(checkAuthentication);
 
@@ -66,4 +70,12 @@ function checkAuthentication(req, res, next) {
     } else {
         res.redirect('/cms/login');
     }
+}
+
+// Custom middleware to handle CMS static files and page requests
+function cmsAuthentication(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(403).send('Access Denied');
+    }
+    next();
 }

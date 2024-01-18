@@ -7,8 +7,8 @@
     <title>Dashboard</title>
 
     <% if (env === 'production') { %>
-        <link rel="preload" href="/css/cms/cms_style.min.css" as="style">
-        <link href="/css/cms/cms_style.min.css" rel="stylesheet">
+        <link rel="preload" href="/cms-assets/css/cms_style.min.css" as="style">
+        <link href="/cms-assets/css/cms_style.min.css" rel="stylesheet">
     <% } else { %>
         <script src="/dev/cms_style.js"></script>
     <% } %>
@@ -43,7 +43,7 @@
     </main>
 
     <% if (env === 'production') { %>
-        <script src="/js/cms_main.min.js"></script>
+        <script src="/cms-assets/js/cms_main.min.js"></script>
     <% } else { %>
         <script type="module" src="/dev/cms_main.js"></script>
     <% } %>
