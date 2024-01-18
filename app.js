@@ -93,7 +93,6 @@ async function setupMiddleware(app) {
         extended: false
     }));
     app.use(cookieParser());
-    app.use(express.static(path.join(__dirname, 'public')));
 
     if (process.env.NODE_ENV === 'production') {
         app.use(logger('combined', {

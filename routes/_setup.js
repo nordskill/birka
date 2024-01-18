@@ -39,6 +39,9 @@ module.exports = (app) => {
     // protect static folder pubblic/css-assets/ with cmsAuthentication
     app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../public/cms-assets')));
 
+    // Serve other static files in public directory
+    app.use(express.static(path.join(__dirname, '../public')));
+
     const cmsRoutes = express.Router();
     cmsRoutes.use(checkAuthentication);
 
