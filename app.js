@@ -43,11 +43,9 @@ async function getSiteSettings() {
         global.SS = await SiteSettings
             .findOne()
             .populate({
-                path: 'social_links.icon',
-                model: 'File',
-                select: 'file_name mime_type extension'
+                path: 'social_links.icon logo',
+                model: 'File'
             })
-            .select('-_id -__v')
             .lean();
 
     } catch (error) {

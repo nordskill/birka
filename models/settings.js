@@ -10,6 +10,7 @@ const SettingsSchema = new Schema({
         type: String,
         trim: true
     },
+    logo: { ref: 'File', type: Schema.Types.ObjectId },
     domain: {
         type: String,
         trim: true
