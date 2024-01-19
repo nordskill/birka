@@ -5,48 +5,167 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
 
-    <% if (env === 'production') { %>
-        <link rel="preload" href="/cms-assets/css/cms_style.min.css" as="style">
-        <link href="/cms-assets/css/cms_style.min.css" rel="stylesheet">
-    <% } else { %>
-        <script src="/dev/cms_style.js"></script>
-    <% } %>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        body * {
+            box-sizing: border-box;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #logo {
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+        }
+
+        form {
+            width: 280px;
+        }
+
+        input {
+            font-size: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            border: thin solid #ccc;
+            width: 100%;
+        }
+
+        form input[name="username"] {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        form input[name="password"] {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .field:has(input[type="checkbox"]) {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            transform: translateX(-4px);
+            justify-content: center;
+        }
+
+        .field:has(input[type="checkbox"]) label {
+            line-height: 32px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 0;
+            border: thin solid #ccc;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .btn {
+            font-size: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            border: thin solid #4b8bda;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #57a3ff;
+            color: #FFF;
+        }
+        #message {
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 10px 15px;
+            background-color: #ffcfda;
+            border: thin solid #dbaeb8;
+            border-radius: 6px;
+            color: #782f3f;
+        }
+    </style>
 
     <%- SS.custom_html %>
-    
+
     <meta name="template" content="<%= template_name %>">
     <meta name="csrf" content="<%= locals?.csrf_token %>">
 </head>
 
-<body class="login d-flex align-items-center py-4 bg-body-tertiary">
-    <main class="form-signin w-100 m-auto">
+<body class="login-page">
+    <main>
         <form name="login">
-            <img class="mb-4" src="/files/56/default_avatar.png" alt="" width="57" height="57">
-            <h1 class="h4 mb-3 fw-normal">Please sign in</h1>
-
-            <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="username or email" name="username">
-                <label for="floatingInput">username or e-mail</label>
+            <img id="logo" src="<%= logo_path %>" alt="" width="64" height="64">
+                <div class="field">
+                    <input type="text" placeholder="username or email" name="username">
+                </div>
+                <div class="field">
+                    <input type="password" placeholder="password" name="password">
+                </div>
+            <div class="field">
+                <input type="checkbox" id="remember-me" name="remember">
+                <label for="remember-me">Remember me</label>
             </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="password" name="password">
-                <label for="floatingPassword">password</label>
-            </div>
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="remember">
-                <label class="form-check-label" for="flexCheckDefault">Remember me</label>
-            </div>
-            <div class="alert alert-danger" hidden></div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+            <div id="message" hidden></div>
+            <button class="btn" type="submit">Sign in</button>
         </form>
     </main>
 
-    <% if (env === 'production') { %>
-        <script src="/cms-assets/js/cms_main.min.js"></script>
-    <% } else { %>
-        <script type="module" src="/dev/cms_main.js"></script>
-    <% } %>
+    <script>
+        const csrfToken = document.querySelector('meta[name="csrf"]').content;
+        const form = document.forms.login;
+        const btn = form.querySelector('button[type="submit"]');
+        const message = document.querySelector('#message');
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await send();
+        });
+
+        async function send() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        username: form.username.value,
+                        password: form.password.value,
+                        remember: form.remember.checked
+                    }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.error(data);
+                    window.location.href = '/cms';
+                } else {
+                    message.innerText = data.message;
+                    message.hidden = false;
+                    console.error(data);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
 
 </body>
 
