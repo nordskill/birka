@@ -14,6 +14,14 @@
  * //   ...
  * // }
  * generateSvgSprites();
+ * 
+ * In EJS templates, use the following syntax:
+ * <!-- add icon anywhere at the page: -->
+ * <svg>
+ *     <use xlink:href="#calendar"></use>
+ * </svg>
+ * <!-- include sprinte once at the page bottom: -->
+ * <%- include('partials/svg-sprite') %>
  */
 
 const fs = require('fs');
