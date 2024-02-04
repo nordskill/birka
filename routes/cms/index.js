@@ -4,7 +4,7 @@ const router = express.Router();
 // CMS Home Page
 router.get('/', async (req, res, next) => {
     res.render('cms/index', {
-        title: 'CMS Dashboard',
+        title: 'Dashboard',
         template_name: 'cms_dashboard',
         active: 'dashboard',
         breadcrumbs: [
