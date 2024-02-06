@@ -24,6 +24,7 @@ class Debouncer {
         this.csrfToken = document.querySelector('meta[name="csrf"]').content;
         this.debounceTimer = null;
         this.init();
+        this.DELAY = 500;
     }
 
     init() {
@@ -34,7 +35,7 @@ class Debouncer {
             invalidFeedback.style.display = 'none';
 
             clearTimeout(this.debounceTimer);
-            this.debounceTimer = setTimeout(() => this.sendRequest(), 500);
+            this.debounceTimer = setTimeout(() => this.sendRequest(), this.DELAY);
         });
     }
 
