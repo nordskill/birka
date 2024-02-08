@@ -1,3 +1,22 @@
+/**
+ * Formats a date according to the specified style.
+ *
+ * @param {Date} date - The date to format.
+ * @param {string} style - The style to format the date in. Can be 'yyyy-mm-dd', 'yyyymmdd', or 'dd mon yyyy'.
+ * @returns {string} The formatted date.
+ *
+ * @example
+ * // Returns '2022-12-31'
+ * formatDate(new Date(2022, 11, 31), 'yyyy-mm-dd');
+ *
+ * @example
+ * // Returns '20221231'
+ * formatDate(new Date(2022, 11, 31), 'yyyymmdd');
+ *
+ * @example
+ * // Returns '31 Dec 2022'
+ * formatDate(new Date(2022, 11, 31), 'dd mon yyyy');
+ */
 function formatDate(date, style) {
 
 	const year = date.getFullYear();

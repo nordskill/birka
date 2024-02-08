@@ -1,3 +1,24 @@
+/**
+ * Resizes an image to specified widths and saves the resized images to a target path.
+ *
+ * @param {string} originalPath - The path to the original image.
+ * @param {Array<number>} widths - An array of widths to which the image should be resized.
+ * @param {string} targetPath - The path where the resized images should be saved.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the image has been resized and saved.
+ *
+ * @throws {Error} If there is an error with the path.
+ *
+ * @example
+ * const originalPath = './images/original.jpg';
+ * const widths = [300, 600, 900];
+ * const targetPath = './images/resized';
+ *
+ * resizeImage(originalPath, widths, targetPath)
+ *     .then(() => console.log('Image resizing completed.'))
+ *     .catch(err => console.error('Error resizing image:', err));
+ */
+
 const sharp = require('sharp');
 const { performance } = require('perf_hooks');
 const ensurePathExists = require('./path-helper');

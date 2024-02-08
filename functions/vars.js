@@ -1,3 +1,13 @@
+/**
+ * Loads variables from a .vars file and sets them as environment variables.
+ * The .vars file should be in the parent directory of this module and should contain a JSON object.
+ * Each key-value pair in the JSON object is set as an environment variable.
+ *
+ * @module loadVars
+ * @returns {void}
+ * @throws {Error} If there is an error reading the .vars file.
+ */
+
 const fs = require('fs');
 const path = require('path');
 
