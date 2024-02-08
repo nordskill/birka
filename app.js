@@ -205,21 +205,13 @@ function setupErrorHandler(app) {
 }
 
 function csrfToken(req, res, next) {
-    const TOKEN_EXPIRY_TIME = 30 * 60 * 1000; // 30 min
-    const now = new Date().getTime();
 
-    if (!req.session.csrfToken || 
-        !req.session.csrfTokenExpiry || 
-        now > req.session.csrfTokenExpiry) {
-        regenerateToken();
-    }
-
+    if (!req.session.csrfToken) regenerateToken();
     res.locals.csrf_token = req.session.csrfToken;
     next();
 
     function regenerateToken() {
         req.session.csrfToken = crypto.randomBytes(32).toString('hex');
-        req.session.csrfTokenExpiry = now + TOKEN_EXPIRY_TIME;
         req.session.save();
     };
 }
