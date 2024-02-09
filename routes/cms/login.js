@@ -12,6 +12,8 @@ router.get('/', async (req, res, next) => {
         const folder = hash.slice(0, 2);
         const size = findClosestNumber(150, sizes);
         logoPath = `/files/${folder}/${size}/${file_name}.${optimized_format}`;
+    } else {
+        logoPath = '/img/birka-logo_v1.webp';
     }
 
     res.render('cms/login', {
