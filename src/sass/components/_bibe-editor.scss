@@ -1,0 +1,67 @@
+.bibe_editor {
+    $paddings: 10px;
+    $anchor_width: 34px;
+    $base_fs: 14px; // base font size
+    $line_height: calc(14px * 1.5); // 1.5em
+    box-shadow: inset 0 0 10px red;
+    
+
+    padding: $paddings $paddings $paddings calc($anchor_width + 1ch);
+    position: relative;
+
+    .content {
+        position: relative;
+        outline: none;
+        font-size: $base_fs;
+        line-height: $line_height;
+
+        &>* {
+            margin: 0;
+            padding: 8px;
+        }
+    }
+
+    .anchor {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-50%);
+        width: $anchor_width;
+        height: 16px;
+
+        .minibtn {
+            position: absolute;
+            width: 16px;
+            height: 100%;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.1);
+
+            svg {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 9px;
+                height: 9px;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .add_block {
+            left: 0;
+            cursor: pointer;
+
+            svg {
+                width: 7px;
+                height: 7px;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+        }
+
+        .handle {
+            left: 18px;
+            cursor: grab;
+        }
+    }
+
+}
