@@ -28,6 +28,9 @@ const BlogPostSchema = new Schema({
         type: Schema.Types.ObjectId,
     },
     body: [Schema.Types.Mixed],
+    draft: [Schema.Types.Mixed],
+    body_rendered: String,
+    draft_rendered: String,
     tags: [{
         ref: 'Tag',
         type: Schema.Types.ObjectId
