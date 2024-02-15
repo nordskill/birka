@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
         const size = findClosestNumber(150, sizes);
         logoPath = `/files/${folder}/${size}/${file_name}.${optimized_format}`;
     } else {
-        logoPath = '/img/birka-logo_v1.webp';
+        logoPath = '/img/birka-logo_v2.webp';
     }
 
     res.render('cms/login', {
