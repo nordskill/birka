@@ -70,8 +70,6 @@ router.get('/:id', async (req, res, next) => {
             .populate('author img_preview')
             .lean();
 
-        console.log(blogPost);
-
         if (!blogPost) {
             throw new OperationalError("Blog Post not found", 404);
         }
