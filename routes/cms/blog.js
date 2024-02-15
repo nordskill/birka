@@ -78,9 +78,9 @@ router.get('/:id', async (req, res, next) => {
 
         const folder_path = '/files/images/blog/';
 
-        res.render(`cms/${SLUG}-post`, {
+        res.render(`cms/${SLUG}post`, {
             title: 'Blog Post',
-            template_name: 'cms_blog-post',
+            template_name: 'cms_blogpost',
             active: SLUG,
             blog_post: blogPost,
             img_preview: `${folder_path}${blogPost.img_preview?.file_name}.${blogPost.img_preview?.extension}`,

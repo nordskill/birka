@@ -1,6 +1,7 @@
 import cms_dashboard from './pages/dashboard';
 import cms_customer from './pages/customer';
 import cms_product from './pages/product';
+import cms_blogpost from './pages/blogpost';
 import files from './pages/files';
 
 import 'bootstrap';
@@ -12,6 +13,7 @@ const page = {
     cms_dashboard,
     cms_customer,
     cms_product,
+    cms_blogpost,
     files
 }
 
