@@ -8,8 +8,12 @@ class BibeEditor {
         this.editor = null;
         this.content = null;
         this.anchor = null;
+        this.anchorHandlePressed = false;
         this.blocks = [];
         this.editorPaddingTop = null; // Editor's top padding
+        this.editorPaddingLeft = null; // Editor's left padding
+        this.hoveredBlock = null;
+        this.draggedBlock = null;
     }
 
     init(container) {
@@ -47,13 +51,32 @@ class BibeEditor {
             // get the top padding of the .bibe_editor
             const editorStyle = window.getComputedStyle(container.querySelector('.bibe_editor'));
             this.editorPaddingTop = parseInt(editorStyle.paddingTop);
+            this.editorPaddingLeft = parseInt(editorStyle.paddingLeft);
 
             this.editor = container.querySelector('.bibe_editor');
+            this.editor.addEventListener('mousemove', this.#handleMouseMove);
+
             this.content = container.querySelector('.content');
-            this.#updateBlocks();
+            this.#initBlocks();
             this.#initAnchor(container);
         }, 0);
 
+    }
+
+    #initBlocks() {
+        this.blocks = [...this.content.children].map(block => ({
+            element: block,
+            rect: block.getBoundingClientRect(),
+            isHovered: false, // Initial state
+            drop: null // Initial state
+        }));
+    }
+
+    #updateBlocks() {
+        this.blocks.forEach((block) => {
+            block.rect = block.element.getBoundingClientRect(); // Update only rect
+            block.isHovered = block.element === this.hoveredBlock?.element; // Update hover state based on hoveredBlock
+        });
     }
 
     #initAnchor(container) {
@@ -74,7 +97,10 @@ class BibeEditor {
                 // prevent text selection
                 e.preventDefault();
 
-                this.editor.addEventListener('mousemove', this.#handleMouseMove);
+                this.anchorHandlePressed = true;
+                this.draggedBlock = this.hoveredBlock;
+                this.hoveredBlock.element.style.backgroundColor = 'hsla(195, 100%, 50%, 0.18';
+                this.hoveredBlock.element.style.borderRadius = '3px';
                 this.editor.addEventListener('mouseup', this.#handleMouseUp, { once: true });
             }
         });
@@ -90,6 +116,7 @@ class BibeEditor {
                 const block = this.blocks.find(b => b.element === blockElement);
                 if (block) {
                     block.isHovered = true;
+                    this.hoveredBlock = block;
                     this.#showAnchor(block.element);
                 }
             }
@@ -101,6 +128,7 @@ class BibeEditor {
                 const block = this.blocks.find(b => b.element === blockElement);
                 if (block) {
                     block.isHovered = false;
+                    this.hoveredBlock = null;
                     this.#hideAnchor();
                 }
             }
@@ -108,6 +136,8 @@ class BibeEditor {
     }
 
     #showAnchor(block) {
+
+        block.isHovered = true;
         // Calculate and adjust the anchor's position to the block's top left corner
         const blockRect = block.getBoundingClientRect();
         const blockStyle = window.getComputedStyle(block);
@@ -124,45 +154,75 @@ class BibeEditor {
 
     #hideAnchor() {
         this.anchor.style.display = 'none'; // Hide the anchor
+        this.blocks.forEach(block => {
+            block.isHovered = false;
+        });
     }
 
     #handleMouseMove = (e) => {
-        this.#updateBlocks();
-        this.blocks.forEach(block => {
-            block.element.style.borderTop = '';
-            block.element.style.borderBottom = '';
-        });
 
-        const nearestBlock = this.blocks.reduce((nearest, block) => {
-            const mouseY = e.clientY;
-            const blockMiddleY = block.rect.top + (block.rect.height / 2);
-            if (!nearest.block || (Math.abs(mouseY - blockMiddleY) < Math.abs(mouseY - nearest.middleY))) {
-                return { block: block.element, middleY: blockMiddleY };
-            }
-            return nearest;
-        }, {});
+        const checkX = e.clientX + this.editorPaddingLeft;
+        const checkY = e.clientY;
 
-        if (nearestBlock.block) {
-            const mouseY = e.clientY;
-            const positionAbove = mouseY < nearestBlock.middleY;
-            nearestBlock.block.style[positionAbove ? 'borderTop' : 'borderBottom'] = '3px solid deepskyblue';
+        const elementAtPoint = document.elementFromPoint(checkX, checkY);
+        const blockElem = elementAtPoint?.closest('.bibe_block');
+
+        if (blockElem) {
+            const block = this.blocks.find(b => b.element === blockElem);
+            block.isHovered = true;
+            this.hoveredBlock = block;
+            this.#showAnchor(elementAtPoint.closest('.bibe_block'));
+        } else {
+            this.hoveredBlock = null;
+            this.#hideAnchor();
         }
+
+        if (this.anchorHandlePressed === true) {
+
+            this.#updateBlocks();
+            this.blocks.forEach(block => {
+                block.drop = null;
+                block.element.style.borderTop = '';
+                block.element.style.borderBottom = '';
+            });
+
+            const nearestBlock = this.blocks.reduce((nearest, block) => {
+                const mouseY = e.clientY;
+                const blockMiddleY = block.rect.top + (block.rect.height / 2);
+                if (!nearest.block || (Math.abs(mouseY - blockMiddleY) < Math.abs(mouseY - nearest.middleY))) {
+                    return { element: block.element, block, middleY: blockMiddleY };
+                }
+                return nearest;
+            }, {});
+
+            if (nearestBlock.element) {
+                const mouseY = e.clientY;
+                const positionAbove = mouseY < nearestBlock.middleY;
+                nearestBlock.element.style[positionAbove ? 'borderTop' : 'borderBottom'] = '3px solid deepskyblue';
+                // console.log(nearestBlock.block);
+                nearestBlock.block.drop = positionAbove ? 'beforeBegin' : 'afterEnd';
+            }
+
+        }
+
     }
 
     #handleMouseUp = () => {
-        window.removeEventListener('mousemove', this.#handleMouseMove);
+        if (this.anchorHandlePressed === true) {
+            this.anchorHandlePressed = false;
+            const dropBlock = this.blocks.find(b => b.drop);
+            if (dropBlock) {
+                dropBlock.element.insertAdjacentElement(dropBlock.drop, this.draggedBlock.element);
+                this.draggedBlock = null;
+                this.#initBlocks();
+            }
+        }
         this.blocks.forEach(block => {
             block.element.style.borderTop = '';
             block.element.style.borderBottom = '';
+            block.element.style.backgroundColor = null;
+            block.element.style.borderRadius = null;
         });
-    }
-
-    #updateBlocks() {
-        this.blocks = [...this.content.children].map(block => ({
-            element: block,
-            rect: block.getBoundingClientRect(),
-            isHovered: false // Initial state
-        }));
     }
 
     #newBlockMenu() {

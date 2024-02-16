@@ -3,9 +3,7 @@
     $anchor_width: 34px;
     $base_fs: 14px; // base font size
     $line_height: calc(14px * 1.5); // 1.5em
-    box-shadow: inset 0 0 10px red;
     
-
     padding: $paddings $paddings $paddings calc($anchor_width + 1ch);
     position: relative;
 
@@ -15,7 +13,7 @@
         font-size: $base_fs;
         line-height: $line_height;
 
-        &>* {
+        .bibe_block {
             margin: 0;
             padding: 8px;
         }
