@@ -17,6 +17,11 @@
             margin: 0;
             padding: 8px;
         }
+
+        blockquote {
+            padding-left: 2ch;
+            border-left: 4px solid #ddd;
+        }
     }
 
     .anchor {
@@ -61,5 +66,47 @@
             cursor: grab;
         }
     }
+
+    .block_menu {
+        display: flex;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(calc(-100% - 24px));
+        gap: 2px;
+        padding: 2px;
+        border: thin solid #ddd;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        height: auto;
+
+        .bibe_btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #EEE;
+            border-radius: 3px;
+            border: thin solid #DDD;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #FFF;
+            }
+
+            svg {
+                width: 50%;
+                height: 50%;
+            }
+        }
+        .divider {
+            width: 4px;
+        }
+    }
+
+    
 
 }

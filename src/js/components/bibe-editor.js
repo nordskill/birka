@@ -1,5 +1,97 @@
 import Debouncer from '../functions/debouncer';
 
+// Base Block class
+class Block {
+    constructor(element) {
+        this.element = element;
+        this.content = element.innerHTML;
+        this.isHovered = false;
+        this.update_rect();
+    }
+
+    update_rect() {
+        this.rect = this.element.getBoundingClientRect();
+    }
+}
+
+// Specific Block classes
+class ParagraphBlock extends Block {
+    constructor(element) {
+        super(element);
+        this.alignment = 'left'; // Initial state
+    }
+
+}
+class TitleBlock extends Block {
+    constructor(element) {
+        super(element);
+        this.level = parseInt(element.tagName[1]);
+    }
+
+}
+class ListBlock extends Block {
+    constructor(element) {
+        super(element);
+        this.type = element.tagName === 'UL' ? 'unordered' : 'ordered';
+    }
+
+}
+class QuoteBlock extends Block {
+    constructor(element) {
+        super(element);
+        this.author = element.querySelector('cite')?.textContent;
+    }
+
+}
+class ImageBlock extends Block {
+    constructor(element) {
+        super(element);
+
+    }
+}
+class TextBlock extends Block {
+    constructor(element) {
+        super(element);
+    }
+
+}
+
+// Base Command class
+class Command {
+    constructor(block) {
+        this.block = block;
+    }
+
+    execute() {
+        throw new Error("Execute method must be implemented");
+    }
+
+    undo() {
+        throw new Error("Undo method must be implemented");
+    }
+}
+
+// Specific Command classes for inline transformations
+class BoldCommand extends Command {
+    execute() {
+        document.execCommand('bold', false, null);
+    }
+
+    undo() {
+        // Specific undo functionality for bold
+    }
+}
+
+class ItalicCommand extends Command {
+    execute() {
+        document.execCommand('italic', false, null);
+    }
+
+    undo() {
+        // Specific undo functionality for italic
+    }
+}
+
 class BibeEditor {
 
     constructor(cssSelector) {
@@ -8,12 +100,16 @@ class BibeEditor {
         this.editor = null;
         this.content = null;
         this.anchor = null;
+        this.block_menu = null;
+        this.block_menu_visible = false;
+        this.new_block_menu = null;
         this.anchorHandlePressed = false;
         this.blocks = [];
         this.editorPaddingTop = null; // Editor's top padding
         this.editorPaddingLeft = null; // Editor's left padding
         this.hoveredBlock = null;
         this.draggedBlock = null;
+        this.selectedBlock = null;
     }
 
     init(container) {
@@ -38,6 +134,23 @@ class BibeEditor {
                         </svg>
                     </div>
                 </div>
+                <div class="block_menu">
+                    <div class="bibe_btn block_type" data-type="paragraph">P</div>
+                    <div class="bibe_btn block_type" data-type="title">T</div>
+                    <div class="bibe_btn block_type" data-type="list">L</div>
+                    <div class="bibe_btn block_type" data-type="quote">Q</div>
+                    <div class="divider"></div>
+                    <div class="bibe_btn delete" data-cmd="del">
+                        <svg viewBox="0 0 13.714 16">
+                            <g fill="#ff0014">
+                                <path d="M4.571 5.714h1.143v6.857H4.571Z" />
+                                <path d="M8 5.714h1.143v6.857H8Z" />
+                                <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z" />
+                                <path d="M4.571 0h4.571v1.143H4.571Z" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
             </div>`;
 
         setTimeout(() => {
@@ -59,23 +172,68 @@ class BibeEditor {
             this.content = container.querySelector('.content');
             this.#initBlocks();
             this.#initAnchor(container);
+            this.#initBlockMenu(container);
         }, 0);
 
     }
 
+    change_block_type(blockElement, toType) {
+
+        console.log(blockElement, toType);
+
+        switch (toType) {
+            case 'paragraph':
+                blockElement.outerHTML = `<p class="bibe_block">${blockElement.innerHTML}</p>`;
+            case 'title':
+                blockElement.outerHTML = `<h2 class="bibe_block">${blockElement.innerHTML}</h2>`;
+                break;
+            case 'list':
+            case 'ul':
+                blockElement.outerHTML = `<ul class="bibe_block">
+                    <li>${blockElement.innerHTML}</li>
+                </ul>`;
+            case 'ol':
+                blockElement.outerHTML = `<ol class="bibe_block">
+                    <li>${blockElement.innerHTML}</li>
+                </ol>`;
+            case 'quote':
+                blockElement.outerHTML = `<blockquote class="bibe_block">${blockElement.innerHTML}</blockquote>`;
+                break;
+        }
+
+        this.#initBlocks();
+
+    }
+
     #initBlocks() {
-        this.blocks = [...this.content.children].map(block => ({
-            element: block,
-            rect: block.getBoundingClientRect(),
-            isHovered: false, // Initial state
-            drop: null // Initial state
-        }));
+        this.blocks = [...this.content.children].map(element => {
+            switch (element.tagName) {
+                case 'P':
+                    return new ParagraphBlock(element);
+                case 'H1':
+                case 'H2':
+                case 'H3':
+                case 'H4':
+                case 'H5':
+                case 'H6':
+                    return new TitleBlock(element);
+                case 'UL':
+                case 'OL':
+                    return new ListBlock(element);
+                case 'BLOCKQUOTE':
+                    return new QuoteBlock(element);
+                case 'IMG':
+                    return new ImageBlock(element);
+                default:
+                    return new TextBlock(element);
+            }
+        });
     }
 
     #updateBlocks() {
         this.blocks.forEach((block) => {
-            block.rect = block.element.getBoundingClientRect(); // Update only rect
-            block.isHovered = block.element === this.hoveredBlock?.element; // Update hover state based on hoveredBlock
+            block.update_rect();
+            block.isHovered = block.element === this.hoveredBlock?.element;
         });
     }
 
@@ -88,6 +246,7 @@ class BibeEditor {
                 this.#newBlockMenu();
             }
             if (e.target.closest('.handle')) {
+                this.selectedBlock = this.hoveredBlock;
                 this.#showBlockMenu();
             }
         });
@@ -107,6 +266,22 @@ class BibeEditor {
 
         this.#setupDelegatedBlockEvents();
 
+    }
+
+    #initBlockMenu(container) {
+        this.block_menu = container.querySelector('.block_menu');
+
+        this.block_menu.addEventListener('click', e => {
+            if (e.target.closest('.block_type')) {
+                const blockType = e.target.closest('.block_type').dataset.type;
+                this.change_block_type(this.selectedBlock.element, blockType);
+            }
+            if (e.target.closest('.delete')) {
+                this.selectedBlock.element.remove();
+                this.#initBlocks();
+            }
+            this.selectedBlock = null;
+        });
     }
 
     #setupDelegatedBlockEvents() {
@@ -230,7 +405,19 @@ class BibeEditor {
     }
 
     #showBlockMenu() {
-        console.log('show block menu');
+
+        this.block_menu.style.top = this.anchor.style.top;
+        this.block_menu.style.left = this.anchor.style.left;
+        this.block_menu.style.visibility = 'visible';
+        this.block_menu_visible = true;
+
+        this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
+        
+    }
+
+    #hideBlockMenu = () => {
+        this.block_menu.style.visibility = 'hidden';
+        this.block_menu_visible = false;
     }
 
 }
