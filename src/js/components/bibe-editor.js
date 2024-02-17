@@ -175,45 +175,115 @@ class BibeEditor {
             this.#initBlocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
+
+            this.#observeChildChanges(this.content, this.#initBlocks);
+
+            this.editor.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+
+                    const selection = window.getSelection();
+                    const range = selection.getRangeAt(0);
+                    const selectedNode = selection.anchorNode;
+                    const parentTag = selectedNode.parentNode.tagName;
+
+                    if (parentTag.match(/^H[1-6]$/)) {
+
+                        event.preventDefault();
+
+                        const newBlock = this.create_block('paragraph');
+                        range.insertNode(newBlock);
+                        range.setStartAfter(newBlock);
+
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+
+                    }
+                }
+            });
         }, 0);
 
     }
 
     change_block_type(blockElement, toType) {
 
+        let wrapper = '';
+
+        // if the current block is ul or ol then convert its li children to array
+        let list = [];
+        if (blockElement.tagName === 'UL' || blockElement.tagName === 'OL') {
+            list = [...blockElement.children].map(li => li.innerHTML);
+        }
+
         switch (toType) {
             case 'paragraph':
                 if (blockElement.tagName === 'P') return;
-                blockElement.outerHTML = `<p class="bibe_block">${blockElement.innerHTML}</p>`;
+                if (list.length) {
+                    wrapper = `<p class="bibe_block">${list.join('<br>')}</p>`;
+                } else {
+                    wrapper = `<p class="bibe_block">${blockElement.innerHTML}</p>`;
+                }
                 break;
             case 'title':
                 if (blockElement.tagName.startsWith('H')) return;
-                blockElement.outerHTML = `<h2 class="bibe_block">${blockElement.innerHTML}</h2>`;
+                wrapper = `<h2 class="bibe_block">${blockElement.innerHTML}</h2>`;
                 break;
             case 'list':
             case 'ul':
                 if (blockElement.tagName === 'UL') return;
-                blockElement.outerHTML = `<ul class="bibe_block">
+                wrapper = `<ul class="bibe_block">
                     <li>${blockElement.innerHTML}</li>
                 </ul>`;
                 break;
             case 'ol':
                 if (blockElement.tagName === 'OL') return;
-                blockElement.outerHTML = `<ol class="bibe_block">
+                wrapper = `<ol class="bibe_block">
                     <li>${blockElement.innerHTML}</li>
                 </ol>`;
                 break;
             case 'quote':
                 if (blockElement.tagName === 'BLOCKQUOTE') return;
-                blockElement.outerHTML = `<blockquote class="bibe_block">${blockElement.innerHTML}</blockquote>`;
+                wrapper = `<blockquote class="bibe_block">${blockElement.innerHTML}</blockquote>`;
                 break;
         }
 
+        blockElement.outerHTML = wrapper;
         this.#initBlocks();
 
     }
 
-    #initBlocks() {
+    create_block(type, content = '') {
+
+        let tag;
+
+        switch (type) {
+            case 'paragraph':
+                tag = 'p'
+                break;
+            case 'title':
+                tag = 'h1';
+                break;
+            case 'list':
+            case 'ul':
+                tag = 'ul';
+                break;
+            case 'ol':
+                tag = 'ol';
+                break;
+            case 'quote':
+                tag = 'blockquote';
+                break;
+        }
+
+        const block = document.createElement(tag);
+        block.classList.add('bibe_block');
+        block.innerHTML = content || '&#8203;';
+
+        return block;
+    }
+
+    #initBlocks = () => {
+        console.log('init blocks');
+
         this.blocks = [...this.content.children].map(element => {
             switch (element.tagName) {
                 case 'P':
@@ -236,6 +306,8 @@ class BibeEditor {
                     return new TextBlock(element);
             }
         });
+        console.log(this.blocks);
+
     }
 
     #updateBlocks() {
@@ -356,7 +428,6 @@ class BibeEditor {
                 const mouseY = e.clientY;
                 const positionAbove = mouseY < nearestBlock.middleY;
                 nearestBlock.element.style[positionAbove ? 'borderTop' : 'borderBottom'] = '3px solid deepskyblue';
-                // console.log(nearestBlock.block);
                 nearestBlock.block.drop = positionAbove ? 'beforeBegin' : 'afterEnd';
             }
 
@@ -394,12 +465,31 @@ class BibeEditor {
         this.block_menu_visible = true;
 
         this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
-        
+
     }
 
     #hideBlockMenu = () => {
         this.block_menu.style.visibility = 'hidden';
         this.block_menu_visible = false;
+    }
+
+    #observeChildChanges(targetElement, callback) {
+
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList') {
+                    callback();
+                    break;
+                }
+            }
+        });
+
+        const config = {
+            childList: true
+        };
+
+        observer.observe(targetElement, config);
+        return observer;
     }
 
 }
