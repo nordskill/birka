@@ -135,20 +135,22 @@ class BibeEditor {
                     </div>
                 </div>
                 <div class="block_menu">
-                    <div class="bibe_btn block_type" data-type="paragraph">P</div>
-                    <div class="bibe_btn block_type" data-type="title">T</div>
-                    <div class="bibe_btn block_type" data-type="list">L</div>
-                    <div class="bibe_btn block_type" data-type="quote">Q</div>
-                    <div class="divider"></div>
-                    <div class="bibe_btn delete" data-cmd="del">
-                        <svg viewBox="0 0 13.714 16">
-                            <g fill="#ff0014">
-                                <path d="M4.571 5.714h1.143v6.857H4.571Z" />
-                                <path d="M8 5.714h1.143v6.857H8Z" />
-                                <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z" />
-                                <path d="M4.571 0h4.571v1.143H4.571Z" />
-                            </g>
-                        </svg>
+                    <div class="controls">
+                        <div class="bibe_btn block_type" data-type="paragraph">P</div>
+                        <div class="bibe_btn block_type" data-type="title">T</div>
+                        <div class="bibe_btn block_type" data-type="list">L</div>
+                        <div class="bibe_btn block_type" data-type="quote">Q</div>
+                        <div class="divider"></div>
+                        <div class="bibe_btn delete" data-cmd="del">
+                            <svg viewBox="0 0 13.714 16">
+                                <g fill="#ff0014">
+                                    <path d="M4.571 5.714h1.143v6.857H4.571Z" />
+                                    <path d="M8 5.714h1.143v6.857H8Z" />
+                                    <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z" />
+                                    <path d="M4.571 0h4.571v1.143H4.571Z" />
+                                </g>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -179,24 +181,30 @@ class BibeEditor {
 
     change_block_type(blockElement, toType) {
 
-        console.log(blockElement, toType);
-
         switch (toType) {
             case 'paragraph':
+                if (blockElement.tagName === 'P') return;
                 blockElement.outerHTML = `<p class="bibe_block">${blockElement.innerHTML}</p>`;
+                break;
             case 'title':
+                if (blockElement.tagName.startsWith('H')) return;
                 blockElement.outerHTML = `<h2 class="bibe_block">${blockElement.innerHTML}</h2>`;
                 break;
             case 'list':
             case 'ul':
+                if (blockElement.tagName === 'UL') return;
                 blockElement.outerHTML = `<ul class="bibe_block">
                     <li>${blockElement.innerHTML}</li>
                 </ul>`;
+                break;
             case 'ol':
+                if (blockElement.tagName === 'OL') return;
                 blockElement.outerHTML = `<ol class="bibe_block">
                     <li>${blockElement.innerHTML}</li>
                 </ol>`;
+                break;
             case 'quote':
+                if (blockElement.tagName === 'BLOCKQUOTE') return;
                 blockElement.outerHTML = `<blockquote class="bibe_block">${blockElement.innerHTML}</blockquote>`;
                 break;
         }
@@ -264,8 +272,6 @@ class BibeEditor {
             }
         });
 
-        this.#setupDelegatedBlockEvents();
-
     }
 
     #initBlockMenu(container) {
@@ -274,6 +280,7 @@ class BibeEditor {
         this.block_menu.addEventListener('click', e => {
             if (e.target.closest('.block_type')) {
                 const blockType = e.target.closest('.block_type').dataset.type;
+                if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
                 this.change_block_type(this.selectedBlock.element, blockType);
             }
             if (e.target.closest('.delete')) {
@@ -281,33 +288,8 @@ class BibeEditor {
                 this.#initBlocks();
             }
             this.selectedBlock = null;
+            this.#hideBlockMenu();
         });
-    }
-
-    #setupDelegatedBlockEvents() {
-        this.content.addEventListener('mouseenter', e => {
-            const blockElement = e.target.closest('.bibe_block');
-            if (blockElement) {
-                const block = this.blocks.find(b => b.element === blockElement);
-                if (block) {
-                    block.isHovered = true;
-                    this.hoveredBlock = block;
-                    this.#showAnchor(block.element);
-                }
-            }
-        }, true); // Use capture phase
-
-        this.content.addEventListener('mouseleave', e => {
-            const blockElement = e.target.closest('.bibe_block');
-            if (blockElement) {
-                const block = this.blocks.find(b => b.element === blockElement);
-                if (block) {
-                    block.isHovered = false;
-                    this.hoveredBlock = null;
-                    this.#hideAnchor();
-                }
-            }
-        }, true); // Use capture phase
     }
 
     #showAnchor(block) {
