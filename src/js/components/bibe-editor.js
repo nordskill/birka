@@ -215,9 +215,6 @@ class BibeEditor {
             array = [...blockElement.children].map(li => li.innerHTML);
         }
 
-        console.log(array);
-        
-
         if (array.length) {
             content = array.join('<br>');
         } else {
@@ -315,8 +312,6 @@ class BibeEditor {
                     return new TextBlock(element);
             }
         });
-        console.log(this.blocks);
-
     }
 
     #updateBlocks() {
