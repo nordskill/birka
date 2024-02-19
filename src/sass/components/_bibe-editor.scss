@@ -67,13 +67,21 @@
         }
     }
 
-    .block_menu {
+    .menu {
         visibility: hidden;
         position: absolute;
         top: 0;
         left: 0;
-        transform: translateY(-63px);
-        padding: 10px 10px 30px 10px;
+        z-index: 1;
+
+        &.block {
+            padding: 10px 10px 30px 10px;
+            transform: translateY(-63px);
+        }
+
+        &.text {
+            padding: 4px 0 0 0;
+        }
 
         .controls {
             display: flex;

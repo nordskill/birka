@@ -1,3 +1,4 @@
+import { set } from 'mongoose';
 import Debouncer from '../functions/debouncer';
 
 // Base Block class
@@ -102,6 +103,8 @@ class BibeEditor {
         this.anchor = null;
         this.block_menu = null;
         this.block_menu_visible = false;
+        this.text_menu = null;
+        this.text_menu_visible = false;
         this.new_block_menu = null;
         this.anchorHandlePressed = false;
         this.blocks = [];
@@ -134,7 +137,7 @@ class BibeEditor {
                         </svg>
                     </div>
                 </div>
-                <div class="block_menu">
+                <div class="menu block">
                     <div class="controls">
                         <div class="bibe_btn block_type" data-type="paragraph">P</div>
                         <div class="bibe_btn block_type" data-type="title">T</div>
@@ -151,6 +154,21 @@ class BibeEditor {
                                 </g>
                             </svg>
                         </div>
+                    </div>
+                </div>
+                <div class="menu text">
+                    <div class="controls">
+                        <div class="bibe_btn text_type" data-type="bold">B</div>
+                        <div class="bibe_btn text_type" data-type="italic">I</div>
+                        <div class="bibe_btn text_type" data-type="underlined">U</div>
+                        <div class="divider"></div>
+                        <div class="bibe_btn text_type" data-type="align_left"><</div>
+                        <div class="bibe_btn text_type" data-type="align_center">|</div>
+                        <div class="bibe_btn text_type" data-type="align_right">></div>
+                        <div class="divider"></div>
+                        <div class="bibe_btn text_type" data-type="link">8</div>
+                        <div class="divider"></div>
+                        <div class="bibe_btn text_type" data-type="list">L</div>
                     </div>
                 </div>
             </div>`;
@@ -175,6 +193,7 @@ class BibeEditor {
             this.#initBlocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
+            this.#initTextMenu(container)
 
             this.#observeChildChanges(this.content, this.#initBlocks);
 
@@ -200,6 +219,9 @@ class BibeEditor {
                     }
                 }
             });
+
+            window.addEventListener('click', this.#handleWindowClick);
+
         }, 0);
 
     }
@@ -257,6 +279,12 @@ class BibeEditor {
 
     }
 
+    change_text(blockElement, toType) {
+
+        console.log('change text', blockElement, toType);
+
+    }
+
     create_block(type, content = '') {
 
         let tag;
@@ -288,8 +316,6 @@ class BibeEditor {
     }
 
     #initBlocks = () => {
-        console.log('init blocks');
-
         this.blocks = [...this.content.children].map(element => {
             switch (element.tagName) {
                 case 'P':
@@ -351,7 +377,7 @@ class BibeEditor {
     }
 
     #initBlockMenu(container) {
-        this.block_menu = container.querySelector('.block_menu');
+        this.block_menu = container.querySelector('.menu.block');
 
         this.block_menu.addEventListener('click', e => {
             if (e.target.closest('.block_type')) {
@@ -366,6 +392,22 @@ class BibeEditor {
             this.selectedBlock = null;
             this.#hideBlockMenu();
         });
+    }
+
+    #showBlockMenu() {
+
+        this.block_menu.style.top = this.anchor.style.top;
+        this.block_menu.style.left = this.anchor.style.left;
+        this.block_menu.style.visibility = 'visible';
+        this.block_menu_visible = true;
+
+        this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
+
+    }
+
+    #hideBlockMenu = () => {
+        this.block_menu.style.visibility = 'hidden';
+        this.block_menu_visible = false;
     }
 
     #showAnchor(block) {
@@ -390,6 +432,49 @@ class BibeEditor {
         this.blocks.forEach(block => {
             block.isHovered = false;
         });
+    }
+
+    #initTextMenu() {
+        this.text_menu = this.container.querySelector('.menu.text');
+
+        this.text_menu.addEventListener('click', e => {
+            if (e.target.closest('.text_type')) {
+                const textType = e.target.closest('.text_type').dataset.type;
+                // if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
+                // this.change_text(this.selectedBlock.element, blockType);
+                this.#hideTextMenu();
+            }
+        });
+
+        this.content.addEventListener('mouseup', (e) => {
+            const selection = document.getSelection();
+
+            if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const editorRect = this.editor.getBoundingClientRect();
+
+                // Calculate the new position for the menu
+                const menuLeft = rect.left - editorRect.left;
+                const menuTop = rect.bottom - editorRect.top;
+
+                this.text_menu.style.left = `${menuLeft}px`;
+                this.text_menu.style.top = `${menuTop}px`; // Adjust if necessary for better appearance
+                this.text_menu.style.visibility = 'visible';
+                // this.text_menu_visible = true;  
+
+            }
+        });
+
+    }
+
+    #showTextMenu() {
+        console.log('show Text menu');
+    }
+
+    #hideTextMenu() {
+        this.text_menu.style.visibility = 'hidden';
+        // this.text_menu_visible = false;
     }
 
     #handleMouseMove = (e) => {
@@ -457,24 +542,14 @@ class BibeEditor {
         });
     }
 
+    #handleWindowClick = (e) => {
+        if (this.text_menu_visible && !e.target.closest('.menu.text')) {
+            this.#hideTextMenu();
+        }
+    }
+
     #newBlockMenu() {
         console.log('add block');
-    }
-
-    #showBlockMenu() {
-
-        this.block_menu.style.top = this.anchor.style.top;
-        this.block_menu.style.left = this.anchor.style.left;
-        this.block_menu.style.visibility = 'visible';
-        this.block_menu_visible = true;
-
-        this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
-
-    }
-
-    #hideBlockMenu = () => {
-        this.block_menu.style.visibility = 'hidden';
-        this.block_menu_visible = false;
     }
 
     #observeChildChanges(targetElement, callback) {
