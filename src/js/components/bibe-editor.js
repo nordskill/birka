@@ -207,25 +207,31 @@ class BibeEditor {
     change_block_type(blockElement, toType) {
 
         let wrapper = '';
+        let content = '';
 
         // if the current block is ul or ol then convert its li children to array
-        let list = [];
-        if (blockElement.tagName === 'UL' || blockElement.tagName === 'OL') {
-            list = [...blockElement.children].map(li => li.innerHTML);
+        let array = [];
+        if (blockElement.children.length > 1 || blockElement?.children[0]?.tagName === 'LI') {
+            array = [...blockElement.children].map(li => li.innerHTML);
+        }
+
+        console.log(array);
+        
+
+        if (array.length) {
+            content = array.join('<br>');
+        } else {
+            content = blockElement.innerHTML;
         }
 
         switch (toType) {
             case 'paragraph':
                 if (blockElement.tagName === 'P') return;
-                if (list.length) {
-                    wrapper = `<p class="bibe_block">${list.join('<br>')}</p>`;
-                } else {
-                    wrapper = `<p class="bibe_block">${blockElement.innerHTML}</p>`;
-                }
+                wrapper = `<p class="bibe_block">${content}</p>`;
                 break;
             case 'title':
                 if (blockElement.tagName.startsWith('H')) return;
-                wrapper = `<h2 class="bibe_block">${blockElement.innerHTML}</h2>`;
+                wrapper = `<h2 class="bibe_block">${content}</h2>`;
                 break;
             case 'list':
             case 'ul':
@@ -242,7 +248,10 @@ class BibeEditor {
                 break;
             case 'quote':
                 if (blockElement.tagName === 'BLOCKQUOTE') return;
-                wrapper = `<blockquote class="bibe_block">${blockElement.innerHTML}</blockquote>`;
+                wrapper = `<blockquote class="bibe_block">
+                    <p>${content}</p>
+                    <cite>Author</cite>
+                </blockquote>`;
                 break;
         }
 
