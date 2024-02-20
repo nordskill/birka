@@ -116,6 +116,7 @@ class BibeEditor {
         this.hoveredBlock = null;
         this.draggedBlock = null;
         this.selectedBlock = null;
+        this.selectionInBlock = null;
     }
 
     init(container) {
@@ -283,6 +284,58 @@ class BibeEditor {
 
     }
 
+    change_text(element, selection, textType) {
+
+        if (!selection.rangeCount) return;
+
+        let range = selection.getRangeAt(0);
+        let newElement;
+
+        switch (textType) {
+            case 'bold':
+                newElement = document.createElement('strong');
+                break;
+            case 'italic':
+                newElement = document.createElement('em');
+                break;
+            case 'underlined':
+                newElement = document.createElement('u');
+                break;
+            case 'link':
+                const url = prompt('Enter the URL:', 'http://');
+                if (url) {
+                    newElement = document.createElement('a');
+                    newElement.href = url;
+                } else {
+                    // Exit if no URL is provided
+                    return;
+                }
+                break;
+            case 'align_left':
+            case 'align_center':
+            case 'align_right':
+                // Directly modify the element's alignment without altering its content
+                element.style.textAlign = textType.split('_')[1];
+                // No other actions needed for alignment changes
+                return;
+            case 'list':
+                // Custom method for changing block type; no selection manipulation needed
+                this.change_block_type(element, 'list');
+                return;
+            default:
+                console.warn('Unknown transformation type:', textType);
+                // Exit if type is unknown
+                return;
+        }
+
+        if (newElement) {
+            let selectedText = range.extractContents();
+            newElement.appendChild(selectedText);
+            range.insertNode(newElement);
+        }
+
+    }
+
     create_block(type, content = '') {
 
         let tag;
@@ -437,6 +490,8 @@ class BibeEditor {
 
         this.text_menu.addEventListener('click', e => {
             if (e.target.closest('.text_type')) {
+                const textType = e.target.closest('.text_type').dataset.type;
+                this.change_text(this.selectionInBlock.element, document.getSelection(), textType);
                 this.#hideTextMenu();
                 document.getSelection().removeAllRanges(); // deselect text
             }
@@ -447,8 +502,8 @@ class BibeEditor {
             if (this.text_menu_visible) return;
 
             const selection = document.getSelection();
-            this.selectedBlock = this.blocks.find(block => block.element.contains(selection.anchorNode));
-           
+            this.selectionInBlock = this.blocks.find(block => block.element.contains(selection.anchorNode));
+
             if (selection.rangeCount > 0 && !selection.isCollapsed) {
 
                 const range = selection.getRangeAt(0);
@@ -476,7 +531,7 @@ class BibeEditor {
     #hideTextMenu() {
         this.text_menu.style.visibility = 'hidden';
         this.text_menu_visible = false;
-        this.selectedBlock = null;
+        this.selectionInBlock = null;
     }
 
     #handleMouseMove = (e) => {
