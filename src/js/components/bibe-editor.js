@@ -8,6 +8,9 @@ class Block {
         this.content = element.innerHTML;
         this.isHovered = false;
         this.update_rect();
+
+        // prevent dragging portions of selected text
+        this.element.addEventListener('dragover', e => e.preventDefault());
     }
 
     update_rect() {
@@ -221,6 +224,7 @@ class BibeEditor {
             });
 
             window.addEventListener('click', this.#handleWindowClick);
+            window.addEventListener('mousedown', this.#handleWindowMouseDown);
 
         }, 0);
 
@@ -276,12 +280,6 @@ class BibeEditor {
 
         blockElement.outerHTML = wrapper;
         this.#initBlocks();
-
-    }
-
-    change_text(blockElement, toType) {
-
-        console.log('change text', blockElement, toType);
 
     }
 
@@ -439,42 +437,46 @@ class BibeEditor {
 
         this.text_menu.addEventListener('click', e => {
             if (e.target.closest('.text_type')) {
-                const textType = e.target.closest('.text_type').dataset.type;
-                // if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
-                // this.change_text(this.selectedBlock.element, blockType);
                 this.#hideTextMenu();
+                document.getSelection().removeAllRanges(); // deselect text
             }
         });
 
-        this.content.addEventListener('mouseup', (e) => {
-            const selection = document.getSelection();
+        this.content.addEventListener('click', (e) => {
 
+            if (this.text_menu_visible) return;
+
+            const selection = document.getSelection();
+            this.selectedBlock = this.blocks.find(block => block.element.contains(selection.anchorNode));
+           
             if (selection.rangeCount > 0 && !selection.isCollapsed) {
+
                 const range = selection.getRangeAt(0);
                 const rect = range.getBoundingClientRect();
                 const editorRect = this.editor.getBoundingClientRect();
+                const left = rect.left - editorRect.left;
+                const top = rect.bottom - editorRect.top;
 
-                // Calculate the new position for the menu
-                const menuLeft = rect.left - editorRect.left;
-                const menuTop = rect.bottom - editorRect.top;
-
-                this.text_menu.style.left = `${menuLeft}px`;
-                this.text_menu.style.top = `${menuTop}px`; // Adjust if necessary for better appearance
-                this.text_menu.style.visibility = 'visible';
-                // this.text_menu_visible = true;  
+                setTimeout(() => {
+                    this.#showTextMenu(left, top);
+                }, 0);
 
             }
         });
 
     }
 
-    #showTextMenu() {
-        console.log('show Text menu');
+    #showTextMenu(left, top) {
+        this.text_menu.style.left = `${left}px`;
+        this.text_menu.style.top = `${top}px`; // Adjust if necessary for better appearance
+        this.text_menu.style.visibility = 'visible';
+        this.text_menu_visible = true;
     }
 
     #hideTextMenu() {
         this.text_menu.style.visibility = 'hidden';
-        // this.text_menu_visible = false;
+        this.text_menu_visible = false;
+        this.selectedBlock = null;
     }
 
     #handleMouseMove = (e) => {
@@ -543,9 +545,13 @@ class BibeEditor {
     }
 
     #handleWindowClick = (e) => {
-        if (this.text_menu_visible && !e.target.closest('.menu.text')) {
-            this.#hideTextMenu();
-        }
+        if (!this.text_menu_visible) return;
+        if (!e.target.closest('.menu.text')) this.#hideTextMenu();
+
+    }
+
+    #handleWindowMouseDown = (e) => {
+        if (e.target.closest('.menu.text')) e.preventDefault();
     }
 
     #newBlockMenu() {

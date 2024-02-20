@@ -16,6 +16,8 @@
         .bibe_block {
             margin: 0;
             padding: 8px;
+            user-select: text;
+            -webkit-user-drag: none;
         }
 
         blockquote {
