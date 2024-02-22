@@ -265,10 +265,13 @@ class BibeEditor {
                 newElement = document.createElement('u');
                 break;
             case 'link':
-                const url = prompt('Enter the URL:', 'http://');
+                const url = prompt('Enter the URL:', 'https://');
                 if (url) {
                     newElement = document.createElement('a');
                     newElement.href = url;
+                    newElement.target = '_blank';
+                    newElement.rel = 'noopener noreferrer';
+                    newElement.contentEditable = 'false';
                 } else {
                     // Exit if no URL is provided
                     return;
