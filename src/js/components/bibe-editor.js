@@ -1,4 +1,3 @@
-import { set } from 'mongoose';
 import Debouncer from '../functions/debouncer';
 
 // Base Block class
@@ -58,42 +57,6 @@ class TextBlock extends Block {
         super(element);
     }
 
-}
-
-// Base Command class
-class Command {
-    constructor(block) {
-        this.block = block;
-    }
-
-    execute() {
-        throw new Error("Execute method must be implemented");
-    }
-
-    undo() {
-        throw new Error("Undo method must be implemented");
-    }
-}
-
-// Specific Command classes for inline transformations
-class BoldCommand extends Command {
-    execute() {
-        document.execCommand('bold', false, null);
-    }
-
-    undo() {
-        // Specific undo functionality for bold
-    }
-}
-
-class ItalicCommand extends Command {
-    execute() {
-        document.execCommand('italic', false, null);
-    }
-
-    undo() {
-        // Specific undo functionality for italic
-    }
 }
 
 class BibeEditor {
