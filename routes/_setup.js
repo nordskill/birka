@@ -28,19 +28,15 @@ const apiFile = require('./api/files');
 
 module.exports = (app) => {
 
-    // Navigation
-    app.use('/', index);
-    app.use('/users', users);
-
-    // CMS
-    app.use('/cms/login', cmsLogin)
-    app.use('/cms/logout', cmsLogout);
-
     // protect static folder pubblic/css-assets/ with cmsAuthentication
     app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../public/cms-assets')));
 
     // Serve other static files in public directory
     app.use(express.static(path.join(__dirname, '../public')));
+
+    // CMS
+    app.use('/cms/login', cmsLogin)
+    app.use('/cms/logout', cmsLogout);
 
     const cmsRoutes = express.Router();
     cmsRoutes.use(checkAuthentication);
@@ -64,6 +60,10 @@ module.exports = (app) => {
     app.use('/api/auth', apiAuth);
     app.use('/api/tags', apiTag);
     app.use('/api/files', apiFile);
+
+    // Navigation
+    app.use('/', index);
+    app.use('/users', users);
 
 };
 
