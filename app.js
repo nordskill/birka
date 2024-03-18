@@ -155,8 +155,8 @@ async function setupMiddleware(app) {
         }
     }));
 
-    app.use(csrfToken);
-    app.use(csrfProtection);
+    // app.use(csrfToken);
+    // app.use(csrfProtection);
 
     // Passport middleware
     app.use(passport.initialize());

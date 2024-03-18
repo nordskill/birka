@@ -190,6 +190,10 @@ router.delete('/:id', async (req, res, next) => {
     const id = req.params.id;
 
     const file = await File.findById(id);
+
+    let undeletedFiles = [];
+    let error;
+
     if (!file) {
         return next(
             new OperationalError('File does not exist.', 404)
@@ -201,12 +205,26 @@ router.delete('/:id', async (req, res, next) => {
         const fileName = file.file_name + '.' + file.extension;
         const filePath = path.join('public', 'files', subfolder, fileName);
 
+        if (file.sizes.length) {
+            undeletedFiles = await deleteResizedImages(subfolder, file);
+            if (undeletedFiles) throw new OperationalError('Some of the files were not deleted.', 500);
+        }
+
         await deleteFile(filePath);
         await File.findByIdAndDelete(id);
 
-        res.json({ success: true });
     } catch (err) {
-        next(err);
+        error = err.message;
+    }
+
+    if (error) {
+        if (undeletedFiles.length > 0) {
+            return res.status(207).json({ success: false, undeletedFiles, error })
+        } else {
+            next(error);
+        }
+    } else {
+        return res.json({ success: true });
     }
 });
 
@@ -221,6 +239,8 @@ router.delete('/', async (req, res, next) => {
     let errors = [];
 
     for (const id of IDs) {
+        let undeletedFiles = [];
+
         try {
             const file = await File.findById(id);
             if (!file) {
@@ -230,6 +250,18 @@ router.delete('/', async (req, res, next) => {
             const subfolder = file.hash.substring(0, 2);
             const fileName = file.file_name + '.' + file.extension;
             const filePath = path.join('public', 'files', subfolder, fileName);
+
+            if (file.sizes.length) {
+                undeletedFiles = await deleteResizedImages(subfolder, file);
+                if (undeletedFiles) {
+                    errors.push({
+                        id,
+                        message: "Some of the files were not deleted.",
+                        undeleted_files: undeletedFiles
+                    });
+                    continue;
+                }
+            }
 
             await deleteFile(filePath);
             await File.findByIdAndDelete(id);
@@ -268,6 +300,39 @@ async function deleteFilesFromTemp() {
         const filePath = path.join(tempFilesDirectory, file);
         await deleteFile(filePath);
     }
+}
+
+async function deleteResizedImages(subfolder, file) {
+    const { id, file_name, sizes, optimized_format } = file;
+
+    let basePath = path.join('public', 'files', subfolder);
+
+    let filesNotFound = [];
+    let sizesNotFound = [];
+
+    for await (const size of sizes) {
+        const directoryPath = path.join(basePath, size.toString());
+        const filePath = path.join(directoryPath, file_name + '.' + optimized_format);
+
+        try {
+            await fs.unlink(filePath);
+
+            const files = await fs.readdir(directoryPath);
+
+            if (files.length === 0) {
+                await fs.rmdir(directoryPath);
+            }
+        } catch {
+            filesNotFound.push(filePath);
+            sizesNotFound.push(size);
+        }
+    }
+
+    if (filesNotFound.length) {
+        await Image.findByIdAndUpdate(id, { sizes: sizesNotFound });
+        return filesNotFound;
+    }
+
 }
 
 async function saveFile(file, fileType, fileAdditionalData, hash, fileName) {
