@@ -11,15 +11,3 @@
         <% } %>
     </head>
     <body>
-        <h1><%= title %></h1>
-        <p>Welcome to <%= title %></p>
-
-        <p><a href="/cms">CMS</a></p>
-        
-        <% if (env === 'production') { %>
-            <script src="/js/main.min.js"></script>
-        <% } else { %>
-            <script src="/js/main.js"></script>
-        <% } %>
-    </body>
-</html>
