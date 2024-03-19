@@ -7,12 +7,13 @@
         "img_preview": "",
         "publisher": "",
         "author": "",
-        "sub_pages": [],
         "tags": [],
         "content": {
             "subtitle": "Our Commitment to Quality",
             "html": "<h1>Quality Assurance</h1><p>We pride ourselves on delivering the highest quality products. Our rigorous testing procedures ensure that you receive only the best.</p><ul><li>100% satisfaction guarantee</li><li>Industry-leading quality checks</li><li>Comprehensive warranties</li></ul>"
-        }
+        },
+        "template": "about",
+        "is_home": true
     },
     {
         "name": "Blog",
@@ -22,12 +23,12 @@
         "img_preview": "",
         "publisher": "",
         "author": "",
-        "sub_pages": [],
         "tags": [],
         "content": {
             "subtitle": "Innovative Design",
             "html": "<h1>Cutting-Edge Creativity</h1><p>Our design team leads the industry with innovative solutions that blend form and function beautifully.</p><div><section><h2>Innovation Lab</h2><p>Explore our latest creations that push the boundaries of design.</p></section><section><h2>User Experience</h2><p>Designs focused on intuitive user experience, ensuring ease of use and customer satisfaction.</p></section></div>"
-        }
+        },
+        "template": "article"
     },
     {
         "name": "Service Overview",
@@ -37,11 +38,11 @@
         "img_preview": "",
         "publisher": "",
         "author": "",
-        "sub_pages": [],
         "tags": [],
         "content": {
             "subtitle": "Sustainable Practices",
             "html": "<h1>Eco-Friendly Approaches</h1><p>Join us in our journey towards sustainability. Our eco-friendly products are designed with the planet in mind.</p><ol><li>Recycled materials</li><li>Energy-efficient production</li><li>Reducing carbon footprint</li></ol>"
-        }
+        },
+        "template": "contact"
     }
 ]

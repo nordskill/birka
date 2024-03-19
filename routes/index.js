@@ -25,7 +25,7 @@ router.get('/:slug', async (req, res, next) => {
 // Route for fetching the homepage
 router.get('/', async (req, res, next) => {
     try {
-        const page = await Page.findOne({ is_home: true }); // Assuming you mark the homepage with an 'isHomepage' field
+        const page = await Page.findOne({ is_home: true });
         if (page) {
             res.render(page.template, {
                 title: page.name,
@@ -33,10 +33,11 @@ router.get('/', async (req, res, next) => {
                 template_name: page.template
             });
         } else {
-            // If no homepage set, you can redirect to a default page or render a specific template
-            res.render('default', { // 'default' should be replaced with your default page template if exists
-                title: 'Default Home',
-                content: 'Welcome to our site!'
+            const defaultTemplate = 'default_home';
+            res.render(defaultTemplate, {
+                title: 'This is a Default Home Page',
+                content: 'Because none of the pages are marked as home.',
+                template_name: defaultTemplate
             });
         }
     } catch (error) {
