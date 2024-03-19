@@ -162,3 +162,24 @@
         }
     }
 }
+
+.file_picker {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1020;
+    background-color: #00000099;
+    display: none;
+
+    .win{
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+
+        background: white;
+    }
+}
