@@ -207,7 +207,7 @@ router.delete('/:id', async (req, res, next) => {
 
         if (file.sizes.length) {
             undeletedFiles = await deleteResizedImages(subfolder, file);
-            if (undeletedFiles) throw new OperationalError('Some of the files were not deleted.', 500);
+            if (undeletedFiles.length) throw new OperationalError('Some of the optimized files were not deleted.', 500);
         }
 
         await deleteFile(filePath);
@@ -236,11 +236,10 @@ router.delete('/', async (req, res, next) => {
     }
 
     let deletedFiles = [];
+    let undeletedFiles = [];
     let errors = [];
 
     for (const id of IDs) {
-        let undeletedFiles = [];
-
         try {
             const file = await File.findById(id);
             if (!file) {
@@ -251,12 +250,12 @@ router.delete('/', async (req, res, next) => {
             const fileName = file.file_name + '.' + file.extension;
             const filePath = path.join('public', 'files', subfolder, fileName);
 
-            if (file.sizes.length) {
+            if (file.sizes?.length) {
                 undeletedFiles = await deleteResizedImages(subfolder, file);
-                if (undeletedFiles) {
+                if (undeletedFiles.length) {
                     errors.push({
                         id,
-                        message: "Some of the files were not deleted.",
+                        message: "Some of the optimized files were not deleted.",
                         undeleted_files: undeletedFiles
                     });
                     continue;
@@ -274,7 +273,7 @@ router.delete('/', async (req, res, next) => {
 
     if (errors.length > 0) {
         if (deletedFiles.length === 0) { // All IDs resulted in errors, none were deleted
-            return res.status(404).json({ success: false, message: "None of the files were found", errors });
+            return res.status(500).json({ success: false, message: "None of the files were deleted", errors });
         } else { // Some IDs were deleted, but there were also some errors
             return res.status(207).json({ success: true, deletedFiles, errors });
         }
@@ -315,7 +314,7 @@ async function deleteResizedImages(subfolder, file) {
         const filePath = path.join(directoryPath, file_name + '.' + optimized_format);
 
         try {
-            await fs.unlink(filePath);
+            await deleteFile(filePath);
 
             const files = await fs.readdir(directoryPath);
 
@@ -330,8 +329,9 @@ async function deleteResizedImages(subfolder, file) {
 
     if (filesNotFound.length) {
         await Image.findByIdAndUpdate(id, { sizes: sizesNotFound });
-        return filesNotFound;
     }
+    
+    return filesNotFound;
 
 }
 
