@@ -112,13 +112,15 @@
 <body class="login-page">
     <main>
         <form name="login">
-            <img id="logo" src="<%= logo_path %>" alt="" width="64" height="64">
-                <div class="field">
-                    <input type="text" placeholder="username or email" name="username">
-                </div>
-                <div class="field">
-                    <input type="password" placeholder="password" name="password">
-                </div>
+            <a href="/">
+                <img id="logo" src="<%= logo_path %>" alt="" width="64" height="64">
+            </a>
+            <div class="field">
+                <input type="text" placeholder="username or email" name="username">
+            </div>
+            <div class="field">
+                <input type="password" placeholder="password" name="password">
+            </div>
             <div class="field">
                 <input type="checkbox" id="remember-me" name="remember">
                 <label for="remember-me">Remember me</label>
