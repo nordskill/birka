@@ -1,3 +1,7 @@
+import FilePicker from "../../functions/filePicker";
+
+const filePicker = new FilePicker();
+
 export default async function () {
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -12,6 +16,10 @@ export default async function () {
                 toggleDisplay(subscriptionBlock, event.target.id === 'subscription_el');
             }
         });
+
+        document.querySelectorAll('.list_meta_icons .px-1')[0].addEventListener('click', () => {
+            filePicker.open();
+        })
     });
 
 }

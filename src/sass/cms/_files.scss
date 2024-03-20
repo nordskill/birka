@@ -172,7 +172,6 @@
     width: 100%;
     z-index: 1020;
     background-color: #00000099;
-    display: none;
 
     .win {
         position: absolute;
@@ -200,3 +199,7 @@
         }
     }
 }
+
+// .file_picker[hidden] {
+//     display: none;
+// }
