@@ -1,4 +1,4 @@
-import FileDetails from '../../functions/file-details';
+import FileDetails from '../../components/file-details';
 
 const fileDetails = new FileDetails();
 const csrfToken = document.querySelector('meta[name="csrf"]').content;

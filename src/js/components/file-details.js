@@ -1,4 +1,4 @@
-import Debouncer from './debouncer';
+import Debouncer from '../functions/debouncer';
 
 /**
  * FileDetails class for handling file details in a modal.
