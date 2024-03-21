@@ -30,7 +30,7 @@ class FilePicker {
 
             const res = await req.json();
 
-            const markup = this._generateMarkup(res);
+            const markup = this._generateContent(res);
             this.files.insertAdjacentHTML('beforeend', markup);
         } catch (error) {
             console.error('Error in fetching files: ', error);
@@ -85,7 +85,7 @@ class FilePicker {
         `;
     }
 
-    _generateMarkup(res) {
+    _generateContent(res) {
         let html = '';
 
         res.forEach(file => {

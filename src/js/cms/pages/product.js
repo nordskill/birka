@@ -1,4 +1,4 @@
-import FilePicker from "../../functions/filePicker";
+import FilePicker from "../../components/file-picker";
 
 const filePicker = new FilePicker();
 
