@@ -84,8 +84,11 @@ class BibeEditor {
 
     init(container) {
 
-        console.log(container);
-
+        if (!container) {
+            console.error('BibeEditor container not found');
+            return;
+        };
+        
         // wrap content
         container.innerHTML = `
             <div class="bibe_editor">
