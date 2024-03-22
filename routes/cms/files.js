@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
 
         res.render('cms/files', {
             title: 'Files',
-            template_name: 'files',
+            template_name: 'cms_files',
             active: 'files',
             files,
             totalPages,
