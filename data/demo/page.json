@@ -10,7 +10,9 @@
         "is_home": true,
         "img_preview": "507f1f77bcf86cd799439011",
         "author": "507f191e810c19729de860ea",
-        "tags": ["507f1f77bcf86cd799439011"],
+        "tags": [
+            "507f1f77bcf86cd799439011"
+        ],
         "title": "Hello, World!",
         "welcome_text": "Welcome to our brand new website!"
     },
@@ -25,7 +27,9 @@
         "is_home": false,
         "img_preview": "507f1f77bcf86cd799439012",
         "author": "507f191e810c19729de860eb",
-        "tags": ["507f1f77bcf86cd799439012"],
+        "tags": [
+            "507f1f77bcf86cd799439012"
+        ],
         "description": "Our company was founded with the mission of ...",
         "specializations": [
             {
@@ -43,8 +47,8 @@
     },
     {
         "type": "Article",
-        "name": "Our Journey",
-        "slug": "our-journey",
+        "name": "Some Article",
+        "slug": "our-journey-to-the-wild-west",
         "excerpt": "The history of our company",
         "published": true,
         "date_published": "2024-03-22T12:00:00.000Z",
@@ -52,16 +56,297 @@
         "is_home": false,
         "img_preview": "507f1f77bcf86cd799439016",
         "author": "507f191e810c19729de860ec",
-        "tags": ["507f1f77bcf86cd799439016"],
+        "tags": [
+            "507f1f77bcf86cd799439016"
+        ],
         "text": [
             {
+                "type": "heading",
+                "content": "Our Journey to the Wild West",
+                "attributes": {
+                    "level": 1
+                }
+            },
+            {
                 "type": "paragraph",
-                "content": "It all started in a small office..."
+                "content": "Camping is an adventure that reconnects us with nature, offers peace away from the hustle of daily life, and provides a unique experience every time. However, to ensure a safe and enjoyable experience, it's essential to be well-prepared. Below are the top 10 must-have items for your next camping trip, ensuring you're ready for anything nature throws your way.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "<em>Always start with the basics: a good tent.</em> Your tent is your home away from home. It should be spacious enough to accommodate your group and durable to withstand various weather conditions.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "Key Features to Consider:",
+                "attributes": {
+                    "level": 3
+                }
+            },
+            {
+                "type": "list",
+                "content": [
+                    {
+                        "item": "<strong>Weather Resistance</strong>: Look for a waterproof and windproof tent."
+                    },
+                    {
+                        "item": "<strong>Size</strong>: Ensure it's big enough for your party and gear."
+                    },
+                    {
+                        "item": "<strong>Ease of Setup</strong>: Opt for a tent that is easy to assemble and disassemble."
+                    }
+                ],
+                "attributes": {
+                    "type": "unordered"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "2. Sleeping Bags and Pads",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "A comfortable sleeping bag is crucial for a good night's sleep. Choose one that suits the weather conditions you'll be facing. Consider the bag's temperature rating, insulation type, and weight. A good sleeping bag will keep you warm and cozy even in colder temperatures.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Sleeping pads are equally important. They provide not only comfort but also insulation from the cold ground. There are various types, including foam pads, self-inflating pads, and air mattresses. Each has its pros and cons in terms of comfort, insulation, weight, and packability.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "3. Reliable Cooking Gear",
+                "attributes": {
+                    "level": 2
+                }
             },
             {
                 "type": "image",
-                "src": "path/to/image.jpg",
-                "caption": "The early days"
+                "content": "/files/images/blog/19_A_campfire_with_a_pot_over_it_surrounded.png",
+                "attributes": {
+                    "width": "full",
+                    "alt": "Camfire with a pot over it",
+                    "caption": "A portable stove is a must-have for any camping trip."
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "You can’t enjoy the great outdoors on an empty stomach. Essential cooking gear includes a portable stove, which could be a lightweight backpacking stove or a larger, more robust stove for car camping. Don't forget fuel for the stove, a lighter or matches, and cooking utensils like pots, pans, and a spatula.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Planning your meals ahead is crucial. Consider easy-to-cook and nutritious meals that can be prepared with minimal utensils. Also, think about how you'll store your food safely, especially in areas where wildlife is present.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "<strong>Pro Tip</strong>: Plan your meals ahead and pack accordingly to avoid overpacking.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "4. Appropriate Clothing",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "image",
+                "content": "/files/images/products/jacket-yellow.png",
+                "attributes": {
+                    "width": "300px",
+                    "align": "right",
+                    "alt": "Waterproof jacket",
+                    "caption": "A waterproof jacket is a must-have for any camping trip."
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "The right clothing can make a significant difference in your camping experience. Dressing in layers is key. Start with a moisture-wicking base layer, add an insulating layer like fleece or down, and top it off with a waterproof and windproof outer layer.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Don't forget accessories like hats, gloves, and sturdy footwear. Waterproof hiking boots are ideal for most camping trips. Also, pack extra socks and undergarments, as getting wet or sweaty can lead to discomfort or even hypothermia in cooler temperatures.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "5. First Aid Kit",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "A well-stocked first aid kit is essential for addressing minor injuries or health issues that might arise. Your kit should include items like bandages, antiseptic wipes, gauze, adhesive tape, scissors, tweezers, pain relievers, allergy medication, and any personal medications.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "It's also a good idea to include items for specific concerns related to your camping area, such as tick removal tools or snake bite kits. Familiarize yourself with the contents of your first aid kit and know how to use each item.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "6. Navigation Tools",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "quote",
+                "content": "Not all those who wander are lost, but a map and compass help.",
+                "attributes": {
+                    "author": "J.R.R. Tolkien"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Getting lost is a risk in the wilderness, so reliable navigation tools are crucial. A physical map of the area and a compass are essential, even if you're also using a GPS device. GPS devices or apps can fail due to battery drain or lack of signal, making traditional navigation tools indispensable.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Learn basic map and compass skills before your trip. It's also a good idea to plan your routes and trails in advance, marking them on your map. Always inform someone about your intended route and expected return time.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "7. Lighting",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Proper lighting is essential for safety and convenience in the wilderness. Headlamps are great for hands-free operation, making them ideal for tasks like cooking or setting up your tent in the dark. Pack extra batteries or a charging method.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Flashlights and lanterns are also useful. Lanterns can illuminate a larger area, making them great for communal spaces like the campsite table. Some lanterns are solar-powered or rechargeable, offering an eco-friendly option.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "8. Water Filtration System",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Clean water is essential for survival. Drinking directly from lakes or streams can expose you to pathogens. Portable filtration systems, like pump filters or gravity filters, effectively remove bacteria and protozoa. Purification tablets or UV light purifiers are lightweight options, although they may not remove particulates.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Carry enough water for your journey to the campsite, and identify water sources nearby. Always test your water filtration system before leaving on your trip.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "9. Multi-tool or Swiss Army Knife",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "A multi-tool or Swiss Army Knife is a compact solution for various needs. These tools usually include a knife, scissors, can opener, screwdrivers, and sometimes more specialized tools like a saw or pliers.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Choose a tool that’s robust yet lightweight. Consider the specific needs of your trip when selecting the features you need. These tools are invaluable for repairs, food preparation, and emergency situations.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "10. Portable Power Bank",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Keeping your electronic devices charged is essential, especially in case of emergency. A portable power bank can charge phones, GPS devices, and other electronics.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Consider the capacity of the power bank and the power requirements of your devices. Some power banks are solar-powered, providing a renewable way to charge devices. Remember, these should be used as a backup, not the primary power source.",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "heading",
+                "content": "Conclusion",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "With these 10 must-have items, you're ready for your next camping adventure. Remember to plan ahead, pack carefully, and always prioritize safety. Happy camping!",
+                "attributes": {
+                    "align": "left"
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Happy camping!",
+                "attributes": {
+                    "align": "left"
+                }
             }
         ]
     },
@@ -76,7 +361,9 @@
         "is_home": false,
         "img_preview": "507f1f77bcf86cd799439017",
         "author": "507f191e810c19729de860ed",
-        "tags": ["507f1f77bcf86cd799439017"],
+        "tags": [
+            "507f1f77bcf86cd799439017"
+        ],
         "contact_form_name": "General Inquiries",
         "address": "1234 Road St, City, Country 12345",
         "phone": "+1234567890",
