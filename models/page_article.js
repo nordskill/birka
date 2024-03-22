@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const Page = require('./page');
 
 const PAGE_TYPE = 'Article';

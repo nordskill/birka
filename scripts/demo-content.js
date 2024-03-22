@@ -12,20 +12,52 @@ const pathToData = path.join(__dirname, '..', 'data', 'demo');
 
 loadVars();
 
+// Use an argument with function names to run only specific functions via the 
+// command line.
+//
+// Example: npm run demo-content insert_tag_data insert_user_data
+// If no arguments are provided, all functions will run in the order they are 
+// defined.
+//
+// Note: If some function uses data from another function, make sure to run
+// the required function first.
+const functionMap = {
+    'insert_tag_data': insert_tag_data,
+    'insert_email_template_data': insert_email_template_data,
+    'insert_file_data': insert_file_data,
+    'insert_settings_data': insert_settings_data,
+    'insert_user_data': insert_user_data,
+    'insert_notification_data': insert_notification_data,
+    'insert_status_data': insert_status_data,
+    'insert_blog_post_data': insert_blog_post_data,
+    'insert_category_data': insert_category_data,
+    'insert_product_data': insert_product_data,
+    'insert_page_data': insert_page_data
+};
+
 (async () => {
     await db.connect();
     console.log('----------');
-    await insert_tag_data();
-    await insert_email_template_data();
-    await insert_file_data();
-    await insert_settings_data();
-    await insert_user_data();
-    await insert_notification_data();
-    await insert_status_data();
-    await insert_blog_post_data();
-    await insert_category_data();
-    await insert_product_data();
-    await insert_page_data();
+
+    const args = process.argv.slice(2); // Remove the first two default arguments (node path and script path)
+
+    if (args.length === 0) {
+        // No specific function requested; run them all
+        for (const func of Object.values(functionMap)) {
+            await func();
+        }
+    } else {
+        // Run only the functions specified in the arguments
+        for (const arg of args) {
+            const func = functionMap[arg];
+            if (func) {
+                await func();
+            } else {
+                console.log(`No function matches the argument: ${arg}`);
+            }
+        }
+    }
+
     console.log('----------');
     console.log(`Database name: ${process.env.DB_NAME}`);
     console.log('----------');
@@ -298,36 +330,60 @@ async function insert_product_data() {
 }
 
 async function insert_page_data() {
-    const { model: pageModel, data: pageData } = load_files('page');
+    const { data: pageData } = load_files('page'); // Assuming this returns an array of page objects
     const { model: userModel } = load_files('user');
     const { File } = require(path.join(pathToModels, 'file.js'));
+    const HomePage = require(path.join(pathToModels, 'page_home.js'));
+    const AboutPage = require(path.join(pathToModels, 'page_about.js'));
+    const ArticlePage = require(path.join(pathToModels, 'page_article.js'));
+    const ContactPage = require(path.join(pathToModels, 'page_contact.js'));
 
-    const secondAdminID = (await userModel.find({}, '_id').exec())[1]._id.toString();
+    const secondAdminID = (await userModel.find({}, '_id').limit(2).exec())[1]?._id;
     const imagesIDs = (await File.find({
         $or: [
             { file_name: 'about_icon' },
             { file_name: 'services_icon' },
             { file_name: 'blog_icon' },
         ]
-    })).map(obj => obj._id.toString());
+    })).map(obj => obj._id);
 
     const randomTags = await getTags();
 
     for (let i = 0; i < pageData.length; i++) {
-        const id = new mongoose.Types.ObjectId;
-        pageData[i]._id = id;
-        pageData[i].img_preview = imagesIDs[i];
-        pageData[i].author = pageData[i].publisher = secondAdminID;
-        pageData[i].tags = randomTags();
-    }
+        const data = pageData[i];
+        data.img_preview = imagesIDs[i % imagesIDs.length];
+        data.author = secondAdminID;
+        data.tags = randomTags().slice(0, 3);
 
-    try {
-        await pageModel.insertMany(pageData);
-        console.log(`inserted ${pageData.length} pages`);
-    } catch (error) {
-        console.log(error);
+        // Determine the correct model based on the type field and insert the data.
+        let model;
+        switch (data.type) {
+            case 'Home':
+                model = HomePage;
+                break;
+            case 'About':
+                model = AboutPage;
+                break;
+            case 'Article':
+                model = ArticlePage;
+                break;
+            case 'Contact':
+                model = ContactPage;
+                break;
+            default:
+                console.error(`Unsupported page type: ${data.type}`);
+                continue; // Skip unsupported page types
+        }
+
+        try {
+            await model.create(data); // Use model.create for individual documents
+            console.log(`Inserted page of type ${data.type}`);
+        } catch (error) {
+            console.error(`Error inserting data for page of type ${data.type}:`, error);
+        }
     }
 }
+
 
 async function insert_settings_data() {
     const { model: settingsModel, data: settingsData } = load_files('settings');

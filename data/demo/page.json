@@ -1,48 +1,85 @@
 [
     {
+        "type": "Home",
+        "name": "Welcome to Our Site",
+        "slug": "welcome",
+        "excerpt": "The first stop on your journey",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "home",
+        "is_home": true,
+        "img_preview": "507f1f77bcf86cd799439011",
+        "author": "507f191e810c19729de860ea",
+        "tags": ["507f1f77bcf86cd799439011"],
+        "title": "Hello, World!",
+        "welcome_text": "Welcome to our brand new website!"
+    },
+    {
+        "type": "About",
         "name": "About Us",
         "slug": "about-us",
-        "excerpt": "Learn more about our team and mission.",
-        "date_published": "2023-10-15T00:00:00Z",
-        "img_preview": "",
-        "publisher": "",
-        "author": "",
-        "tags": [],
-        "content": {
-            "subtitle": "Our Commitment to Quality",
-            "html": "<h1>Quality Assurance</h1><p>We pride ourselves on delivering the highest quality products. Our rigorous testing procedures ensure that you receive only the best.</p><ul><li>100% satisfaction guarantee</li><li>Industry-leading quality checks</li><li>Comprehensive warranties</li></ul>"
-        },
+        "excerpt": "Learn more about us",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
         "template": "about",
-        "is_home": true
+        "is_home": false,
+        "img_preview": "507f1f77bcf86cd799439012",
+        "author": "507f191e810c19729de860eb",
+        "tags": ["507f1f77bcf86cd799439012"],
+        "description": "Our company was founded with the mission of ...",
+        "specializations": [
+            {
+                "name": "Innovation",
+                "description": "We focus on innovative solutions for our customers.",
+                "img": "507f1f77bcf86cd799439013"
+            },
+            {
+                "name": "Quality",
+                "description": "High quality is at the core of everything we do.",
+                "img": "507f1f77bcf86cd799439014"
+            }
+        ],
+        "founder_photo": "507f1f77bcf86cd799439015"
     },
     {
-        "name": "Blog",
-        "slug": "blog",
-        "excerpt": "An insightful blog.",
-        "date_published": "2023-09-01T00:00:00Z",
-        "img_preview": "",
-        "publisher": "",
-        "author": "",
-        "tags": [],
-        "content": {
-            "subtitle": "Innovative Design",
-            "html": "<h1>Cutting-Edge Creativity</h1><p>Our design team leads the industry with innovative solutions that blend form and function beautifully.</p><div><section><h2>Innovation Lab</h2><p>Explore our latest creations that push the boundaries of design.</p></section><section><h2>User Experience</h2><p>Designs focused on intuitive user experience, ensuring ease of use and customer satisfaction.</p></section></div>"
-        },
-        "template": "article"
+        "type": "Article",
+        "name": "Our Journey",
+        "slug": "our-journey",
+        "excerpt": "The history of our company",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "article",
+        "is_home": false,
+        "img_preview": "507f1f77bcf86cd799439016",
+        "author": "507f191e810c19729de860ec",
+        "tags": ["507f1f77bcf86cd799439016"],
+        "text": [
+            {
+                "type": "paragraph",
+                "content": "It all started in a small office..."
+            },
+            {
+                "type": "image",
+                "src": "path/to/image.jpg",
+                "caption": "The early days"
+            }
+        ]
     },
     {
-        "name": "Service Overview",
-        "slug": "service-overview",
-        "excerpt": "A brief overview of our main services.",
-        "date_published": "2023-11-01T00:00:00Z",
-        "img_preview": "",
-        "publisher": "",
-        "author": "",
-        "tags": [],
-        "content": {
-            "subtitle": "Sustainable Practices",
-            "html": "<h1>Eco-Friendly Approaches</h1><p>Join us in our journey towards sustainability. Our eco-friendly products are designed with the planet in mind.</p><ol><li>Recycled materials</li><li>Energy-efficient production</li><li>Reducing carbon footprint</li></ol>"
-        },
-        "template": "contact"
+        "type": "Contact",
+        "name": "Contact Us",
+        "slug": "contact",
+        "excerpt": "How to reach us",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "contact",
+        "is_home": false,
+        "img_preview": "507f1f77bcf86cd799439017",
+        "author": "507f191e810c19729de860ed",
+        "tags": ["507f1f77bcf86cd799439017"],
+        "contact_form_name": "General Inquiries",
+        "address": "1234 Road St, City, Country 12345",
+        "phone": "+1234567890",
+        "email": "contact@ourcompany.com"
     }
 ]
