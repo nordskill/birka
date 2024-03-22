@@ -5,15 +5,22 @@
                 <div class="pb-4">
                     <form action="#" class="needs-validation">
                         <div class="row">
-                            <div class="col-12 col-lg">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="title" name="title" value="<%= page.title %>" placeholder="Page title" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="welcome_text" class="form-label">Welcome Text</label>
-                                    <textarea class="form-control" id="welcome_text" name="welcome_text" rows="3"><%= page.welcome_text %></textarea>
-                                </div>
-                            </div>
+                            <% switch (page.type) { 
+                                case 'Home': %>
+                                    <%- include('partials/page/home') %>
+                                    <% break;
+                                case 'About': %>
+                                    <%- include('partials/page/about') %>
+                                    <% break;
+                                case 'Article': %>
+                                    <%- include('partials/page/article') %>
+                                    <% break;
+                                case 'Contact': %>
+                                    <%- include('partials/page/contact') %>
+                                    <% break;
+                                default:
+                                    break; 
+                            } %>
                             <div class="col-12 col-lg-3 mt-5 mt-lg-0">
                                 <div class="card meta_block mb-4">
                                     <%- include('partials/img-edit') %>
@@ -100,6 +107,11 @@
                     </form>
                     <!-- content -->
                 </div>
+                <code>
+                    <pre>
+                        <%= JSON.stringify(page, null, 2) %>
+                    </pre>
+                </code>
     </main>
     <%- include('../partials/svg-sprite') %>
         <%- include('partials/footer') %>
