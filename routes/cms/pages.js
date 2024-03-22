@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
 
     try {
         const pages = await Page.find()
-            .populate('author tags sub_pages')
+            .populate('author tags')
             .lean();
 
         res.render(`cms/${SLUG}s`, {
@@ -39,7 +39,7 @@ router.get('/', async (req, res, next) => {
 router.get(`/:id`, async (req, res, next) => {
 
     const page = await Page.findById(req.params.id)
-        .populate('author tags sub_pages')
+        .populate('author tags')
         .lean();
 
     if (!page) {

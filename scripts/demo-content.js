@@ -321,8 +321,6 @@ async function insert_page_data() {
         pageData[i].tags = randomTags();
     }
 
-    pageData[0].sub_pages = [pageData[2]._id];
-
     try {
         await pageModel.insertMany(pageData);
         console.log(`inserted ${pageData.length} pages`);
