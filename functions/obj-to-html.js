@@ -1,4 +1,4 @@
-function formatBody(body) {
+function OBJtoHTML(body) {
 	let html = '';
 
 	body.forEach((element) => {
@@ -32,4 +32,4 @@ function formatBody(body) {
 
 	return html;
 }
-module.exports = formatBody;
+module.exports = OBJtoHTML;

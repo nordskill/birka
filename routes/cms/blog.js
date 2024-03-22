@@ -3,7 +3,7 @@ const router = express.Router();
 const Blog = require('../../models/blog-post');
 const Tag = require('../../models/tag');
 const User = require('../../models/user');
-const formatBody = require('../../functions/format-body');
+const OBJtoHTML = require('../../functions/obj-to-html');
 const mongoose = require('mongoose');
 const OperationalError = require('../../functions/operational-error');
 
@@ -82,7 +82,7 @@ router.get('/:id', async (req, res, next) => {
             active: SLUG,
             blog_post: blogPost,
             img_preview: `${folder_path}${blogPost.img_preview?.file_name}.${blogPost.img_preview?.extension}`,
-            body: formatBody(blogPost.body),
+            rendered_body: OBJtoHTML(blogPost.body),
             breadcrumbs: [{
                     name: 'CMS',
                     href: '/cms'

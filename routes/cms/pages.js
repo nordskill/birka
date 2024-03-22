@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Page = require('../../models/page');
+const OBJtoHTML = require('../../functions/obj-to-html');
+const OperationalError = require('../../functions/operational-error');
 
 const SLUG = 'page';
 const TITLE = 'Page';
@@ -53,6 +55,7 @@ router.get(`/:id`, async (req, res, next) => {
         template_name: `cms_${SLUG}`,
         active: `${SLUG}s`,
         page,
+        renderHTML: OBJtoHTML,
         breadcrumbs: [{
             name: 'CMS',
             href: '/cms'
