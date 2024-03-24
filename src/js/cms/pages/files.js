@@ -143,7 +143,7 @@ class FilesSelectionManager {
 export default function () {
 
     initFilesUpload();
-    document.addEventListener('DOMContentLoaded', initFiles);
+    initFiles();
 
 }
 
