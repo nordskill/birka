@@ -38,12 +38,13 @@ router.get('/', async (req, res, next) => {
 
 router.get(`/:id`, async (req, res, next) => {
 
-    const menu = await Menu.findById(req.params.id)
+    const id = req.params.id;
+    const menu = await Menu.findById(id)
         .lean();
 
     if (!menu) {
         return next(
-            new OperationalError('Menu entity not found', 404)
+            new OperationalError(`Menu not found, ID: ${id} `, 404)
         );
     }
 

@@ -40,13 +40,14 @@ router.get('/', async (req, res, next) => {
 
 router.get(`/:id`, async (req, res, next) => {
 
-    const page = await Page.findById(req.params.id)
+    const id = req.params.id;
+    const page = await Page.findById(id)
         .populate('author tags')
         .lean();
 
     if (!page) {
         return next(
-            new OperationalError('Page entity not found', 404)
+            new OperationalError(`Page not found, ID: ${id}`, 404)
         );
     }
 
