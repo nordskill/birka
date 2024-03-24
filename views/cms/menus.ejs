@@ -1,0 +1,64 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div>
+                    <div class="card bg-light">
+                        <div class="card-body d-flex flex-wrap justify-content-between">
+                            <div class="col-auto">
+                                <button class="btn btn-primary me-2">Add New</button>
+                                <button class="btn btn-danger">Delete <span>2</span> Selected</button>
+                            </div>
+                            <div class="col-auto">
+                                <form action="#" class="needs-validation" novalidate="">
+                                    <div class="row align-content-center gx-2">
+                                        <div class="col-auto position-relative">
+                                            <label for="s_1" class="visually-hidden">Search</label>
+                                            <input type="text" class="form-control" id="s_1"
+                                                aria-describedby="validationServer03Feedback" required=""
+                                                placeholder="Search...">
+                                            <div class="invalid-tooltip">
+                                                Please provide a valid Search.
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-outline-success" type="submit">Search</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped  align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <input class="form-check-input" type="checkbox" value="" aria-label="select all rows">
+                                    </th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Tags</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (const menu of menus) { %>
+                                    <tr>
+                                        <td><input class="form-check-input" type="checkbox" aria-label="select row"></td>
+                                        <td>
+                                            <a href="/cms/menus/<%= menu._id %>"><%= menu.name %></a>
+                                        </td>
+                                        <td><%= formatDate(menu.createdAt, 'dd mon yyyy') %></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pt-1">
+                        <button class="btn btn-danger">Delete Selected</button>
+                    </div>
+                    <!-- content -->
+                </div>
+    </main>
+    <%- include('partials/footer') %>

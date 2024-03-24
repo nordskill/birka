@@ -32,7 +32,8 @@ const functionMap = {
     'insert_blog_post_data': insert_blog_post_data,
     'insert_category_data': insert_category_data,
     'insert_product_data': insert_product_data,
-    'insert_page_data': insert_page_data
+    'insert_page_data': insert_page_data,
+    'insert_menu_data': insert_menu_data
 };
 
 (async () => {
@@ -384,7 +385,6 @@ async function insert_page_data() {
     }
 }
 
-
 async function insert_settings_data() {
     const { model: settingsModel, data: settingsData } = load_files('settings');
     const { File } = require(path.join(pathToModels, 'file.js'));
@@ -402,5 +402,38 @@ async function insert_settings_data() {
         console.log(`inserted settings data`);
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function insert_menu_data() {
+    const { model: pageModel } = load_files('page'); // Load the page model
+    const { model: menuModel } = load_files('menu'); // Load the menu model
+
+    // Fetch all pages from the database
+    const pages = await pageModel.find({}).exec();
+
+    // Map pages to menu items
+    const menuItems = pages.map(page => ({
+        name: page.name,
+        title: page.excerpt,
+        url: page.is_home ? '/' : `/${page.slug}`,
+        target: '_self',
+        entityType: 'Page',
+        entityId: page._id,
+        order: 0
+    }));
+
+    // Create a new menu object
+    const mainMenu = new menuModel({
+        name: 'Main Menu',
+        items: menuItems
+    });
+
+    // Save the new menu to the database
+    try {
+        await mainMenu.save();
+        console.log('Main Menu created with links to all the pages.');
+    } catch (error) {
+        console.log('Error creating Main Menu:', error);
     }
 }

@@ -1,7 +1,9 @@
 <nav>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/contact">Contact</a></li>
-    </ul>
+    <% if (menus['Main Menu']) { %>
+        <ul>
+            <% menus['Main Menu'].forEach(function(item) { %>
+                <li><a href="<%= item.url %>" target="<%= item.target %>"><%= item.name %></a></li>
+            <% }); %>
+        </ul>
+    <% } %>
 </nav>

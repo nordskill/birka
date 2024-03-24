@@ -19,6 +19,7 @@ const cmsPages = require('./cms/pages');
 const cmsBlog = require('./cms/blog');
 const cmsNotifications = require('./cms/notifications');
 const cmsEmails = require('./cms/email-templates');
+const cmsMenus = require('./cms/menus');
 const cmsSettings = require('./cms/settings');
 
 // JSON API
@@ -52,6 +53,7 @@ module.exports = (app) => {
     cmsRoutes.use('/blog', cmsBlog);
     cmsRoutes.use('/notifications', cmsNotifications);
     cmsRoutes.use('/email-templates', cmsEmails);
+    cmsRoutes.use('/menus', cmsMenus);
     cmsRoutes.use('/settings', cmsSettings);
 
     app.use('/cms', cmsRoutes);

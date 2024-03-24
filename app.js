@@ -17,6 +17,7 @@ const loadIcons = require('./functions/load-icons');
 const icon = require('./functions/icon');
 const generateSvgSprites = require('./functions/generate-svg-sprites');
 const formatDate = require('./functions/format-date');
+const loadMenus = require('./functions/menus');
 
 const SiteSettings = require('./models/settings');
 const setupRoutes = require('./routes/_setup');
@@ -91,6 +92,7 @@ async function setupMiddleware(app) {
         extended: false
     }));
     app.use(cookieParser());
+    app.use(loadMenus);
 
     if (process.env.NODE_ENV === 'production') {
         app.use(logger('combined', {
