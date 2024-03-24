@@ -4,11 +4,10 @@ import cms_product from './pages/product';
 import cms_blogpost from './pages/blogpost';
 import cms_page from './pages/page';
 import cms_files from './pages/files';
+import cms_menu from './pages/menu';
 
 import 'bootstrap';
 import bootstrapFormsValidation from '../functions/bootstrap-forms-validation';
-
-const currentPage = determineCurrentPage();
 
 const page = {
     cms_dashboard,
@@ -16,14 +15,20 @@ const page = {
     cms_product,
     cms_blogpost,
     cms_files,
-    cms_page
+    cms_page,
+    cms_menu
 }
 
-if (page[currentPage]) {
-    page[currentPage]();
-} else {
-    console.log('No JS for:', currentPage);
-}
+document.addEventListener('DOMContentLoaded', () => {
+
+    const currentPage = determineCurrentPage();
+
+    if (page[currentPage]) {
+        page[currentPage]();
+    } else {
+        console.log('No JS for:', currentPage);
+    }
+});
 
 bootstrapFormsValidation();
 

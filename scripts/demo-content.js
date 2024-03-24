@@ -418,8 +418,8 @@ async function insert_menu_data() {
         title: page.excerpt,
         url: page.is_home ? '/' : `/${page.slug}`,
         target: '_self',
-        entityType: 'Page',
-        entityId: page._id,
+        entity_type: 'Page',
+        entity_id: page._id,
         order: 0
     }));
 

@@ -1,9 +1,16 @@
 .table {
+
 	&.table_edit {
+
 		tr {
 			td:last-child {
 				text-align: right;
 			}
+		}
+
+		.save_item_edit,
+		.cancel_item_edit {
+			display: none;
 		}
 	}
 
