@@ -1,79 +1,66 @@
 /**
- * Debouncer class for debouncing input events and sending requests to a specified
- * endpoint.
+ * Debouncer class for debouncing user input and making requests to a specified endpoint.
  * @class
- * 
- * @example
- * // Create a new Debouncer instance
- * const inputField = document.querySelector('#myInputField');
- * const debouncer = new Debouncer(inputField, '/api/endpoint');
- * 
- * // Now, the input field will debounce input events and send requests to
- * // '/api/endpoint'
+ * @param {Object} options - Configuration options for the debouncer.
+ * @param {HTMLElement} options.field_element - The input field element.
+ * @param {string} options.endpoint - The endpoint to send requests to.
+ * @param {string} [options.token=''] - The CSRF token for the request.
+ * @param {number} [options.min_chars=0] - The minimum number of characters to trigger the debouncer.
+ * @param {Function} options.success_callback - The callback function to execute on successful response.
+ * @param {Function} options.error_callback - The callback function to execute on error response.
+ * @param {Function} options.input_callback - The callback function to execute on input event.
  */
 class Debouncer {
-    /**
-     * Creates a new Debouncer.
-     * @param {HTMLElement} fieldElement - The input field element to debounce.
-     * @param {string} endpoint - The endpoint to send requests to when the input event
-     * is debounced.
-     */
-    constructor(fieldElement, endpoint) {
-        this.fieldElement = fieldElement;
-        this.endpoint = endpoint;
-        this.csrfToken = document.querySelector('meta[name="csrf"]').content;
-        this.debounceTimer = null;
-        this.init();
+    constructor(options) {
+        this.field_element = options.field_element;
+        this.endpoint = options.endpoint;
+        this.token = options.token || '';
+        this.min_chars = options.min_chars || 0;
+        this.success_callback = options.success_callback;
+        this.error_callback = options.error_callback;
+        this.input_callback = options.input_callback;
+        this.debounce_timer = null;
         this.DELAY = 500;
+        this.init();
     }
 
     init() {
-        this.fieldElement.addEventListener('input', () => {
+        this.field_element.addEventListener('input', () => {
+            this.input_callback(this.field_element);
 
-            this.fieldElement.classList.remove('is-valid', 'is-invalid');
-            const invalidFeedback = this.fieldElement.nextElementSibling;
-            invalidFeedback.style.display = 'none';
-
-            clearTimeout(this.debounceTimer);
-            this.debounceTimer = setTimeout(() => this.sendRequest(), this.DELAY);
+            if (this.field_element.value.length >= this.min_chars) {
+                clearTimeout(this.debounce_timer);
+                this.debounce_timer = setTimeout(() => this.sendRequest(), this.DELAY);
+            }
         });
     }
 
     async sendRequest() {
-        const value = this.fieldElement.value;
-        const name = this.fieldElement.name;
+        const value = this.field_element.value;
+        const name = this.field_element.name;
 
         try {
             const response = await fetch(this.endpoint, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': this.csrfToken
+                    'X-CSRF-Token': this.token
                 },
                 body: JSON.stringify({ [name]: value })
             });
 
             if (response.ok) {
-                this.handleSuccess();
+                const json = await response.json();
+                this.success_callback(this.field_element, json);
             } else {
                 const errorData = await response.json();
-                this.handleError(errorData.message);
+                this.error_callback(this.field_element, errorData.message);
             }
         } catch (error) {
-            this.handleError(error.message);
+            this.error_callback(error.message);
         }
-    }
-
-    handleSuccess() {
-        this.fieldElement.classList.add('is-valid');
-    }
-
-    handleError(errorMessage) {
-        this.fieldElement.classList.add('is-invalid');
-        const invalidFeedback = this.fieldElement.nextElementSibling;
-        invalidFeedback.style.display = 'block';
-        invalidFeedback.textContent = errorMessage;
     }
 }
 
 export default Debouncer;
+
