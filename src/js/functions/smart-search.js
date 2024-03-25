@@ -15,7 +15,6 @@ import Debouncer from './debouncer';
  * searchField.dataset.search = '/api/new-search-endpoint';
  * smartSearch.update();
  */
-// import SmartSearch from './smart-search.js';
 class SmartSearch {
     constructor(field, csrfToken) {
         this.field = field;
