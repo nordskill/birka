@@ -6,11 +6,9 @@ const MenuItemSchema = new Schema({
     title:      { type: String, trim: true },
     url:        { type: String, trim: true },
     target:     { type: String, enum: ['_self', '_blank'], default: '_self' },
-    entityType: { type: String, trim: true },
-    entityId:   { type: Schema.Types.ObjectId },
+    entity_type: { type: String, trim: true },
+    entity_id:   { type: Schema.Types.ObjectId },
     order:      { type: Number, default: 0 }
-}, {
-    _id: false
 });
 
 const MenuSchema = new Schema({

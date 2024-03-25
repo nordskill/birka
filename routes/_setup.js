@@ -26,6 +26,7 @@ const cmsSettings = require('./cms/settings');
 const apiAuth = require('./api/auth');
 const apiTag = require('./api/tags');
 const apiFile = require('./api/files');
+const apiPage = require('./api/pages');
 
 module.exports = (app) => {
 
@@ -62,6 +63,7 @@ module.exports = (app) => {
     app.use('/api/auth', apiAuth);
     app.use('/api/tags', apiTag);
     app.use('/api/files', apiFile);
+    app.use('/api/pages', apiPage);
 
     // Navigation
     app.use('/', index);

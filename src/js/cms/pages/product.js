@@ -1,4 +1,5 @@
 import FilePicker from "../../components/file-picker";
+const csrfToken = document.querySelector('meta[name="csrf"]').content;
 
 const filePicker = new FilePicker();
 
