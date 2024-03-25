@@ -189,6 +189,7 @@ class FileDetails {
                 field_element: field,
                 endpoint,
                 token,
+                method: 'PUT',
                 success_callback: onSuccess,
                 error_callback: onError,
                 input_callback: onInput
