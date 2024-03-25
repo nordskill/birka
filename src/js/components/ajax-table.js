@@ -61,12 +61,16 @@ class AJAXTable {
                 cell.innerHTML = '';
                 const input = document.createElement('input');
                 input.type = 'text';
+                input.name = dataField;
                 input.className = 'form-control form-control-sm';
                 input.value = value.replace(/"/g, '&quot;');
                 input.placeholder = dataField || '';
                 cell.appendChild(input);
             }
         });
+
+        const editEvent = new CustomEvent('ajaxtable:row-edit', { detail: { row } });
+        this.element.dispatchEvent(editEvent);
 
     }
 

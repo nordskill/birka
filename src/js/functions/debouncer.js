@@ -19,15 +19,12 @@ class Debouncer {
     }
 
     set_options(options) {
-        // Only update field_element if it's explicitly provided in options
-        if (options.field_element) {
-            this.field_element = options.field_element;
-        }
-        // Update other options normally
-        this.endpoint = options.endpoint || this.endpoint; // Retain old value if not provided
-        this.method = options.method || this.method; // Default to existing method if not specified
-        this.token = options.token || this.token; // Default to existing token if not provided
-        this.min_chars = options.min_chars || this.min_chars; // Default to existing min_chars if not provided
+        // Initialize default values if they don't exist, or retain old value if not provided new ones
+        this.field_element = options.field_element || this.field_element;
+        this.endpoint = options.endpoint || this.endpoint || '';
+        this.method = options.method || this.method || 'GET';
+        this.token = options.token || this.token || '';
+        this.min_chars = (options.min_chars !== undefined) ? options.min_chars : (this.min_chars || 0);
         this.success_callback = options.success_callback || this.success_callback;
         this.error_callback = options.error_callback || this.error_callback;
         this.input_callback = options.input_callback || this.input_callback;
@@ -41,7 +38,6 @@ class Debouncer {
 
     handle_input = () => {
         if (this.input_callback) this.input_callback(this.field_element);
-
         if (this.field_element.value.length >= this.min_chars) {
             clearTimeout(this.debounce_timer);
             this.debounce_timer = setTimeout(() => this._send_request(), this.DELAY);
