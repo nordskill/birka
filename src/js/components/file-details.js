@@ -165,15 +165,39 @@ class FileDetails {
     }
 
     _initFieldUpdates(id) {
-
         const fields = this.win.querySelectorAll('input, textarea');
         const endpoint = `/api/files/${id}`;
+        const token = document.querySelector('meta[name="csrf"]').content;
+
+        const onSuccess = (fieldElem) => {
+            fieldElem.classList.add('is-valid');
+        };
+        const onError = (fieldElem, message) => {
+            fieldElem.classList.add('is-invalid');
+            const invalidFeedback = fieldElem.nextElementSibling;
+            invalidFeedback.style.display = 'block';
+            invalidFeedback.textContent = message;
+        };
+        const onInput = (fieldElem) => {
+            fieldElem.classList.remove('is-valid', 'is-invalid');
+            const invalidFeedback = fieldElem.nextElementSibling;
+            invalidFeedback.style.display = 'none';
+        };
 
         fields.forEach(field => {
-            new Debouncer(field, endpoint);
+            new Debouncer({
+                field_element: field,
+                endpoint,
+                token,
+                method: 'PUT',
+                success_callback: onSuccess,
+                error_callback: onError,
+                input_callback: onInput
+            });
         });
-
     }
+
+
 
 }
 
