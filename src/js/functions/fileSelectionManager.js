@@ -3,12 +3,12 @@ import FileDetails from "../components/file-details";
 const fileDetails = new FileDetails();
 
 class FilesSelectionManager {
-    constructor({token}) {
+    constructor({token, parent}) {
         this.token = token;
-        this.btnDelete = document.querySelector('.delete-btn');
+        this.btnDelete = parent.querySelector('.delete-btn');
         this.delNumber = this.btnDelete.querySelector('var');
-        this.btnDeselect = document.querySelector('.deselect-btn');
-        this.filesContainer = document.querySelector('.files');
+        this.btnDeselect = parent.querySelector('.deselect-btn');
+        this.filesContainer = parent.querySelector('.files');
         this.lastSelected = null;
         this.selectedItems = new Set();
 
@@ -114,7 +114,11 @@ class FilesSelectionManager {
             .then(res => res.json())
             .then(res => {
                 if (res.success) {
-                    location.reload();
+                    const deletedFiles = res.deletedFiles;
+                    
+                    deletedFiles.forEach(fileId => {
+                        this.filesContainer.querySelector(`[data-id="${fileId}"]`).remove();
+                    })
                 } else {
                     console.error(res.message);
                 }
