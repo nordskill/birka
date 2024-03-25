@@ -35,14 +35,43 @@ const storage = multer.diskStorage(
 const upload = multer({ storage: storage });
 
 router.get('/', async (req, res, next) => {
+    const countsByType = await File.aggregate([
+        {
+            $group: {
+                _id: '$type',
+                count: { $sum: 1 }
+            }
+        }
+    ]).exec();
+
+    const fileType = req.query.type;
+
     try {
-        const files = await File.find()
+        let condition = {};
+        if (fileType) condition.type = fileType;
+
+        const files = await File.find(condition)
             .sort({ file_name: 'asc' })
             .select('-__v')
             .populate('tags', '-_id -__v')
             .lean();
 
-        res.json(files);
+        let totalCount;
+        if (fileType) {
+            const fileTypeCount = countsByType.find(count => count._id === fileType);
+            totalCount = fileTypeCount ? fileTypeCount.count : 0;
+        } else {
+            totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
+        }
+
+        // sort countsByType by _id
+        countsByType.sort((a, b) => {
+            if (a._id < b._id) return -1;
+            if (a._id > b._id) return 1;
+            return 0;
+        });
+
+        res.json({files, countsByType, totalCount});
     } catch (err) {
         next(err);
     }
@@ -272,6 +301,7 @@ router.delete('/', async (req, res, next) => {
     }
 
     if (errors.length > 0) {
+        console.log(errors)
         if (deletedFiles.length === 0) { // All IDs resulted in errors, none were deleted
             return res.status(500).json({ success: false, message: "None of the files were deleted", errors });
         } else { // Some IDs were deleted, but there were also some errors
@@ -289,6 +319,7 @@ async function deleteFile(filePath) {
     try {
         await fs.unlink(filePath);
     } catch (err) {
+        console.log('dupa')
         throw new Error('Error deleting file: ' + err.message);
     }
 }
@@ -330,7 +361,7 @@ async function deleteResizedImages(subfolder, file) {
     if (filesNotFound.length) {
         await Image.findByIdAndUpdate(id, { sizes: sizesNotFound });
     }
-    
+
     return filesNotFound;
 
 }

@@ -10,10 +10,6 @@ class FileManager {
         }
 
         this.destination = destination || 'page';
-        this.breadcrumbs = [
-            { name: 'CMS', href: '/cms' },
-            { name: 'Files', href: '/cms/files' }
-        ],
 
         this._generateTemplate();
         this.files = this.target.querySelector('.files');
@@ -126,7 +122,7 @@ class FileManager {
 
     _initFiles() {
         this._detectProcessingFiles();
-        new FilesSelectionManager({token: this.token});
+        new FilesSelectionManager({token: this.token, parent: this.target});
     }
 
     _addFile(file) {
@@ -224,12 +220,7 @@ class FileManager {
                             </form>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom">`+
-                        // <a href="${breadcrumbs.at(-1).href}" class="btn btn-light me-2">All <span class="text-black-50 all_files_amount"></span></a>
-                        // ${type_counts.forEach(type => {
-                        //     `<a href="<%= breadcrumbs.at(-1).href + '/?type=' + type._id %>" class="btn btn-light me-2"><%= type._id %>s <span class="text-black-50"><%= type.count %></span></a>`
-                        // })}
-                    `</div>
+                    <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom file-types"></div>
                 </div>
                 <div class="py-4 ${this.destination == 'picker' ? 'px-2': ''} files_container">
                     <div class="files">
@@ -239,8 +230,11 @@ class FileManager {
     }
 
     async _getFiles() {
+
+        const params = location.href.split('?')[1] || '';
+
         try {
-            const req = await fetch('/api/files', {
+            const req = await fetch(`/api/files?${params}`, {
                 method: 'GET',
                 headers: {
                     'X-CSRF-Token': this.token
@@ -248,19 +242,20 @@ class FileManager {
             });
 
             const res = await req.json();
+            this._generateContent(res);
 
-            const markup = this._generateContent(res);
-            this.files.insertAdjacentHTML('beforeend', markup);
         } catch (error) {
             console.error('Error in fetching files: ', error);
         }
     }
 
     _generateContent(res) {
-        let html = '';
+        const { files, countsByType, totalCount } = res;
 
-        res.forEach(file => {
+        let filesMarkup = '';
+        let fileTypeMarkup = '';
 
+        files.forEach(file => {
             let fileMarkup;
 
             if (file.type === 'image') {
@@ -281,14 +276,22 @@ class FileManager {
                 `
             }
 
-            html += `
+            filesMarkup += `
                 <div class="file" data-id="${file._id}" data-type="${file.type}">
                     ${fileMarkup}
                 </div>
             `;
         })
 
-        return html;
+        fileTypeMarkup = `
+            <a href="/cms/files" class="btn btn-light me-2">All <span class="text-black-50 all_files_amount">${totalCount}</span></a>
+            ${countsByType.map(type => {
+                return `<a href="/cms/files?type=${type._id}" class="btn btn-light me-2">${type._id}s <span class="text-black-50">${type.count}</span></a>`
+            })}
+        `;
+
+        this.target.querySelector('.file-types').insertAdjacentHTML('beforeend', fileTypeMarkup);
+        this.files.insertAdjacentHTML('beforeend', filesMarkup);
     }
 }
 
