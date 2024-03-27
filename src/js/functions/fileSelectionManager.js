@@ -115,15 +115,27 @@ class FilesSelectionManager {
             .then(res => {
                 if (res.success) {
                     const deletedFiles = res.deletedFiles;
-                    
+
                     deletedFiles.forEach(fileId => {
-                        this.filesContainer.querySelector(`[data-id="${fileId}"]`).remove();
+                        const deletedFile = this.filesContainer.querySelector(`[data-id="${fileId}"]`)
+                        const fileType = deletedFile.dataset.type;
+
+                        decrementFileAmount(`a.${fileType}s-btn span`);
+                        decrementFileAmount('a.all_files_btn span');
+
+                        deletedFile.remove();
                     })
                 } else {
                     console.error(res.message);
                 }
             })
             .catch(err => console.error(err));
+
+            function decrementFileAmount(selector) {
+                const filter = document.querySelector(selector);
+                const oldValue = filter.innerHTML;
+                filter.innerHTML = oldValue - 1;
+            }
     }
 
     showControlButtons() {
