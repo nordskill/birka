@@ -285,10 +285,11 @@ class FileManager {
 
         fileTypeMarkup = `
             <a href="/cms/files" class="btn btn-light me-2 all_files_btn">All <span class="text-black-50 all_files_amount">${totalCount}</span></a>
-            ${countsByType.map(type => {
-                return `<a href="/cms/files?type=${type._id}" class="btn btn-light me-2 ${type._id}s-btn">${type._id[0].toUpperCase() + type._id.slice(1)}s <span class="text-black-50">${type.count}</span></a>`
-            })}
         `;
+
+        countsByType.forEach(type => {
+            fileTypeMarkup += `<a href="/cms/files?type=${type._id}" class="btn btn-light me-2 ${type._id}s-btn">${type._id[0].toUpperCase() + type._id.slice(1)}s <span class="text-black-50">${type.count}</span></a>`
+        })
 
         this.target.querySelector('.file-types').insertAdjacentHTML('beforeend', fileTypeMarkup);
         this.files.insertAdjacentHTML('beforeend', filesMarkup);
