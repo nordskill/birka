@@ -5,15 +5,9 @@ const csrfToken = document.querySelector('meta[name="csrf"]').content;
 class FilePicker {
     constructor() {
         this._generateTemplate();
-        new FileManager({
-            token: csrfToken,
-            target: '.win div',
-            destination: 'picker'
-        })
 
         this.modal = document.querySelector('.file_picker')
         this.win = this.modal.querySelector('.win')
-        this.files = this.win.querySelector('.files');
         this.selectBtn = this.win.querySelector('.select-btn');
         this.cancelBtn = this.win.querySelector('.cancel-btn');
 
@@ -21,11 +15,19 @@ class FilePicker {
     }
 
     open() {
+        new FileManager({
+            token: csrfToken,
+            target: '.win div',
+            destination: 'picker'
+        })
+
+        this.files = document.querySelector('.files');
         this.modal.removeAttribute('hidden');
     }
 
     close() {
         this.modal.setAttribute('hidden', '');
+        this.win.querySelector('div').innerHTML = '';
     }
 
     async select() {
