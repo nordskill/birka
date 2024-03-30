@@ -11,11 +11,12 @@ class FilePicker {
         this.selectBtn = this.win.querySelector('.select-btn');
         this.cancelBtn = this.win.querySelector('.cancel-btn');
 
-        this.cancelBtn.onclick = this.close.bind(this);
+        this.cancelBtn.onclick = this.close;
+        this.selectBtn.onclick = this.select;
     }
 
-    open() {
-        new FileManager({
+    open = () => {
+        this.fileManager = new FileManager({
             token: csrfToken,
             target: '.win div',
             destination: 'picker'
@@ -25,13 +26,13 @@ class FilePicker {
         this.modal.removeAttribute('hidden');
     }
 
-    close() {
+    close = () => {
         this.modal.setAttribute('hidden', '');
         this.win.querySelector('div').innerHTML = '';
     }
 
-    async select() {
-
+    select = async () =>  {
+        console.log(this.fileManager.selected);
     }
 
     _generateTemplate() {

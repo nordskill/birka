@@ -31,6 +31,11 @@ class FileManager {
         }
     }
 
+    get selected() {
+        const selectedFiles = Array.from(this.files.querySelectorAll('.files .selected'));
+        return selectedFiles.map(file => file.dataset.id);
+    }
+
     _ajaxScroll = () => {
         const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
 
