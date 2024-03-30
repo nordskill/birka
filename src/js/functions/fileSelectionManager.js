@@ -124,6 +124,7 @@ class FilesSelectionManager {
                         decrementFileAmount('button.all_files_btn span');
                         this.hideControlButtons();
 
+                        this.btnDelete.removeAttribute('disabled');
                         deletedFile.remove();
                     })
                 } else {
