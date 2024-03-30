@@ -3,22 +3,5 @@
         <%- include('partials/breadcrumbs') %>
             <%- include('partials/title') %>
             <div class="files_main_container"></div>
-            <nav aria-label="Page navigation" class="pt-3">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item previous-page <%= currentPage === 1 ? 'disabled' : '' %>">
-                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage - 1) + (typeof type !== 'undefined' ? '&type=' + type : '') %>" rel="previous-page">Previous</a>
-                    </li>
-
-                    <% for(let i = 1; i <= totalPages; i++){ %>
-                        <li class="page-item">
-                            <a class="page-link <%= currentPage === i ? 'active' : '' %>" href="<%= breadcrumbs.at(-1).href + '/?page=' + i + (typeof type !== 'undefined' ? '&type=' + type : '') %>"><%- i -%></a>
-                        </li>
-                    <% }; %>
-
-                    <li class="page-item next-page <%= currentPage === totalPages ? 'disabled' : '' %>">
-                        <a class="page-link" href="<%= breadcrumbs.at(-1).href + '/?page=' + (+currentPage + 1) + (typeof type !== 'undefined' ? '&type=' + type : '') %>" rel="next-page">Next</a>
-                    </li>
-                </ul>
-            </nav>
     </main>
     <%- include('partials/footer') %>

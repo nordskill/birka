@@ -44,6 +44,17 @@ router.get('/', async (req, res, next) => {
         }
     ]).exec();
 
+    const AMOUNT_OF_FILES_PER_PAGE = 30;
+
+    let limit = 0;
+    let skip = 0;
+
+    if (req.query.page) {
+        const page = parseInt(req.query.page);
+        skip = (page - 1) * AMOUNT_OF_FILES_PER_PAGE;
+        limit = AMOUNT_OF_FILES_PER_PAGE;
+    }
+
     const fileType = req.query.type;
 
     try {
@@ -52,6 +63,8 @@ router.get('/', async (req, res, next) => {
 
         const files = await File.find(condition)
             .sort({ file_name: 'asc' })
+            .limit(limit)
+            .skip(skip)
             .select('-__v')
             .populate('tags', '-_id -__v')
             .lean();

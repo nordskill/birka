@@ -10,16 +10,84 @@ class FileManager {
         }
 
         this.destination = destination || 'page';
-
         this._generateTemplate();
+
         this.files = this.target.querySelector('.files');
+        this.containerToScroll = this.destination == 'picker' ? document.querySelector('.files_container') : window;
+
+        this.maxPages = 0
+        this.nextPage = 2;
+        this.typeToShow = '';
+        this.blockScrollEvent = false;
 
         this._getFiles();
+        this._ajax_scroll();
         this._initFilesUpload();
-        document.addEventListener('DOMContentLoaded', this._initFiles.bind(this));
+
+        if (destination != 'picker') {
+            document.addEventListener('DOMContentLoaded', this._initFiles);
+        } else {
+            this._initFiles()
+        }
     }
 
-    _initFilesUpload() {
+    _ajax_scroll = () => {
+        const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
+
+        const handleScroll = async () => {
+
+            if(this.blockScrollEvent) return;
+
+            if (getDistanceToPageBottom() < DISTANCE_TO_PAGE_BOTTOM) {
+                this.containerToScroll.removeEventListener("scroll", handleScroll);
+
+                const filterBtns = document.querySelectorAll('.file-types button');
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.containerToScroll.addEventListener('scroll', handleScroll)
+                    })
+                })
+
+                loadPosts().then(() => {
+                    if (getDistanceToPageBottom() > DISTANCE_TO_PAGE_BOTTOM) {
+                        this.containerToScroll.addEventListener('scroll', handleScroll)
+                    }
+                });
+            }
+        }
+
+        const loadPosts = () => {
+
+            return new Promise((resolve) => {
+                if (this.nextPage <= this.maxPages) {
+                    fetch(`/api/files?type=${this.typeToShow}&page=` + this.nextPage)
+                        .then((req) => {
+                            if (req.ok) {
+                                return req.json();
+                            }
+                            return Promise.reject(req);
+                        })
+                        .then((response) => {
+                            this._generateContent(response)
+                            this.nextPage += 1;
+
+                            resolve();
+                        });
+                }
+            });
+        }
+
+        const getDistanceToPageBottom = () => {
+            const bottom = this.files.getBoundingClientRect().bottom;
+            const gap = bottom - (this.destination == 'picker' ? document.querySelector('.files_container').getBoundingClientRect().height : window.innerHeight);
+            return gap;
+        }
+
+        this.containerToScroll.addEventListener('scroll', handleScroll);
+
+    }
+
+    _initFilesUpload = () => {
 
         const fileInput = document.querySelector('#file_input');
 
@@ -59,7 +127,7 @@ class FileManager {
             }
         }
 
-        function handleFile({ type, file, object, event }) {
+        const handleFile = ({ type, file, object, event }) => {
             const reader = new FileReader();
             reader.onload = function (e) {
                 object[event] = function () {
@@ -89,7 +157,7 @@ class FileManager {
             reader.readAsDataURL(file);
         }
 
-        function sendFiles() {
+        const sendFiles = () => {
 
             for (let i = 0; i < loadedFiles.length; i++) {
                 const formData = new FormData();
@@ -120,7 +188,7 @@ class FileManager {
 
     }
 
-    _initFiles() {
+    _initFiles = () => {
         this._detectProcessingFiles();
         new FilesSelectionManager({token: this.token, parent: this.target});
     }
@@ -231,10 +299,8 @@ class FileManager {
 
     async _getFiles() {
 
-        const params = location.href.split('?')[1] || '';
-
         try {
-            const req = await fetch(`/api/files?${params}`, {
+            const req = await fetch(`/api/files?page=1&type=${this.typeToShow}`, {
                 method: 'GET',
                 headers: {
                     'X-CSRF-Token': this.token
@@ -242,7 +308,14 @@ class FileManager {
             });
 
             const res = await req.json();
+
+            const AMOUNT_OF_FILES_PER_PAGE = 30;
+            this.maxPages = Math.ceil(res.totalCount / AMOUNT_OF_FILES_PER_PAGE);
+
             this._generateContent(res);
+            this._generateMarkupForFilter(res);
+
+            if (this.blockScrollEvent) this.blockScrollEvent = false;
 
         } catch (error) {
             console.error('Error in fetching files: ', error);
@@ -250,7 +323,7 @@ class FileManager {
     }
 
     _generateContent(res) {
-        const { files, countsByType, totalCount } = res;
+        const { files } = res;
 
         let filesMarkup = '';
         let fileTypeMarkup = '';
@@ -283,16 +356,42 @@ class FileManager {
             `;
         })
 
-        fileTypeMarkup = `
-            <a href="/cms/files" class="btn btn-light me-2 all_files_btn">All <span class="text-black-50 all_files_amount">${totalCount}</span></a>
+
+
+        // this.target.querySelector('.file-types').innerHTML = fileTypeMarkup
+        this.files.insertAdjacentHTML('beforeend', filesMarkup);
+    }
+
+    _generateMarkupForFilter(res) {
+
+        const { countsByType, totalCount } = res;
+
+        let filterMarkup = '';
+
+        filterMarkup = `
+            <button class="btn btn-light me-2 all_files_btn" data-type="">All <span class="text-black-50 all_files_amount">${totalCount}</span></button>
         `;
 
         countsByType.forEach(type => {
-            fileTypeMarkup += `<a href="/cms/files?type=${type._id}" class="btn btn-light me-2 ${type._id}s-btn">${type._id[0].toUpperCase() + type._id.slice(1)}s <span class="text-black-50">${type.count}</span></a>`
+            filterMarkup += `<button class="btn btn-light me-2 ${type._id}s-btn" data-type="${type._id}">${type._id[0].toUpperCase() + type._id.slice(1)}s <span class="text-black-50">${type.count}</span></button>`
         })
 
-        this.target.querySelector('.file-types').insertAdjacentHTML('beforeend', fileTypeMarkup);
-        this.files.insertAdjacentHTML('beforeend', filesMarkup);
+        this.target.querySelector('.file-types').innerHTML = filterMarkup;
+
+        this.filters = document.querySelectorAll('.file-types button');
+
+        this.filters.forEach(filter => {
+            filter.addEventListener('click', this._handleFilterChange);
+        })
+    }
+
+    _handleFilterChange = (e) => {
+        this.blockScrollEvent = true;
+        this.typeToShow = e.target.closest('button').dataset.type;
+        this.files.innerHTML = '';
+        this.nextPage = 2;
+
+        this._getFiles();
     }
 }
 

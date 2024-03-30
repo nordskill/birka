@@ -120,8 +120,9 @@ class FilesSelectionManager {
                         const deletedFile = this.filesContainer.querySelector(`[data-id="${fileId}"]`)
                         const fileType = deletedFile.dataset.type;
 
-                        decrementFileAmount(`a.${fileType}s-btn span`);
-                        decrementFileAmount('a.all_files_btn span');
+                        decrementFileAmount(`button.${fileType}s-btn span`);
+                        decrementFileAmount('button.all_files_btn span');
+                        this.hideControlButtons();
 
                         deletedFile.remove();
                     })
