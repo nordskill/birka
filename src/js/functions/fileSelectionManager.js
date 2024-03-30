@@ -34,6 +34,7 @@ class FilesSelectionManager {
 
         if (isShiftPressed && this.lastSelected) {
             let inRange = false;
+            this.selectedItems.clear();
             for (const item of this.filesContainer.querySelectorAll('.file')) {
                 if (item === this.lastSelected || item === clickedItem) {
                     inRange = !inRange;
