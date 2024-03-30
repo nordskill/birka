@@ -340,7 +340,6 @@ class FileManager {
         const { files } = res;
 
         let filesMarkup = '';
-        let fileTypeMarkup = '';
 
         files.forEach(file => {
             let fileMarkup;
@@ -370,9 +369,6 @@ class FileManager {
             `;
         })
 
-
-
-        // this.target.querySelector('.file-types').innerHTML = fileTypeMarkup
         this.files.insertAdjacentHTML('beforeend', filesMarkup);
     }
 
