@@ -21,7 +21,7 @@ class FileManager {
         this.blockScrollEvent = false;
 
         this._getFiles();
-        this._ajax_scroll();
+        this._ajaxScroll();
         this._initFilesUpload();
 
         if (destination != 'picker') {
@@ -31,7 +31,7 @@ class FileManager {
         }
     }
 
-    _ajax_scroll = () => {
+    _ajaxScroll = () => {
         const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
 
         const handleScroll = async () => {
@@ -400,7 +400,13 @@ class FileManager {
         this.files.innerHTML = '';
         this.nextPage = 2;
 
+        this._hideControlButtons();
         this._getFiles();
+    }
+
+    _hideControlButtons() {
+        this.target.querySelector('.delete-btn').setAttribute('hidden', '')
+        this.target.querySelector('.deselect-btn').setAttribute('hidden', '')
     }
 }
 
