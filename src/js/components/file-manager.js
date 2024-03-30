@@ -177,6 +177,9 @@ class FileManager {
                         if (res.success) {
                             this._addFile(res.file);
                             this._checkState(res.file._id);
+
+                            incrementFileAmount('button.all_files_btn span');
+                            incrementFileAmount(`button.${res.file.type}s-btn span`);
                         } else {
                             console.error(res.message);
                         }
@@ -184,6 +187,12 @@ class FileManager {
                     .catch(err => console.error(err));
             }
 
+        }
+
+        function incrementFileAmount(selector) {
+            const filter = document.querySelector(selector);
+            const oldValue = +filter.innerHTML;
+            filter.innerHTML = oldValue + 1;
         }
 
     }

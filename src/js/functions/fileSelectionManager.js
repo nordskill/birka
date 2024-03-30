@@ -134,7 +134,7 @@ class FilesSelectionManager {
 
             function decrementFileAmount(selector) {
                 const filter = document.querySelector(selector);
-                const oldValue = filter.innerHTML;
+                const oldValue = +filter.innerHTML;
                 filter.innerHTML = oldValue - 1;
             }
     }
