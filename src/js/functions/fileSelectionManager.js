@@ -115,6 +115,7 @@ class FilesSelectionManager {
             .then(res => {
                 if (res.success) {
                     const deletedFiles = res.deletedFiles;
+                    this.selectedItems.clear();
 
                     deletedFiles.forEach(fileId => {
                         const deletedFile = this.filesContainer.querySelector(`[data-id="${fileId}"]`)
