@@ -15,9 +15,9 @@ class FileManager {
         this.files = this.target.querySelector('.files');
         this.containerToScroll = this.destination == 'picker' ? document.querySelector('.files_container') : window;
 
-        this.maxPages = 0
+        this.maxPages = 0 //default value
         this.nextPage = 2;
-        this.typeToShow = '';
+        this.typeOfFilesToShow = '';
         this.blockScrollEvent = false;
 
         this._getFiles();
@@ -60,7 +60,7 @@ class FileManager {
 
             return new Promise((resolve) => {
                 if (this.nextPage <= this.maxPages) {
-                    fetch(`/api/files?type=${this.typeToShow}&page=` + this.nextPage)
+                    fetch(`/api/files?type=${this.typeOfFilesToShow}&page=` + this.nextPage)
                         .then((req) => {
                             if (req.ok) {
                                 return req.json();
@@ -309,7 +309,7 @@ class FileManager {
     async _getFiles() {
 
         try {
-            const req = await fetch(`/api/files?page=1&type=${this.typeToShow}`, {
+            const req = await fetch(`/api/files?page=1&type=${this.typeOfFilesToShow}`, {
                 method: 'GET',
                 headers: {
                     'X-CSRF-Token': this.token
@@ -396,7 +396,7 @@ class FileManager {
 
     _handleFilterChange = (e) => {
         this.blockScrollEvent = true;
-        this.typeToShow = e.target.closest('button').dataset.type;
+        this.typeOfFilesToShow = e.target.closest('button').dataset.type;
         this.files.innerHTML = '';
         this.nextPage = 2;
 
