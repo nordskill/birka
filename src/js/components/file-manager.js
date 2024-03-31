@@ -2,6 +2,7 @@ import FilesSelectionManager from "../functions/fileSelectionManager";
 
 class FileManager {
     constructor({ token, target, destination }) {
+        
         this.token = token;
         this.target = document.querySelector(target);
 
@@ -32,7 +33,7 @@ class FileManager {
     }
 
     get selected() {
-        const selectedFiles = Array.from(this.files.querySelectorAll('.files .selected'));
+        const selectedFiles = Array.from(this.selectionManager.selectedItems);
         return selectedFiles.map(file => file.dataset.id);
     }
 
@@ -204,7 +205,7 @@ class FileManager {
 
     _initFiles = () => {
         this._detectProcessingFiles();
-        new FilesSelectionManager({token: this.token, parent: this.target});
+        this.selectionManager = new FilesSelectionManager({token: this.token, parent: this.target});
     }
 
     _addFile(file) {
