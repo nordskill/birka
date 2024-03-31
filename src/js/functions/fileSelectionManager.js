@@ -5,6 +5,7 @@ const fileDetails = new FileDetails();
 class FilesSelectionManager {
     constructor({token, parent}) {
         this.token = token;
+        this.parent = parent;
         this.btnDelete = parent.querySelector('.delete-btn');
         this.delNumber = this.btnDelete.querySelector('var');
         this.btnDeselect = parent.querySelector('.deselect-btn');
@@ -15,12 +16,18 @@ class FilesSelectionManager {
         this.attachEventListeners();
     }
 
-    attachEventListeners() {
+    attachEventListeners = () => {
         this.filesContainer.addEventListener('click', this.onFileClick.bind(this));
         this.filesContainer.addEventListener('dblclick', this.onFileDoubleClick.bind(this));
         this.btnDeselect.addEventListener('click', this.deselectAll.bind(this));
         this.btnDelete.addEventListener('click', this.deleteSelected.bind(this));
+        this.parent.querySelector('.file-types').addEventListener('click', this.handleFilterchange.bind(this));
+
         window.addEventListener('keydown', this.onKeyDown.bind(this));
+    }
+
+    handleFilterchange(e) {
+        if (e.target.closest('button')) this.selectedItems.clear();
     }
 
     onFileClick(event) {
@@ -34,7 +41,6 @@ class FilesSelectionManager {
 
         if (isShiftPressed && this.lastSelected) {
             let inRange = false;
-            this.selectedItems.clear();
             for (const item of this.filesContainer.querySelectorAll('.file')) {
                 if (item === this.lastSelected || item === clickedItem) {
                     inRange = !inRange;
