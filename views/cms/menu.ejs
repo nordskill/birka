@@ -2,29 +2,18 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <%- include('partials/breadcrumbs') %>
             <%- include('partials/title') %>
-                <div class="ajax_table">
+                <div class="ajax_table" data-id="<%= menu._id %>" data-endpoint="/api/menus/<%= menu._id %>/items">
                     <div class="card bg-light">
-                        <div class="card-body d-flex flex-wrap justify-content-between">
+                        <div class="card-body d-flex flex-wrap justify-content-between">    
                             <div class="col-auto">
-                                <button class="btn btn-danger">Delete <span>2</span> Selected</button>
+                                <button class="btn btn-danger delete_item" style="display: none;">Delete Selected</button>
                             </div>
                             <div class="col-auto">
-                                <form action="#" class="needs-validation" novalidate>
-                                    <div class="row align-content-center gx-2">
-                                        <div class="col-auto position-relative">
-                                            <label for="create_1" class="visually-hidden">New Tag</label>
-                                            <input type="text" class="form-control" id="create_1"
-                                                aria-describedby="validationServer03Feedback" required=""
-                                                placeholder="Create new tag">
-                                            <div class="invalid-tooltip">
-                                                Please provide a valid New Tag.
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button class="btn btn-primary" type="submit">Create</button>
-                                        </div>
+                                <div class="row align-content-center gx-2">
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary add_item" type="submit">Add New Item</button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,7 +82,7 @@
                         </table>
                     </div>
                     <div class="pt-1">
-                        <button class="btn btn-danger">Delete Selected</button>
+                        <button class="btn btn-danger delete_item" style="display: none;">Delete Selected</button>
                     </div>
                 </div>
     </main>

@@ -4,6 +4,7 @@ import cms_product from './pages/product';
 import cms_blogpost from './pages/blogpost';
 import cms_page from './pages/page';
 import cms_files from './pages/files';
+import cms_menus from './pages/menus';
 import cms_menu from './pages/menu';
 
 import 'bootstrap';
@@ -16,6 +17,7 @@ const page = {
     cms_blogpost,
     cms_files,
     cms_page,
+    cms_menus,
     cms_menu
 }
 
