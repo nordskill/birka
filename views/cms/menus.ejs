@@ -6,8 +6,8 @@
                     <div class="card bg-light">
                         <div class="card-body d-flex flex-wrap justify-content-between">
                             <div class="col-auto">
-                                <button class="btn btn-primary me-2">Add New</button>
-                                <button class="btn btn-danger">Delete <span>2</span> Selected</button>
+                                <button class="btn btn-primary me-2" id="create_menu">Add New</button>
+                                <button class="btn btn-danger" id="delete_menu" style="display: none;">Delete Selected</button>
                             </div>
                             <div class="col-auto">
                                 <form action="#" class="needs-validation" novalidate="">
@@ -40,7 +40,7 @@
                             </thead>
                             <tbody>
                                 <% for (const menu of menus) { %>
-                                    <tr>
+                                    <tr data-id="<%= menu._id %>">
                                         <td><input class="form-check-input" type="checkbox" aria-label="select row"></td>
                                         <td>
                                             <a href="/cms/menus/<%= menu._id %>"><%= menu.name %></a>

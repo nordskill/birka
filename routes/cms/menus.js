@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Menu = require('../../models/menu');
 const OperationalError = require('../../functions/operational-error');
@@ -38,6 +39,12 @@ router.get('/', async (req, res, next) => {
 
 router.get(`/:id`, async (req, res, next) => {
 
+    if (!isValidObjectId(req.params.id)) {
+        return next(
+            new OperationalError("Invalid ID format", 400) // Using 400 for Bad Request
+        );
+    }
+
     const id = req.params.id;
     const menu = await Menu.findById(id)
         .lean();
@@ -73,3 +80,7 @@ router.get(`/:id`, async (req, res, next) => {
 });
 
 module.exports = router;
+
+function isValidObjectId(id) {
+    return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;
+}

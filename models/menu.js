@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const MenuItemSchema = new Schema({
-    name:       { type: String, required: true, trim: true },
+    name:       { type: String, trim: true },
     title:      { type: String, trim: true },
     url:        { type: String, trim: true },
     target:     { type: String, enum: ['_self', '_blank'], default: '_self' },
