@@ -2,7 +2,7 @@ import FilesSelectionManager from "../functions/fileSelectionManager";
 
 class FileManager {
     constructor({ token, target, destination }) {
-        
+
         this.token = token;
         this.target = document.querySelector(target);
 
@@ -25,11 +25,9 @@ class FileManager {
         this._ajaxScroll();
         this._initFilesUpload();
 
-        if (destination != 'picker') {
-            document.addEventListener('DOMContentLoaded', this._initFiles);
-        } else {
-            this._initFiles()
-        }
+
+        this._initFiles()
+
     }
 
     get selected() {
