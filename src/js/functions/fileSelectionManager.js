@@ -9,7 +9,6 @@ class FilesSelectionManager {
         this.btnDelete = parent.querySelector('.delete-btn');
         this.delNumber = this.btnDelete.querySelector('var');
         this.btnDeselect = parent.querySelector('.deselect-btn');
-        this.btnSelect = document.querySelector(':scope .select-btn');
         this.filesContainer = parent.querySelector('.files');
         this.lastSelected = null;
         this.selectedItems = new Set();
@@ -28,7 +27,10 @@ class FilesSelectionManager {
     }
 
     handleFilterchange(e) {
-        if (e.target.closest('button')) this.selectedItems.clear();
+        if (e.target.closest('button')) {
+            this.selectedItems.clear();
+            this.dispatchFileSelectionUpdate();
+        }
     }
 
     onFileClick(event) {
@@ -71,20 +73,12 @@ class FilesSelectionManager {
         this.lastSelected = clickedItem;
         if (this.selectedItems.size > 0) {
             this.showControlButtons();
-            this.enableSelectButton();
         } else {
             this.hideControlButtons();
-            this.disableSelectButton();
         }
 
-    }
+        this.dispatchFileSelectionUpdate();
 
-    enableSelectButton() {
-        this.btnSelect.removeAttribute('disabled');
-    }
-
-    disableSelectButton() {
-        this.btnSelect.setAttribute('disabled', '');
     }
 
     onFileDoubleClick(event) {
@@ -103,7 +97,7 @@ class FilesSelectionManager {
             this.selectedItems.add(item);
         });
         this.showControlButtons();
-        this.enableSelectButton();
+        this.dispatchFileSelectionUpdate(); 
 
     }
 
@@ -111,7 +105,7 @@ class FilesSelectionManager {
         this.selectedItems.forEach(item => item.classList.remove('selected'));
         this.selectedItems.clear();
         this.hideControlButtons();
-        this.disableSelectButton();
+        this.dispatchFileSelectionUpdate(); 
     }
 
     deleteSelected() {
@@ -136,7 +130,7 @@ class FilesSelectionManager {
                 if (res.success) {
                     const deletedFiles = res.deletedFiles;
                     this.selectedItems.clear();
-
+                    
                     deletedFiles.forEach(fileId => {
                         const deletedFile = this.filesContainer.querySelector(`[data-id="${fileId}"]`)
                         const fileType = deletedFile.dataset.type;
@@ -144,11 +138,13 @@ class FilesSelectionManager {
                         decrementFileAmount(`button.${fileType}s-btn span`);
                         decrementFileAmount('button.all_files_btn span');
                         this.hideControlButtons();
-                        this.disableSelectButton();
 
                         this.btnDelete.removeAttribute('disabled');
                         deletedFile.remove();
-                    })
+                    });
+
+                    this.dispatchFileSelectionUpdate(); 
+
                 } else {
                     console.error(res.message);
                 }
@@ -177,6 +173,14 @@ class FilesSelectionManager {
         if (event.key == 'Delete') this.deleteSelected();
         if (event.key == 'Escape') this.deselectAll();
         if (event.key == 'a' && (event.ctrlKey || event.metaKey)) this.selectAll(event);
+    }
+
+    // Method to dispatch the custom event
+    dispatchFileSelectionUpdate = () => {
+        const event = new CustomEvent('file-selection:update', {
+            detail: [...this.selectedItems]
+        });
+        document.dispatchEvent(event);
     }
 }
 

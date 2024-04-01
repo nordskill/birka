@@ -35,6 +35,23 @@ class FileManager {
         return selectedFiles.map(file => file.dataset.id);
     }
 
+    destroy() {
+        // Remove event listeners that might not be automatically cleaned up
+        if (this.containerToScroll) {
+            this.containerToScroll.removeEventListener('scroll', this._ajax_scroll);
+        }
+    
+        // Clear references to DOM elements
+        this.target = null;
+        this.files = null;
+        this.containerToScroll = null;
+    
+        // Additional cleanup for event listeners
+        if (this.filters) {
+            this.filters.forEach(filter => filter.removeEventListener('click', this._handle_filter_change));
+        }
+    }
+
     _ajax_scroll = () => {
         const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
 
