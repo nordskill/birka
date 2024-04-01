@@ -62,7 +62,7 @@ router.get('/', async (req, res, next) => {
         if (fileType) condition.type = fileType;
 
         const files = await File.find(condition)
-            .sort({ file_name: 'asc' })
+            .sort({ createdAt: 'desc' })
             .limit(limit)
             .skip(skip)
             .select('-__v')
@@ -70,12 +70,8 @@ router.get('/', async (req, res, next) => {
             .lean();
 
         let totalCount;
-        if (fileType) {
-            const fileTypeCount = countsByType.find(count => count._id === fileType);
-            totalCount = fileTypeCount ? fileTypeCount.count : 0;
-        } else {
-            totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
-        }
+        
+        totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
 
         // sort countsByType by _id
         countsByType.sort((a, b) => {
