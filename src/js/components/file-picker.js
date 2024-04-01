@@ -4,7 +4,7 @@ const csrfToken = document.querySelector('meta[name="csrf"]').content;
 
 class FilePicker {
     constructor() {
-        this._generateTemplate();
+        this._generate_template();
 
         this.modal = document.querySelector('.file_picker')
         this.win = this.modal.querySelector('.win')
@@ -35,7 +35,7 @@ class FilePicker {
         console.log(this.fileManager.selected);
     }
 
-    _generateTemplate() {
+    _generate_template() {
         let html = `
             <div class="file_picker" hidden>
                 <div class="win rounded">

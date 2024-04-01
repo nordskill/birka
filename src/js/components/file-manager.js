@@ -11,7 +11,7 @@ class FileManager {
         }
 
         this.destination = destination || 'page';
-        this._generateTemplate();
+        this._generate_template();
 
         this.files = this.target.querySelector('.files');
         this.containerToScroll = this.destination == 'picker' ? document.querySelector('.files_container') : window;
@@ -21,12 +21,12 @@ class FileManager {
         this.typeOfFilesToShow = '';
         this.blockScrollEvent = false;
 
-        this._getFiles();
-        this._ajaxScroll();
-        this._initFilesUpload();
+        this._get_files();
+        this._ajax_scroll();
+        this._init_files_upload();
 
 
-        this._initFiles()
+        this._init_files()
 
     }
 
@@ -35,7 +35,7 @@ class FileManager {
         return selectedFiles.map(file => file.dataset.id);
     }
 
-    _ajaxScroll = () => {
+    _ajax_scroll = () => {
         const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
 
         const handleScroll = async () => {
@@ -67,7 +67,7 @@ class FileManager {
 
                     if (req.ok) {
                         const response = await req.json();
-                        this._generateContent(response)
+                        this._generate_content(response)
                         this.nextPage += 1;
 
                         resolve();
@@ -88,7 +88,7 @@ class FileManager {
 
     }
 
-    _initFilesUpload = () => {
+    _init_files_upload = () => {
 
         const fileInput = document.querySelector('#file_input');
 
@@ -176,8 +176,8 @@ class FileManager {
                     .then(res => res.json())
                     .then(res => {
                         if (res.success) {
-                            this._addFile(res.file);
-                            this._checkState(res.file._id);
+                            this._add_file(res.file);
+                            this._check_state(res.file._id);
 
                             incrementFileAmount('button.all_files_btn span');
                             incrementFileAmount(`button.${res.file.type}s-btn span`);
@@ -198,12 +198,12 @@ class FileManager {
 
     }
 
-    _initFiles = () => {
-        this._detectProcessingFiles();
+    _init_files = () => {
+        this._detect_processing_files();
         this.selectionManager = new FilesSelectionManager({token: this.token, parent: this.target});
     }
 
-    _addFile(file) {
+    _add_file(file) {
 
         const filesContainer = document.querySelector('.files');
         const { _id, type } = file;
@@ -217,7 +217,7 @@ class FileManager {
 
     }
 
-    _checkState(id) {
+    _check_state(id) {
         const fileElement = document.querySelector(`.file[data-id="${id}"]`);
 
         const interval = setInterval(() => {
@@ -226,7 +226,7 @@ class FileManager {
                 .then(file => {
                     if (file.status == 'optimized') {
                         clearInterval(interval);
-                        this._addFilePreview(fileElement, file);
+                        this._add_file_preview(fileElement, file);
                     }
                 })
                 .catch(err => console.error(err));
@@ -234,7 +234,7 @@ class FileManager {
 
     }
 
-    _addFilePreview(targetElement, file) {
+    _add_file_preview(targetElement, file) {
 
         const { type, file_name, hash, optimized_format } = file;
 
@@ -267,19 +267,19 @@ class FileManager {
         targetElement.innerHTML = html;
     }
 
-    _detectProcessingFiles() {
+    _detect_processing_files() {
 
         const files = document.querySelectorAll('.file');
 
         files.forEach(file => {
             if (file.querySelector('.spinner')) {
-                this._checkState(file.dataset.id);
+                this._check_state(file.dataset.id);
             }
         });
 
     }
 
-    _generateTemplate() {
+    _generate_template() {
         this.target.innerHTML = `
                 <div class="m-0">
                     <div class="d-flex justify-content-between bg-light p-3 rounded-top">
@@ -307,7 +307,7 @@ class FileManager {
         `
     }
 
-    async _getFiles() {
+    async _get_files() {
 
         try {
             const req = await fetch(`/api/files?page=1&type=${this.typeOfFilesToShow}`, {
@@ -322,8 +322,8 @@ class FileManager {
             const AMOUNT_OF_FILES_PER_PAGE = 30;
             this.maxPages = Math.ceil(res.totalCount / AMOUNT_OF_FILES_PER_PAGE);
 
-            this._generateContent(res);
-            this._generateMarkupForFilter(res);
+            this._generate_content(res);
+            this._generate_markup_for_filter(res);
 
             if (this.blockScrollEvent) this.blockScrollEvent = false;
 
@@ -332,7 +332,7 @@ class FileManager {
         }
     }
 
-    _generateContent(res) {
+    _generate_content(res) {
         const { files } = res;
 
         let filesMarkup = '';
@@ -368,7 +368,7 @@ class FileManager {
         this.files.insertAdjacentHTML('beforeend', filesMarkup);
     }
 
-    _generateMarkupForFilter(res) {
+    _generate_markup_for_filter(res) {
 
         const { countsByType, totalCount } = res;
 
@@ -387,21 +387,21 @@ class FileManager {
         this.filters = document.querySelectorAll('.file-types button');
 
         this.filters.forEach(filter => {
-            filter.addEventListener('click', this._handleFilterChange);
+            filter.addEventListener('click', this._handle_filter_change);
         })
     }
 
-    _handleFilterChange = (e) => {
+    _handle_filter_change = (e) => {
         this.blockScrollEvent = true;
         this.typeOfFilesToShow = e.target.closest('button').dataset.type;
         this.files.innerHTML = '';
         this.nextPage = 2;
 
-        this._hideControlButtons();
-        this._getFiles();
+        this._hide_control_buttons();
+        this._get_files();
     }
 
-    _hideControlButtons() {
+    _hide_control_buttons() {
         this.target.querySelector('.delete-btn').setAttribute('hidden', '')
         this.target.querySelector('.deselect-btn').setAttribute('hidden', '')
     }
