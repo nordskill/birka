@@ -174,17 +174,23 @@
     background-color: #00000099;
 
     .win {
+        display: grid;
         position: absolute;
-        top: 100px;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%);
         width: 80%;
+        height: 90vh;
 
         background: white;
 
+        & > div {
+            overflow: hidden;
+            height: 100%;
+            display: grid;
+        }
+
         .files_container {
-            max-height: calc(100vh - 450px);
-            height: fit-content;
             overflow-y: auto;
 
             .files {
@@ -199,7 +205,3 @@
         }
     }
 }
-
-// .file_picker[hidden] {
-//     display: none;
-// }
