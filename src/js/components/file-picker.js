@@ -21,8 +21,7 @@ class FilePicker {
     open() {
         this.fileManager = new FileManager({
             token: csrfToken,
-            target: '.win .items',
-            destination: 'picker'
+            target: '.win .items'
         });
 
         document.addEventListener('file-selection:update', this._handleFileSelectionUpdate);
@@ -54,7 +53,7 @@ class FilePicker {
             <div class="file_picker" hidden>
                 <div class="win rounded">
                     <div class="items">
-                    
+
                     </div>
                     <div class="bg-secondary-subtle d-flex justify-content-end p-3 rounded-bottom">
                         <button class="btn btn-primary me-2 select-btn" disabled>Select files</button>

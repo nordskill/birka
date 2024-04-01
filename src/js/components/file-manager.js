@@ -1,7 +1,7 @@
 import FilesSelectionManager from "../functions/fileSelectionManager";
 
 class FileManager {
-    constructor({ token, target, destination }) {
+    constructor({ token, target }) {
 
         this.token = token;
         this.target = document.querySelector(target);
@@ -10,11 +10,10 @@ class FileManager {
             return;
         }
 
-        this.destination = destination || 'page';
         this._generate_template();
 
         this.files = this.target.querySelector('.files');
-        this.containerToScroll = this.destination == 'picker' ? document.querySelector('.files_container') : window;
+        this.containerToScroll = document.querySelector('.files_container');
 
         this.maxPages = 0 //default value
         this.nextPage = 2;
@@ -40,12 +39,12 @@ class FileManager {
         if (this.containerToScroll) {
             this.containerToScroll.removeEventListener('scroll', this._ajax_scroll);
         }
-    
+
         // Clear references to DOM elements
         this.target = null;
         this.files = null;
         this.containerToScroll = null;
-    
+
         // Additional cleanup for event listeners
         if (this.filters) {
             this.filters.forEach(filter => filter.removeEventListener('click', this._handle_filter_change));
@@ -53,7 +52,7 @@ class FileManager {
     }
 
     _ajax_scroll = () => {
-        const DISTANCE_TO_PAGE_BOTTOM = this.destination == 'picker' ? 400 : 600;
+        const DISTANCE_TO_PAGE_BOTTOM = 500;
 
         const handleScroll = async () => {
 
@@ -97,7 +96,7 @@ class FileManager {
 
         const getDistanceToPageBottom = () => {
             const bottom = this.files.getBoundingClientRect().bottom;
-            const gap = bottom - (this.destination == 'picker' ? document.querySelector('.files_container').getBoundingClientRect().height : window.innerHeight);
+            const gap = bottom - this.containerToScroll.getBoundingClientRect().height;
             return gap;
         }
 
@@ -317,7 +316,7 @@ class FileManager {
                     </div>
                     <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom file-types"></div>
                 </div>
-                <div class="py-4 ${this.destination == 'picker' ? 'px-2': ''} files_container">
+                <div class="mt-4 files_container">
                     <div class="files">
                     </div>
                 </div>
