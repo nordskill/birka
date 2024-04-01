@@ -52,31 +52,28 @@ class FileManager {
                     })
                 })
 
-                loadPosts().then(() => {
-                    if (getDistanceToPageBottom() > DISTANCE_TO_PAGE_BOTTOM) {
-                        this.containerToScroll.addEventListener('scroll', handleScroll)
-                    }
-                });
+                await loadFiles()
+                if (getDistanceToPageBottom() > DISTANCE_TO_PAGE_BOTTOM) {
+                    this.containerToScroll.addEventListener('scroll', handleScroll)
+                }
             }
         }
 
-        const loadPosts = () => {
+        const loadFiles = async () => {
 
-            return new Promise((resolve) => {
+            return new Promise(async (resolve, reject) => {
                 if (this.nextPage <= this.maxPages) {
-                    fetch(`/api/files?type=${this.typeOfFilesToShow}&page=` + this.nextPage)
-                        .then((req) => {
-                            if (req.ok) {
-                                return req.json();
-                            }
-                            return Promise.reject(req);
-                        })
-                        .then((response) => {
-                            this._generateContent(response)
-                            this.nextPage += 1;
+                    const req = await fetch(`/api/files?type=${this.typeOfFilesToShow}&page=` + this.nextPage);
 
-                            resolve();
-                        });
+                    if (req.ok) {
+                        const response = await req.json();
+                        this._generateContent(response)
+                        this.nextPage += 1;
+
+                        resolve();
+                    } else {
+                        reject(req);
+                    }
                 }
             });
         }
