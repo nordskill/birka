@@ -18,7 +18,7 @@ class FilePicker {
     open = () => {
         this.fileManager = new FileManager({
             token: csrfToken,
-            target: '.win div',
+            target: '.win .items',
             destination: 'picker'
         })
 
@@ -28,7 +28,7 @@ class FilePicker {
 
     close = () => {
         this.modal.setAttribute('hidden', '');
-        this.win.querySelector('div').innerHTML = '';
+        this.win.querySelector('.items').innerHTML = '';
     }
 
     select = async () =>  {
@@ -40,7 +40,7 @@ class FilePicker {
         let html = `
             <div class="file_picker" hidden>
                 <div class="win rounded">
-                    <div>
+                    <div class="items">
 
                     </div>
                     <div class="bg-secondary-subtle d-flex justify-content-end p-3 rounded-bottom">
