@@ -9,6 +9,7 @@ class FilesSelectionManager {
         this.btnDelete = parent.querySelector('.delete-btn');
         this.delNumber = this.btnDelete.querySelector('var');
         this.btnDeselect = parent.querySelector('.deselect-btn');
+        this.btnSelect = document.querySelector(':scope .select-btn');
         this.filesContainer = parent.querySelector('.files');
         this.lastSelected = null;
         this.selectedItems = new Set();
@@ -70,10 +71,20 @@ class FilesSelectionManager {
         this.lastSelected = clickedItem;
         if (this.selectedItems.size > 0) {
             this.showControlButtons();
+            this.enableSelectButton();
         } else {
             this.hideControlButtons();
+            this.disableSelectButton();
         }
 
+    }
+
+    enableSelectButton() {
+        this.btnSelect.removeAttribute('disabled');
+    }
+
+    disableSelectButton() {
+        this.btnSelect.setAttribute('disabled', '');
     }
 
     onFileDoubleClick(event) {
@@ -92,6 +103,7 @@ class FilesSelectionManager {
             this.selectedItems.add(item);
         });
         this.showControlButtons();
+        this.enableSelectButton();
 
     }
 
@@ -99,6 +111,7 @@ class FilesSelectionManager {
         this.selectedItems.forEach(item => item.classList.remove('selected'));
         this.selectedItems.clear();
         this.hideControlButtons();
+        this.disableSelectButton();
     }
 
     deleteSelected() {
@@ -131,6 +144,7 @@ class FilesSelectionManager {
                         decrementFileAmount(`button.${fileType}s-btn span`);
                         decrementFileAmount('button.all_files_btn span');
                         this.hideControlButtons();
+                        this.disableSelectButton();
 
                         this.btnDelete.removeAttribute('disabled');
                         deletedFile.remove();

@@ -32,7 +32,8 @@ class FilePicker {
     }
 
     select = async () =>  {
-        console.log(this.fileManager.selected);
+        this.close();
+        return this.fileManager.selected;
     }
 
     _generate_template() {
@@ -43,7 +44,7 @@ class FilePicker {
 
                     </div>
                     <div class="bg-secondary-subtle d-flex justify-content-end p-3 rounded-bottom">
-                        <button class="btn btn-primary me-2 select-btn" >Select files</button>
+                        <button class="btn btn-primary me-2 select-btn" disabled>Select files</button>
                         <button class="btn btn-danger cancel-btn" >Cancel</button>
                     </div>
                 </div>
