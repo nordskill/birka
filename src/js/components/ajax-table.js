@@ -1,9 +1,51 @@
 class AJAXTable {
-    constructor(element, dropdownOptions, csrfToken) {
+    constructor(element, fieldsList, dropdownOptions, csrfToken) {
         this.element = element;
+        this.table = element.querySelector('table');
+        this.btnAddItem = element.querySelector('.add_item');
+        this.fieldsList = fieldsList;
         this.dropdownOptions = dropdownOptions;
         this.token = csrfToken;
         this._attachEventListeners();
+
+        this.btnAddItem.addEventListener('click', this.add_row);
+    }
+
+    add_row = () => {
+
+        const row = this.table.insertRow();
+        row.className = 'new_row';
+        row.insertCell().innerHTML = '<input class="form-check-input" type="checkbox">';
+        
+        this.fieldsList.forEach(field => {
+            const cell = row.insertCell();
+            cell.dataset.field = field;
+        });
+        
+        row.insertCell().innerHTML = `
+            <button class="btn btn-link btn-sm edit_item">
+                <svg class="icon">
+                <use xlink:href="#pencil"></use>
+                </svg>
+            </button>
+            <button class="btn btn-link btn-sm save_item_edit">
+                <svg class="icon">
+                <use xlink:href="#check"></use>
+                </svg>
+            </button>
+            <button class="btn btn-link btn-sm cancel_item_edit">
+                <svg class="icon">
+                <use xlink:href="#cancel"></use>
+                </svg>
+            </button>
+            <button class="btn btn-link btn-sm delete_item">
+                <svg class="icon">
+                <use xlink:href="#trash"></use>
+                </svg>
+            </button>`;
+
+
+        this._edit_row(row);
     }
 
     _attachEventListeners() {
@@ -27,7 +69,6 @@ class AJAXTable {
     }
 
     _edit_row(row) {
-        const id = row.dataset.id;
 
         row.classList.add('table-active');
 
@@ -74,12 +115,76 @@ class AJAXTable {
 
     }
 
-    _save_edit(row) {
-        const id = row.dataset.id;
+    async _save_edit(row) {
 
+        const id = row.dataset.id;
+        const url = this.element.dataset.endpoint + (id ? '/' + id : '');
+        const method = id ? 'PUT' : 'POST';
+       
+        const data = Array.from(row.cells).reduce((acc, cell, index) => {
+            if (index === 0 || index === row.cells.length - 1) { // Skip the checkbox and the action buttons
+                return acc;
+            }
+
+            const input = cell.querySelector('input, select');
+            const key = input.name || cell.getAttribute('data-field');
+            const value = input.value;
+
+            acc[key] = value;
+            return acc;
+        }, {});
+
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': this.token
+            },
+            body: JSON.stringify(data),
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            console.error('Error saving item:', response.statusText);
+            return;
+        }
+
+        const savedItem = await response.json();
+        console.log(savedItem);
+        row.classList.remove('new_row', 'table-active');
+        row.dataset.id = savedItem._id;
+
+        // Toggle buttons visibility
+        row.querySelector('.edit_item').style.display = 'inline-block';
+        row.querySelector('.save_item_edit').style.display = 'none';
+        row.querySelector('.cancel_item_edit').style.display = 'none';
+
+        // add data from the savedItem to the corresponding cells
+        Array.from(row.cells).forEach((cell, index) => {
+            if (index === 0 || index === row.cells.length - 1) { // Skip the checkbox and the action buttons
+                return;
+            }
+
+            const dataField = cell.getAttribute('data-field');
+            const value = savedItem[dataField] || '';
+            const isLink = value.includes('http') || dataField === 'url';
+
+            if (dataField && this.dropdownOptions[dataField]) {
+                cell.innerHTML = this.dropdownOptions[dataField].find(option => option.value === value).value;
+            } else {
+                cell.innerHTML = isLink ? `<a href="${value}">${value}</a>` : value;
+            }
+        });
+        
     }
 
     _cancel_edit(row) {
+
+        if (row.classList.contains('new_row')) {
+            row.remove();
+            return;
+        }
+
         row.classList.remove('table-active');
 
         // Toggle buttons visibility
@@ -100,9 +205,20 @@ class AJAXTable {
     }
 
     async _delete_row(row) {
-        const id = row.dataset.id;
 
-        const response = await fetch(`/menus/${id}`, {
+        if (row.classList.contains('new_row')) {
+            row.remove();
+            return;
+        }
+
+        if (!confirm('Are you sure you want to delete this item?')) {
+            return;
+        }
+
+        const id = row.dataset.id;
+        const url = this.element.dataset.endpoint + '/' + id;
+
+        const response = await fetch(url, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
