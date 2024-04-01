@@ -2,6 +2,11 @@
     box-shadow: 0 0 0 4px black, inset 0 0 0 4px #fff;
 }
 
+.files_container {
+    height: 75vh;
+    overflow-y: auto;
+}
+
 .files {
     display: grid;
     gap: 10px;
@@ -192,6 +197,7 @@
 
         .files_container {
             overflow-y: auto;
+            height: unset;
 
             .files {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

@@ -316,7 +316,7 @@ class FileManager {
                     </div>
                     <div class="d-flex align-items-center bg-secondary-subtle p-3 rounded-bottom file-types"></div>
                 </div>
-                <div class="mt-4 files_container">
+                <div class="mt-4 p-2 files_container">
                     <div class="files">
                     </div>
                 </div>
