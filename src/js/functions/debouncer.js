@@ -9,6 +9,32 @@
  * @param {Function} options.success_callback - The callback function to execute on successful response.
  * @param {Function} options.error_callback - The callback function to execute on error response.
  * @param {Function} options.input_callback - The callback function to execute on input event.
+ *
+ * @example
+ * // Create a new instance of Debouncer
+ * const debouncer = new Debouncer({
+ *   field_element: document.getElementById('inputField'),
+ *   endpoint: '/api/search',
+ *   token: 'csrf_token',
+ *   min_chars: 3,
+ *   success_callback: (field, response) => {
+ *     console.log('Success:', response);
+ *   },
+ *   error_callback: (field, errorMessage) => {
+ *     console.error('Error:', errorMessage);
+ *   },
+ *   input_callback: (field) => {
+ *     console.log('Input event:', field.value);
+ *   }
+ * });
+ *
+ * // Update the options of the debouncer
+ * debouncer.update_options({
+ *   min_chars: 2,
+ *   success_callback: (field, response) => {
+ *     console.log('Updated Success:', response);
+ *   }
+ * });
  */
 class Debouncer {
     constructor(options) {
