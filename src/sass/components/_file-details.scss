@@ -1,0 +1,115 @@
+.file_details {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000099;
+    z-index: 1021;
+    padding: 0;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .window {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 92%;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 62% 1fr;
+
+        .media {
+            background-color: #333;
+            position: relative;
+
+            img,
+            video {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                position: absolute;
+            }
+        }
+
+        .info {
+            overflow: auto;
+            padding: 20px 25px;
+
+            header {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-gap: 10px;
+                align-items: center;
+                margin-bottom: 15px;
+
+                h5 {
+                    margin: 0;
+                    word-break: break-all;
+                }
+
+                svg {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .closer {
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                }
+            }
+
+            .meta {
+                font-size: 12px;
+                margin-bottom: 50px;
+
+                div {
+                    display: grid;
+                    grid-template-columns: 80px 1fr;
+                    grid-gap: 10px;
+                    align-items: center;
+
+                    pre {
+                        margin: 0;
+                        word-break: break-all;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 900px) {
+
+            grid-template-columns: 1fr;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(0, 0);
+            width: 100vw;
+            height: 100vh;
+
+            .media {
+                height: 40vh;
+            }
+
+            .info {
+                overflow: auto;
+
+                h5 {
+                    font-size: 18px;
+                }
+            }
+
+        }
+    }
+}

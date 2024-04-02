@@ -10,6 +10,8 @@ class FileManager {
             return;
         }
 
+        
+
         this._generate_template();
 
         this.files = this.target.querySelector('.files');
@@ -297,6 +299,7 @@ class FileManager {
 
     _generate_template() {
         this.target.innerHTML = `
+            <div class="file_manager">
                 <div class="m-0">
                     <div class="d-flex justify-content-between bg-light p-3 rounded-top">
                         <div class="col-auto d-flex">
@@ -320,7 +323,7 @@ class FileManager {
                     <div class="files">
                     </div>
                 </div>
-        `
+            </div>`;
     }
 
     async _get_files() {

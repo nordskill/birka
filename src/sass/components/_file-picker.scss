@@ -1,0 +1,43 @@
+.file_picker {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1020;
+    background-color: #00000099;
+
+    .win {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 90vh;
+
+        background: white;
+
+        .items {
+            overflow: auto;
+            
+            .file_manager {
+                height: 100%;
+            }
+        }
+
+        .files_container {
+
+            .files {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+                &>.file {
+                    min-width: 100px;
+                    max-width: 200px;
+                }
+            }
+
+        }
+    }
+}
