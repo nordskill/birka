@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Blog = require('../../models/blog-post');
+const BlogPost = require('../../models/blog-post');
 const Tag = require('../../models/tag');
 const User = require('../../models/user');
 const OBJtoHTML = require('../../functions/obj-to-html');
@@ -16,11 +16,11 @@ router.get('/', async (req, res, next) => {
 
     let blogs = [];
     try {
-        blogs = await Blog.find()
+        blogs = await BlogPost.find()
             .sort({
-                slug: 'asc'
+                createdAt: 'desc'
             })
-            .select(' -__v -body')
+            .select('-__v -body')
             .populate('author tags')
             .lean();
 
@@ -34,13 +34,13 @@ router.get('/', async (req, res, next) => {
             active: SLUG,
             blogs,
             breadcrumbs: [{
-                    name: 'CMS',
-                    href: '/cms'
-                },
-                {
-                    name: TITLE,
-                    href: `/cms/${SLUG}`
-                }
+                name: 'CMS',
+                href: '/cms'
+            },
+            {
+                name: TITLE,
+                href: `/cms/${SLUG}`
+            }
             ],
             scripts: [
                 'validation-form.js'
@@ -64,7 +64,7 @@ router.get('/:id', async (req, res, next) => {
     }
 
     try {
-        const blogPost = await Blog.findById(id)
+        const blogPost = await BlogPost.findById(id)
             .select('-__v')
             .populate('tags', 'slug name -_id')
             .populate('author img_preview')
@@ -84,17 +84,17 @@ router.get('/:id', async (req, res, next) => {
             img_preview: `${folder_path}${blogPost.img_preview?.file_name}.${blogPost.img_preview?.extension}`,
             rendered_body: OBJtoHTML(blogPost.body),
             breadcrumbs: [{
-                    name: 'CMS',
-                    href: '/cms'
-                },
-                {
-                    name: TITLE,
-                    href: `/cms/${SLUG}`
-                },
-                {
-                    name: 'Post',
-                    href: `/cms/${SLUG}/post`
-                }
+                name: 'CMS',
+                href: '/cms'
+            },
+            {
+                name: TITLE,
+                href: `/cms/${SLUG}`
+            },
+            {
+                name: 'Post',
+                href: `/cms/${SLUG}/post`
+            }
             ],
             scripts: [
                 'validation-form.js'
