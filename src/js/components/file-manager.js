@@ -10,7 +10,10 @@ class FileManager {
             return;
         }
 
-        
+
+
+
+
 
         this._generate_template();
 
@@ -18,17 +21,16 @@ class FileManager {
         this.containerToScroll = document.querySelector('.files_container');
 
         this.maxPages = 0 //default value
-        this.nextPage = 2;
+        this.nextPage = 1;
         this.typeOfFilesToShow = '';
         this.blockScrollEvent = false;
 
         this._get_files();
-        this._ajax_scroll();
+
+        document.addEventListener('files-loaded', this._ajax_scroll);
+
         this._init_files_upload();
-
-
         this._init_files()
-
     }
 
     get selected() {
@@ -51,10 +53,18 @@ class FileManager {
         if (this.filters) {
             this.filters.forEach(filter => filter.removeEventListener('click', this._handle_filter_change));
         }
+
+        document.removeEventListener('files-loaded', this._ajax_scroll);
     }
 
     _ajax_scroll = () => {
         const DISTANCE_TO_PAGE_BOTTOM = 500;
+
+        const handleLackOfFiles = async () => {
+            while(getDistanceToPageBottom() < DISTANCE_TO_PAGE_BOTTOM && this.nextPage <= this.maxPages) {
+                await loadFiles();
+            }
+        }
 
         const handleScroll = async () => {
 
@@ -78,7 +88,6 @@ class FileManager {
         }
 
         const loadFiles = async () => {
-
             return new Promise(async (resolve, reject) => {
                 if (this.nextPage <= this.maxPages) {
                     const req = await fetch(`/api/files?type=${this.typeOfFilesToShow}&page=` + this.nextPage);
@@ -102,8 +111,8 @@ class FileManager {
             return gap;
         }
 
+        handleLackOfFiles();
         this.containerToScroll.addEventListener('scroll', handleScroll);
-
     }
 
     _init_files_upload = () => {
@@ -343,8 +352,12 @@ class FileManager {
 
             this._generate_content(res);
             this._generate_markup_for_filter(res);
+            this.nextPage++;
 
             if (this.blockScrollEvent) this.blockScrollEvent = false;
+
+            const event = new CustomEvent('files-loaded');
+            document.dispatchEvent(event);
 
         } catch (error) {
             console.error('Error in fetching files: ', error);
@@ -414,7 +427,7 @@ class FileManager {
         this.blockScrollEvent = true;
         this.typeOfFilesToShow = e.target.closest('button').dataset.type;
         this.files.innerHTML = '';
-        this.nextPage = 2;
+        this.nextPage = 1;
 
         this._hide_control_buttons();
         this._get_files();
