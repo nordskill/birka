@@ -297,8 +297,10 @@ class BibeEditor {
             this.#initBlockMenu(container);
             this.#initTextMenu(container);
 
-            this.#observeChildChanges(this.content, this.#initBlocks);
-            
+            this.#observeChildChanges(this.content, () => {
+                this.#initBlocks();
+                this.#send_content_update();
+            });
 
             this.editor.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
