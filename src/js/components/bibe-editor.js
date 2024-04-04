@@ -107,7 +107,7 @@ class BibeEditor {
             console.error('BibeEditor container not found');
             return;
         };
-        
+
         // wrap content
         container.innerHTML = `
             <div class="bibe_editor">
@@ -385,246 +385,246 @@ class BibeEditor {
         console.log(this.blocks);
     }
 
-        #updateBlocks() {
-            this.blocks.forEach(block => {
-                block.update_rect();
-                block.isHovered = block.element === this.hoveredBlock?.element;
-            });
-        }
+    #updateBlocks() {
+        this.blocks.forEach(block => {
+            block.update_rect();
+            block.isHovered = block.element === this.hoveredBlock?.element;
+        });
+    }
 
-        #initAnchor(container) {
+    #initAnchor(container) {
 
-            this.anchor = container.querySelector('.anchor');
+        this.anchor = container.querySelector('.anchor');
 
-            this.anchor.addEventListener('click', e => {
-                if (e.target.closest('.add_block')) {
-                    this.#newBlockMenu();
-                }
-                if (e.target.closest('.handle')) {
-                    this.selectedBlock = this.hoveredBlock;
-                    this.#showBlockMenu();
-                }
-            });
+        this.anchor.addEventListener('click', e => {
+            if (e.target.closest('.add_block')) {
+                this.#newBlockMenu();
+            }
+            if (e.target.closest('.handle')) {
+                this.selectedBlock = this.hoveredBlock;
+                this.#showBlockMenu();
+            }
+        });
 
-            this.anchor.addEventListener('mousedown', e => {
-                if (e.target.closest('.handle')) {
-                    // prevent text selection
-                    e.preventDefault();
+        this.anchor.addEventListener('mousedown', e => {
+            if (e.target.closest('.handle')) {
+                // prevent text selection
+                e.preventDefault();
 
-                    this.anchorHandlePressed = true;
-                    this.draggedBlock = this.hoveredBlock;
-                    this.hoveredBlock.element.style.backgroundColor = 'hsla(195, 100%, 50%, 0.18';
-                    this.hoveredBlock.element.style.borderRadius = '3px';
-                    this.editor.addEventListener('mouseup', this.#handleMouseUp, { once: true });
-                }
-            });
+                this.anchorHandlePressed = true;
+                this.draggedBlock = this.hoveredBlock;
+                this.hoveredBlock.element.style.backgroundColor = 'hsla(195, 100%, 50%, 0.18';
+                this.hoveredBlock.element.style.borderRadius = '3px';
+                this.editor.addEventListener('mouseup', this.#handleMouseUp, { once: true });
+            }
+        });
 
-        }
+    }
 
-        #initBlockMenu(container) {
-            this.block_menu = container.querySelector('.menu.block');
+    #initBlockMenu(container) {
+        this.block_menu = container.querySelector('.menu.block');
 
-            this.block_menu.addEventListener('click', e => {
-                if (e.target.closest('.block_type')) {
-                    const blockType = e.target.closest('.block_type').dataset.type;
-                    if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
-                    this.change_block_type(this.selectedBlock.element, blockType);
-                }
-                if (e.target.closest('.delete')) {
-                    this.selectedBlock.element.remove();
-                    this.#initBlocks();
-                }
-                this.selectedBlock = null;
-                this.#hideBlockMenu();
-            });
-        }
+        this.block_menu.addEventListener('click', e => {
+            if (e.target.closest('.block_type')) {
+                const blockType = e.target.closest('.block_type').dataset.type;
+                if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
+                this.change_block_type(this.selectedBlock.element, blockType);
+            }
+            if (e.target.closest('.delete')) {
+                this.selectedBlock.element.remove();
+                this.#initBlocks();
+            }
+            this.selectedBlock = null;
+            this.#hideBlockMenu();
+        });
+    }
 
-        #showBlockMenu() {
+    #showBlockMenu() {
 
-            this.block_menu.style.top = this.anchor.style.top;
-            this.block_menu.style.left = this.anchor.style.left;
-            this.block_menu.style.visibility = 'visible';
-            this.block_menu_visible = true;
+        this.block_menu.style.top = this.anchor.style.top;
+        this.block_menu.style.left = this.anchor.style.left;
+        this.block_menu.style.visibility = 'visible';
+        this.block_menu_visible = true;
 
-            this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
+        this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
 
-        }
+    }
 
-        #hideBlockMenu = () => {
-            this.block_menu.style.visibility = 'hidden';
-            this.block_menu_visible = false;
-        }
+    #hideBlockMenu = () => {
+        this.block_menu.style.visibility = 'hidden';
+        this.block_menu_visible = false;
+    }
 
-        #showAnchor(block) {
+    #showAnchor(block) {
 
+        block.isHovered = true;
+        // Calculate and adjust the anchor's position to the block's top left corner
+        const blockRect = block.getBoundingClientRect();
+        const blockStyle = window.getComputedStyle(block);
+        const blockPaddingTop = parseInt(blockStyle.paddingTop);
+        const blockLineHeight = parseInt(blockStyle.lineHeight);
+
+        const contentRect = this.content.getBoundingClientRect();
+        const relativeTop = blockRect.top - contentRect.top + blockPaddingTop + blockLineHeight;
+
+        this.anchor.style.left = `0px`;
+        this.anchor.style.top = `${relativeTop}px`;
+        this.anchor.style.display = 'block'; // Show the anchor
+    }
+
+    #hideAnchor() {
+        this.anchor.style.display = 'none'; // Hide the anchor
+        this.blocks.forEach(block => {
+            block.isHovered = false;
+        });
+    }
+
+    #initTextMenu() {
+        this.text_menu = this.container.querySelector('.menu.text');
+
+        this.text_menu.addEventListener('click', e => {
+            if (e.target.closest('.text_type')) {
+                const textType = e.target.closest('.text_type').dataset.type;
+                this.change_text(this.blockWithSeletion.element, document.getSelection(), textType);
+                this.#hideTextMenu();
+                document.getSelection().removeAllRanges(); // deselect text
+            }
+        });
+
+        this.content.addEventListener('click', (e) => {
+
+            if (this.text_menu_visible) return;
+
+            const selection = document.getSelection();
+            this.blockWithSeletion = this.blocks.find(block => block.element.contains(selection.anchorNode));
+
+            if (selection.rangeCount > 0 && !selection.isCollapsed) {
+
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const editorRect = this.editor.getBoundingClientRect();
+                const left = rect.left - editorRect.left;
+                const top = rect.bottom - editorRect.top;
+
+                setTimeout(() => {
+                    this.#showTextMenu(left, top);
+                }, 0);
+
+            }
+        });
+
+    }
+
+    #showTextMenu(left, top) {
+        this.text_menu.style.left = `${left}px`;
+        this.text_menu.style.top = `${top}px`; // Adjust if necessary for better appearance
+        this.text_menu.style.visibility = 'visible';
+        this.text_menu_visible = true;
+    }
+
+    #hideTextMenu() {
+        this.text_menu.style.visibility = 'hidden';
+        this.text_menu_visible = false;
+        this.blockWithSeletion = null;
+    }
+
+    #handleMouseMove = (e) => {
+
+        const checkX = e.clientX + this.editorPaddingLeft;
+        const checkY = e.clientY;
+
+        const elementAtPoint = document.elementFromPoint(checkX, checkY);
+        const blockElem = elementAtPoint?.closest('.bibe_block');
+
+        if (blockElem) {
+            const block = this.blocks.find(b => b.element === blockElem);
             block.isHovered = true;
-            // Calculate and adjust the anchor's position to the block's top left corner
-            const blockRect = block.getBoundingClientRect();
-            const blockStyle = window.getComputedStyle(block);
-            const blockPaddingTop = parseInt(blockStyle.paddingTop);
-            const blockLineHeight = parseInt(blockStyle.lineHeight);
-
-            const contentRect = this.content.getBoundingClientRect();
-            const relativeTop = blockRect.top - contentRect.top + blockPaddingTop + blockLineHeight;
-
-            this.anchor.style.left = `0px`;
-            this.anchor.style.top = `${relativeTop}px`;
-            this.anchor.style.display = 'block'; // Show the anchor
+            this.hoveredBlock = block;
+            this.#showAnchor(elementAtPoint.closest('.bibe_block'));
+        } else {
+            this.hoveredBlock = null;
+            this.#hideAnchor();
         }
 
-        #hideAnchor() {
-            this.anchor.style.display = 'none'; // Hide the anchor
+        if (this.anchorHandlePressed === true) {
+
+            this.#updateBlocks();
             this.blocks.forEach(block => {
-                block.isHovered = false;
-            });
-        }
-
-        #initTextMenu() {
-            this.text_menu = this.container.querySelector('.menu.text');
-
-            this.text_menu.addEventListener('click', e => {
-                if (e.target.closest('.text_type')) {
-                    const textType = e.target.closest('.text_type').dataset.type;
-                    this.change_text(this.blockWithSeletion.element, document.getSelection(), textType);
-                    this.#hideTextMenu();
-                    document.getSelection().removeAllRanges(); // deselect text
-                }
-            });
-
-            this.content.addEventListener('click', (e) => {
-
-                if (this.text_menu_visible) return;
-
-                const selection = document.getSelection();
-                this.blockWithSeletion = this.blocks.find(block => block.element.contains(selection.anchorNode));
-
-                if (selection.rangeCount > 0 && !selection.isCollapsed) {
-
-                    const range = selection.getRangeAt(0);
-                    const rect = range.getBoundingClientRect();
-                    const editorRect = this.editor.getBoundingClientRect();
-                    const left = rect.left - editorRect.left;
-                    const top = rect.bottom - editorRect.top;
-
-                    setTimeout(() => {
-                        this.#showTextMenu(left, top);
-                    }, 0);
-
-                }
-            });
-
-        }
-
-        #showTextMenu(left, top) {
-            this.text_menu.style.left = `${left}px`;
-            this.text_menu.style.top = `${top}px`; // Adjust if necessary for better appearance
-            this.text_menu.style.visibility = 'visible';
-            this.text_menu_visible = true;
-        }
-
-        #hideTextMenu() {
-            this.text_menu.style.visibility = 'hidden';
-            this.text_menu_visible = false;
-            this.blockWithSeletion = null;
-        }
-
-        #handleMouseMove = (e) => {
-
-            const checkX = e.clientX + this.editorPaddingLeft;
-            const checkY = e.clientY;
-
-            const elementAtPoint = document.elementFromPoint(checkX, checkY);
-            const blockElem = elementAtPoint?.closest('.bibe_block');
-
-            if (blockElem) {
-                const block = this.blocks.find(b => b.element === blockElem);
-                block.isHovered = true;
-                this.hoveredBlock = block;
-                this.#showAnchor(elementAtPoint.closest('.bibe_block'));
-            } else {
-                this.hoveredBlock = null;
-                this.#hideAnchor();
-            }
-
-            if (this.anchorHandlePressed === true) {
-
-                this.#updateBlocks();
-                this.blocks.forEach(block => {
-                    block.drop = null;
-                    block.element.style.borderTop = '';
-                    block.element.style.borderBottom = '';
-                });
-
-                const nearestBlock = this.blocks.reduce((nearest, block) => {
-                    const mouseY = e.clientY;
-                    const blockMiddleY = block.rect.top + (block.rect.height / 2);
-                    if (!nearest.block || (Math.abs(mouseY - blockMiddleY) < Math.abs(mouseY - nearest.middleY))) {
-                        return { element: block.element, block, middleY: blockMiddleY };
-                    }
-                    return nearest;
-                }, {});
-
-                if (nearestBlock.element) {
-                    const mouseY = e.clientY;
-                    const positionAbove = mouseY < nearestBlock.middleY;
-                    nearestBlock.element.style[positionAbove ? 'borderTop' : 'borderBottom'] = '3px solid deepskyblue';
-                    nearestBlock.block.drop = positionAbove ? 'beforeBegin' : 'afterEnd';
-                }
-
-            }
-
-        }
-
-        #handleMouseUp = () => {
-            if (this.anchorHandlePressed === true) {
-                this.anchorHandlePressed = false;
-                const dropBlock = this.blocks.find(b => b.drop);
-                if (dropBlock) {
-                    dropBlock.element.insertAdjacentElement(dropBlock.drop, this.draggedBlock.element);
-                    this.draggedBlock = null;
-                    this.#initBlocks();
-                }
-            }
-            this.blocks.forEach(block => {
+                block.drop = null;
                 block.element.style.borderTop = '';
                 block.element.style.borderBottom = '';
-                block.element.style.backgroundColor = null;
-                block.element.style.borderRadius = null;
             });
-        }
 
-        #handleWindowClick = (e) => {
-            if (!this.text_menu_visible) return;
-            if (!e.target.closest('.menu.text')) this.#hideTextMenu();
-
-        }
-
-        #handleWindowMouseDown = (e) => {
-            if (e.target.closest('.menu.text')) e.preventDefault();
-        }
-
-        #newBlockMenu() {
-            console.log('add block');
-        }
-
-        #observeChildChanges(targetElement, callback) {
-
-            const observer = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                    if (mutation.type === 'childList') {
-                        callback();
-                        break;
-                    }
+            const nearestBlock = this.blocks.reduce((nearest, block) => {
+                const mouseY = e.clientY;
+                const blockMiddleY = block.rect.top + (block.rect.height / 2);
+                if (!nearest.block || (Math.abs(mouseY - blockMiddleY) < Math.abs(mouseY - nearest.middleY))) {
+                    return { element: block.element, block, middleY: blockMiddleY };
                 }
-            });
+                return nearest;
+            }, {});
 
-            const config = {
-                childList: true
-            };
+            if (nearestBlock.element) {
+                const mouseY = e.clientY;
+                const positionAbove = mouseY < nearestBlock.middleY;
+                nearestBlock.element.style[positionAbove ? 'borderTop' : 'borderBottom'] = '3px solid deepskyblue';
+                nearestBlock.block.drop = positionAbove ? 'beforeBegin' : 'afterEnd';
+            }
 
-            observer.observe(targetElement, config);
-            return observer;
         }
+
+    }
+
+    #handleMouseUp = () => {
+        if (this.anchorHandlePressed === true) {
+            this.anchorHandlePressed = false;
+            const dropBlock = this.blocks.find(b => b.drop);
+            if (dropBlock) {
+                dropBlock.element.insertAdjacentElement(dropBlock.drop, this.draggedBlock.element);
+                this.draggedBlock = null;
+                this.#initBlocks();
+            }
+        }
+        this.blocks.forEach(block => {
+            block.element.style.borderTop = '';
+            block.element.style.borderBottom = '';
+            block.element.style.backgroundColor = null;
+            block.element.style.borderRadius = null;
+        });
+    }
+
+    #handleWindowClick = (e) => {
+        if (!this.text_menu_visible) return;
+        if (!e.target.closest('.menu.text')) this.#hideTextMenu();
+
+    }
+
+    #handleWindowMouseDown = (e) => {
+        if (e.target.closest('.menu.text')) e.preventDefault();
+    }
+
+    #newBlockMenu() {
+        console.log('add block');
+    }
+
+    #observeChildChanges(targetElement, callback) {
+
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList') {
+                    callback();
+                    break;
+                }
+            }
+        });
+
+        const config = {
+            childList: true
+        };
+
+        observer.observe(targetElement, config);
+        return observer;
+    }
 
 }
 
