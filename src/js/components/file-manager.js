@@ -1,4 +1,4 @@
-import FilesSelectionManager from "../functions/fileSelectionManager";
+import FilesSelectionManager from "../functions/file-selection-manager";
 
 class FileManager {
     constructor({ token, target }) {
@@ -9,11 +9,6 @@ class FileManager {
         if (!this.target) {
             return;
         }
-
-
-
-
-
 
         this._generate_template();
 
