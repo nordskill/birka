@@ -1,6 +1,7 @@
 node_modules/
 public/files/
 public/dev/
+public/cms-assets/
 logs/
 .vars
 .DS_Store
