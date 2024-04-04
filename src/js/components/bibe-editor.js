@@ -138,7 +138,7 @@ class Notification {
         this.notification.style.letterSpacing = '0.01em';
         this.notification.style.color = 'white';
         this.notification.style.fontWeight = 'bold';
-        this.notification.style.borderRadius = '3px';
+        this.notification.style.borderRadius = '4px';
         this.notification.style.zIndex = '1000';
         this.editor.appendChild(this.notification);
         this.hideTimeout = null;
@@ -149,6 +149,7 @@ class Notification {
 
         this.notification.textContent = message;
         this.notification.style.backgroundColor = type === 'success' ? 'green' : 'salmon';
+        this.notification.style.padding = type === 'success' ? '4px' : '2px 4px';
 
         if (this.notification.style.display === 'none') {
             // if notification is not visible, show it with animation
@@ -157,7 +158,7 @@ class Notification {
 
             await this.notification.animate([
                 { opacity: 0 },
-                { opacity: 1 }
+                { opacity: 0.5 }
             ], {
                 duration: 150,
                 easing: 'ease-in-out',
@@ -171,10 +172,10 @@ class Notification {
     hide = async () => {
 
         await this.notification.animate([
-            { opacity: 1 },
+            { opacity: 0.5 },
             { opacity: 0 }
         ], {
-            duration: 500,
+            duration: 400,
             easing: 'ease-in-out',
             fill: 'forwards'
         }).finished;
@@ -464,6 +465,8 @@ class BibeEditor {
             }
         });
 
+        console.trace();
+
     };
 
     #setup_debouncer() {
@@ -685,7 +688,6 @@ class BibeEditor {
             if (dropBlock) {
                 dropBlock.element.insertAdjacentElement(dropBlock.drop, this.draggedBlock.element);
                 this.draggedBlock = null;
-                this.#initBlocks();
             }
         }
         this.blocks.forEach(block => {
@@ -766,7 +768,7 @@ class BibeEditor {
     }
 
     #on_update_ok() {
-        this.notification.show('saved', 'success');
+        this.notification.show('', 'success');
     }
 
     #on_update_error(errorMessage) {
