@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="pb-3">
                                     <label for="details" class="form-label">Content:</label>
-                                    <div class="post_editor">
+                                    <div class="post_editor" data-update-url="/api/blog/<%= blog_post._id %>/draft">
                                         <%- rendered_body %>
                                     </div>
                                 </div>
@@ -85,8 +85,5 @@
                     </form>
                     <!-- content -->
                 </div>
-                <pre><code>
-                    <%= JSON.stringify(blog_post, null, 2) %>
-                </code></pre>
     </main>
     <%- include('partials/footer') %>

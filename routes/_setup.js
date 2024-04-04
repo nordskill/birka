@@ -28,6 +28,7 @@ const apiTag = require('./api/tags');
 const apiFile = require('./api/files');
 const apiPage = require('./api/pages');
 const apiMenu = require('./api/menus');
+const apiBlog = require('./api/blog');
 
 module.exports = (app) => {
 
@@ -66,6 +67,7 @@ module.exports = (app) => {
     app.use('/api/files', apiFile);
     app.use('/api/pages', apiPage);
     app.use('/api/menus', apiMenu);
+    app.use('/api/blog', apiBlog);
 
     // Navigation
     app.use('/', index);

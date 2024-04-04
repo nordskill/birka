@@ -1,4 +1,4 @@
-// Base Block class
+// Base Block Class
 class Block {
     constructor(element) {
         this.tag = element.tagName;
@@ -9,8 +9,6 @@ class Block {
         };
 
         this.update_rect();
-
-        // prevent dragging portions of selected text
         this.element.addEventListener('dragover', e => e.preventDefault());
     }
 
@@ -27,14 +25,25 @@ class Block {
         return this.attributes.align;
     }
 
+    // Static method to initialize from an existing DOM element
+    static fromElement(element) {
+        return new this(element);
+    }
 }
 
-// Specific Block classes
+// Specific Block Subclasses
 class ParagraphBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'paragraph';
         this.content = element.innerHTML;
+    }
+
+    static create(content = '') {
+        const p = document.createElement('p');
+        p.innerHTML = content || '&#8203;';
+        p.classList.add('bibe_block');
+        return new this(p);
     }
 }
 class TitleBlock extends Block {
@@ -44,15 +53,31 @@ class TitleBlock extends Block {
         this.content = element.innerHTML;
         this.attributes.level = parseInt(element.tagName[1]);
     }
+
+    static create(content = '', level = 1) {
+        const h = document.createElement(`h${level}`);
+        h.innerHTML = content;
+        h.classList.add('bibe_block');
+        return new this(h);
+    }
 }
 class ListBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'list';
-        this.content = [...element.querySelectorAll('li')].map(li => ({
-            item: li.innerHTML
-        }));
+        this.content = [...element.querySelectorAll('li')].map(li => li.innerHTML);
         this.attributes.type = element.tagName === 'UL' ? 'unordered' : 'ordered';
+    }
+
+    static create(items = [], ordered = false) {
+        const listElement = document.createElement(ordered ? 'ol' : 'ul');
+        listElement.classList.add('bibe_block');
+        items.forEach(itemContent => {
+            const li = document.createElement('li');
+            li.innerHTML = itemContent;
+            listElement.appendChild(li);
+        });
+        return new this(listElement);
     }
 }
 class QuoteBlock extends Block {
@@ -62,6 +87,13 @@ class QuoteBlock extends Block {
         this.content = element.querySelector('p')?.innerHTML || '';
         const author = element.querySelector('cite')?.textContent || '';
         this.attributes.author = author;
+    }
+
+    static create(content = '', author = '') {
+        const blockquote = document.createElement('blockquote');
+        blockquote.classList.add('bibe_block');
+        blockquote.innerHTML = `<p>${content}</p><cite>${author}</cite>`;
+        return new this(blockquote);
     }
 }
 class ImageBlock extends Block {
@@ -74,8 +106,84 @@ class ImageBlock extends Block {
         this.attributes.alt = this.img.alt;
         this.attributes.caption = element.querySelector('figcaption')?.textContent || '';
     }
+
+    static create(src = '', alt = '', caption = '') {
+        const figure = document.createElement('figure');
+        figure.classList.add('bibe_block');
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = alt;
+        figure.appendChild(img);
+        if (caption) {
+            const figcaption = document.createElement('figcaption');
+            figcaption.textContent = caption;
+            figure.appendChild(figcaption);
+        }
+        return new this(figure);
+    }
 }
 
+// Update Status Notification
+class Notification {
+    constructor(editor) {
+        this.editor = editor;
+        this.notification = document.createElement('div');
+        this.notification.style.display = 'none';
+        this.notification.style.position = 'absolute';
+        this.notification.style.left = '4px';
+        this.notification.style.bottom = '4px';
+        this.notification.style.padding = '2px 4px';
+        this.notification.style.fontSize = '10px';
+        this.notification.style.textTransform = 'uppercase';
+        this.notification.style.letterSpacing = '0.01em';
+        this.notification.style.color = 'white';
+        this.notification.style.fontWeight = 'bold';
+        this.notification.style.borderRadius = '3px';
+        this.notification.style.zIndex = '1000';
+        this.editor.appendChild(this.notification);
+        this.hideTimeout = null;
+    }
+
+    async show(message, type) {
+        clearTimeout(this.hideTimeout); // clear any existing hide timeout
+
+        this.notification.textContent = message;
+        this.notification.style.backgroundColor = type === 'success' ? 'green' : 'salmon';
+
+        if (this.notification.style.display === 'none') {
+            // if notification is not visible, show it with animation
+            this.notification.style.display = 'block';
+            this.notification.style.opacity = 0;
+
+            await this.notification.animate([
+                { opacity: 0 },
+                { opacity: 1 }
+            ], {
+                duration: 150,
+                easing: 'ease-in-out',
+                fill: 'forwards'
+            }).finished;
+        }
+
+        this.hideTimeout = setTimeout(this.hide, type === 'error' ? 5000 : 500);
+    }
+
+    hide = async () => {
+
+        await this.notification.animate([
+            { opacity: 1 },
+            { opacity: 0 }
+        ], {
+            duration: 500,
+            easing: 'ease-in-out',
+            fill: 'forwards'
+        }).finished;
+
+        this.notification.style.display = 'none';
+    }
+}
+
+// Main Class
 class BibeEditor {
 
     constructor(options) {
@@ -83,6 +191,7 @@ class BibeEditor {
         this.init(this.container);
         this.read_url = options.read_url;
         this.update_url = options.update_url;
+        this.token = options.token;
         this.editor = null;
         this.content = null;
         this.anchor = null;
@@ -99,6 +208,7 @@ class BibeEditor {
         this.selectedBlock = null;
         this.blockWithSeletion = null;
         this.blocks = [];
+        this.notification = null;
     }
 
     init(container) {
@@ -178,13 +288,16 @@ class BibeEditor {
             this.editor = container.querySelector('.bibe_editor');
             this.editor.addEventListener('mousemove', this.#handleMouseMove);
 
+            this.notification = new Notification(this.editor);
+
             this.content = container.querySelector('.content');
             this.#initBlocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
-            this.#initTextMenu(container)
+            this.#initTextMenu(container);
 
             this.#observeChildChanges(this.content, this.#initBlocks);
+            
 
             this.editor.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
@@ -200,23 +313,26 @@ class BibeEditor {
 
                         event.preventDefault();
 
-                        const newBlock = this.create_block('paragraph');
+                        // const newBlock = this.create_block('paragraph');
+                        const newParagraph = ParagraphBlock.create('');
                         const currentBlock = selectedNode.parentNode.closest('.bibe_block');
-                        currentBlock.insertAdjacentElement('afterend', newBlock);
+                        currentBlock.insertAdjacentElement('afterend', newParagraph.element);
 
                         // place cursor into the new block
-                        const newRange = document.createRange();
-                        newRange.setStart(newBlock, 0);
-                        newRange.collapse(true);
+                        const range = document.createRange();
                         selection.removeAllRanges();
-                        selection.addRange(newRange);
-
+                        range.setStart(newParagraph.element, 0);
+                        range.collapse(true);
+                        selection.addRange(range);
+                        newParagraph.element.focus();
                     }
                 }
             });
 
             window.addEventListener('click', this.#handleWindowClick);
             window.addEventListener('mousedown', this.#handleWindowMouseDown);
+
+            this.#setup_debouncer();
 
         }, 0);
 
@@ -329,66 +445,53 @@ class BibeEditor {
 
     }
 
-    create_block(type, content = '') {
-
-        let tag;
-
-        switch (type) {
-            case 'paragraph':
-                tag = 'p'
-                break;
-            case 'title':
-                tag = 'h1';
-                break;
-            case 'list':
-            case 'ul':
-                tag = 'ul';
-                break;
-            case 'ol':
-                tag = 'ol';
-                break;
-            case 'quote':
-                tag = 'blockquote';
-                break;
-        }
-
-        const block = document.createElement(tag);
-        block.classList.add('bibe_block');
-        block.innerHTML = content || '&#8203;';
-
-        return block;
-    }
-
     #initBlocks = () => {
-        this.blocks = [...this.content.children].map(element => {
+
+        this.blocks = Array.from(this.content.children).map(element => {
             switch (element.tagName) {
-                case 'P':
-                    return new ParagraphBlock(element);
+                case 'P': return ParagraphBlock.fromElement(element);
                 case 'H1':
                 case 'H2':
                 case 'H3':
                 case 'H4':
                 case 'H5':
-                case 'H6':
-                    return new TitleBlock(element);
+                case 'H6': return TitleBlock.fromElement(element);
                 case 'UL':
-                case 'OL':
-                    return new ListBlock(element);
-                case 'BLOCKQUOTE':
-                    return new QuoteBlock(element);
-                case 'PICTURE':
-                    return new ImageBlock(element);
-                default:
-                    return new ParagraphBlock(element);
+                case 'OL': return ListBlock.fromElement(element);
+                case 'BLOCKQUOTE': return QuoteBlock.fromElement(element);
+                case 'PICTURE': return ImageBlock.fromElement(element);
+                default: return new Block(element);
             }
         });
-        console.log(this.blocks);
+
+    };
+
+    #setup_debouncer() {
+
+        let debounceTimer;
+        this.content.addEventListener('keydown', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                this.#send_content_update();
+            }, 500);
+        });
+
     }
 
     #updateBlocks() {
         this.blocks.forEach(block => {
             block.update_rect();
             block.isHovered = block.element === this.hoveredBlock?.element;
+        });
+    }
+
+    #updateContentOfBlocks() {
+        this.blocks.forEach(block => {
+            if (block.type === 'list') { // For ListBlocks
+                block.content = [...block.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
+            } else { // For other block types
+                block.content = block.element.innerHTML;
+            }
         });
     }
 
@@ -624,6 +727,50 @@ class BibeEditor {
 
         observer.observe(targetElement, config);
         return observer;
+    }
+
+    // Send content to the server
+
+    #gather_content() {
+
+        this.#updateContentOfBlocks();
+
+        return this.blocks.map(block => {
+            const { type, content, attributes } = block;
+            return { type, content, attributes };
+        });
+    }
+
+    #send_content_update() {
+        const content = this.#gather_content();
+        fetch(this.update_url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': this.token
+            },
+            body: JSON.stringify(content),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                this.#on_update_ok();
+            })
+            .catch(error => {
+                this.#on_update_error(error.message);
+            });
+    }
+
+    #on_update_ok() {
+        this.notification.show('saved', 'success');
+    }
+
+    #on_update_error(errorMessage) {
+        this.notification.show(errorMessage, 'error');
     }
 
 }

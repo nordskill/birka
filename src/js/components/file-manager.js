@@ -27,7 +27,7 @@ class FileManager {
 
         this._get_files();
 
-        document.addEventListener('files-loaded', this._ajax_scroll);
+        document.addEventListener('files-loaded', this._ajax_scroll, { once: true });
 
         this._init_files_upload();
         this._init_files()
@@ -54,7 +54,6 @@ class FileManager {
             this.filters.forEach(filter => filter.removeEventListener('click', this._handle_filter_change));
         }
 
-        document.removeEventListener('files-loaded', this._ajax_scroll);
     }
 
     _ajax_scroll = () => {

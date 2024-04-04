@@ -76,13 +76,22 @@ router.get('/:id', async (req, res, next) => {
 
         const folder_path = '/files/images/blog/';
 
+        let bodyContent = blogPost.body;
+
+        if (Array.isArray(blogPost.draft) && blogPost.draft.length > 0) {
+            const firstBlock = blogPost.draft[0];
+            if (Object.keys(firstBlock).length > 0) {
+                bodyContent = blogPost.draft;
+            }
+        }
+
         res.render(`cms/${SLUG}post`, {
             title: 'Blog Post',
             template_name: 'cms_blogpost',
             active: SLUG,
             blog_post: blogPost,
             img_preview: `${folder_path}${blogPost.img_preview?.file_name}.${blogPost.img_preview?.extension}`,
-            rendered_body: OBJtoHTML(blogPost.body),
+            rendered_body: OBJtoHTML(bodyContent),
             breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'
