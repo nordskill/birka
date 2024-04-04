@@ -1,9 +1,7 @@
 <nav>
     <% if (menus['Main Menu']) { %>
-        <ul>
-            <% menus['Main Menu'].forEach(function(item) { %>
-                <li><a href="<%= item.url %>" target="<%= item.target %>"><%= item.name %></a></li>
-            <% }); %>
+        <ul><% menus['Main Menu'].forEach(item => { %>
+            <li><a href="<%= item.url %>" target="<%= item.target %>"><%= item.name %></a></li><% }); %>
         </ul>
     <% } %>
 </nav>
