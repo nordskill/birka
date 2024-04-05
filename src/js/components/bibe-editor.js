@@ -16,6 +16,14 @@ class Block {
         this.rect = this.element.getBoundingClientRect();
     }
 
+    serialize() {
+        return {
+            type: this.type,
+            content: this.element.innerHTML,
+            attributes: this.attributes
+        };
+    }
+
     set alignment(newAlignment) {
         this.element.style.textAlign = newAlignment;
         this.attributes.align = newAlignment;
@@ -29,6 +37,7 @@ class Block {
     static fromElement(element) {
         return new this(element);
     }
+
 }
 
 // Specific Block Subclasses
@@ -65,7 +74,7 @@ class ListBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'list';
-        this.content = [...element.querySelectorAll('li')].map(li => li.innerHTML);
+        this.content = [...this.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
         this.attributes.type = element.tagName === 'UL' ? 'unordered' : 'ordered';
     }
 
@@ -78,6 +87,15 @@ class ListBlock extends Block {
             listElement.appendChild(li);
         });
         return new this(listElement);
+    }
+
+    serialize() {
+        const items = [...this.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
+        return {
+            type: this.type,
+            content: items,
+            attributes: this.attributes, // Assuming attributes are updated elsewhere if they can change
+        };
     }
 }
 class QuoteBlock extends Block {
@@ -94,6 +112,16 @@ class QuoteBlock extends Block {
         blockquote.classList.add('bibe_block');
         blockquote.innerHTML = `<p>${content}</p><cite>${author}</cite>`;
         return new this(blockquote);
+    }
+
+    serialize() {
+        const content = this.element.querySelector('p')?.innerHTML || '';
+        const author = this.element.querySelector('cite')?.textContent || '';
+        return {
+            type: this.type,
+            content: content,
+            attributes: { author: author },
+        };
     }
 }
 class ImageBlock extends Block {
@@ -120,6 +148,19 @@ class ImageBlock extends Block {
             figure.appendChild(figcaption);
         }
         return new this(figure);
+    }
+
+    serialize() {
+        return {
+            type: this.type,
+            content: this.img.src, // Assuming `this.img` is the img element
+            attributes: {
+                width: this.img.style.width,
+                align: this.element.style.textAlign,
+                alt: this.img.alt,
+                caption: this.element.querySelector('figcaption')?.textContent || '',
+            },
+        };
     }
 }
 
@@ -189,7 +230,6 @@ class BibeEditor {
 
     constructor(options) {
         this.container = document.querySelector(options.container);
-        this.init(this.container);
         this.read_url = options.read_url;
         this.update_url = options.update_url;
         this.token = options.token;
@@ -210,6 +250,21 @@ class BibeEditor {
         this.blockWithSeletion = null;
         this.blocks = [];
         this.notification = null;
+        this.updatePending = false; // To prevent overlapping updates
+        this.debounceTimer = null; // To manage debouncing
+        this.init(this.container);
+        this.skip_update = false;
+
+        this.ignored_keys = [
+            'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+            'PageUp', 'PageDown',
+            'Home', 'End',
+            'Control', 'Alt', 'Shift', 'Escape',
+            'CapsLock',
+            'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+            'ContextMenu', 'Meta', 'Tab'
+        ];
+
     }
 
     init(container) {
@@ -298,44 +353,21 @@ class BibeEditor {
             this.#initTextMenu(container);
 
             this.#observeChildChanges(this.content, () => {
+
                 this.#initBlocks();
-                this.#send_content_update();
-            });
 
-            this.editor.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-
-                    const selection = window.getSelection();
-                    const selectedNode = selection.anchorNode;
-                    const parentTag = selectedNode.parentNode.tagName;
-
-                    if (parentTag.match(/^H[1-6]$/)) {
-
-                        // if cursor is not at the end of the title
-                        if (selection.anchorOffset !== selectedNode.length) return;
-
-                        event.preventDefault();
-
-                        // const newBlock = this.create_block('paragraph');
-                        const newParagraph = ParagraphBlock.create('');
-                        const currentBlock = selectedNode.parentNode.closest('.bibe_block');
-                        currentBlock.insertAdjacentElement('afterend', newParagraph.element);
-
-                        // place cursor into the new block
-                        const range = document.createRange();
-                        selection.removeAllRanges();
-                        range.setStart(newParagraph.element, 0);
-                        range.collapse(true);
-                        selection.addRange(range);
-                        newParagraph.element.focus();
-                    }
+                if (!this.skip_update) {
+                    this.#send_content_update();
                 }
+
+                this.skip_update = false;
+
             });
+
+            this.editor.addEventListener('keydown', this.#handleKeys);
 
             window.addEventListener('click', this.#handleWindowClick);
             window.addEventListener('mousedown', this.#handleWindowMouseDown);
-
-            this.#setup_debouncer();
 
         }, 0);
 
@@ -467,19 +499,78 @@ class BibeEditor {
             }
         });
 
-        console.trace();
-
     };
 
-    #setup_debouncer() {
+    #handleKeys = (event) => {
 
-        let debounceTimer;
-        this.content.addEventListener('keydown', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
+        if (event.key === 'Enter') {
+            this.handleEnterKey(event);
+        } else if (event.key === 'Backspace') {
+            this.handleBackspaceKey(event);
+        } else {
+            if (this.ignored_keys.includes(event.key)) return;
+            this.debouncedContentUpdate();
+        }
+
+    }
+
+    handleEnterKey(event) {
+
+        const selection = window.getSelection();
+        const selectedNode = selection.anchorNode;
+        const parentTag = selectedNode.parentNode;
+
+        if (selection.anchorOffset === selectedNode.length || selectedNode?.innerText?.trim().length === 0) {
+            this.skip_update = true;
+
+            if (parentTag.tagName.match(/^H[1-6]$/)) {
+
+                event.preventDefault();
+                const newParagraph = ParagraphBlock.create('');
+                const currentBlock = selectedNode.parentNode.closest('.bibe_block');
+                currentBlock.insertAdjacentElement('afterend', newParagraph.element);
+                this.focusOnNewBlock(newParagraph.element);
+
+            }
+
+        }
+
+    }
+
+    handleBackspaceKey(event) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        if (range.startOffset === 0 && range.endOffset === 0) { // The caret is at the start of a block
+            this.skip_update = true;
+
+            setTimeout(() => { // let browser do its thing
+                this.#initBlocks();
                 this.#send_content_update();
-            }, 500);
-        });
+            }, 0);
+
+        } else {
+            this.debouncedContentUpdate();
+        }
+    }
+
+    focusOnNewBlock(element) {
+
+        const range = document.createRange();
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        range.setStart(element, 0);
+        range.collapse(true);
+        selection.addRange(range);
+        element.focus();
+
+    }
+
+    debouncedContentUpdate() {
+
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(this.#send_content_update, 500);
 
     }
 
@@ -487,16 +578,6 @@ class BibeEditor {
         this.blocks.forEach(block => {
             block.update_rect();
             block.isHovered = block.element === this.hoveredBlock?.element;
-        });
-    }
-
-    #updateContentOfBlocks() {
-        this.blocks.forEach(block => {
-            if (block.type === 'list') { // For ListBlocks
-                block.content = [...block.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
-            } else { // For other block types
-                block.content = block.element.innerHTML;
-            }
         });
     }
 
@@ -737,36 +818,42 @@ class BibeEditor {
 
     #gather_content() {
 
-        this.#updateContentOfBlocks();
+        return this.blocks.map(block => block.serialize());
 
-        return this.blocks.map(block => {
-            const { type, content, attributes } = block;
-            return { type, content, attributes };
-        });
     }
 
-    #send_content_update() {
-        const content = this.#gather_content();
-        fetch(this.update_url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': this.token
-            },
-            body: JSON.stringify(content),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                this.#on_update_ok();
-            })
-            .catch(error => {
-                this.#on_update_error(error.message);
+    #send_content_update = async () => {
+
+        if (this.updatePending) return;
+
+        try {
+            const content = this.#gather_content();
+            console.trace();
+
+            this.updatePending = true;
+
+            const response = await fetch(this.update_url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': this.token
+                },
+                body: JSON.stringify(content),
             });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            await response.json();
+            this.#on_update_ok();
+            this.updatePending = false;
+
+        } catch (error) {
+
+            this.#on_update_error(error.message);
+
+        }
     }
 
     #on_update_ok() {
