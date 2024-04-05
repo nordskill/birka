@@ -254,6 +254,7 @@ class BibeEditor {
         this.debounceTimer = null; // To manage debouncing
         this.init(this.container);
         this.skip_update = false;
+        this.debouncer_delay = 1000;
 
         this.ignored_keys = [
             'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
@@ -570,7 +571,7 @@ class BibeEditor {
     debouncedContentUpdate() {
 
         clearTimeout(this.debounceTimer);
-        this.debounceTimer = setTimeout(this.#send_content_update, 500);
+        this.debounceTimer = setTimeout(this.#send_content_update, this.debouncer_delay);
 
     }
 
