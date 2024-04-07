@@ -1,0 +1,18 @@
+[
+    {
+        "username": "adminUser1",
+        "password": "password123!",
+        "email": "admin1@example.com",
+        "role": "Super Administrator",
+        "email_notifications": true,
+        "web_notifications": true
+    },
+    {
+        "username": "adminUser2",
+        "password": "securepass456!",
+        "email": "admin2@example.com",
+        "role": "Administrator",
+        "email_notifications": false,
+        "web_notifications": false
+    }
+]

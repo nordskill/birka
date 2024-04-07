@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/user');
+const Member = require('../models/member');
 const passwordUtils = require('../functions/password-utils');
 
 passport.use(new LocalStrategy(
@@ -11,38 +11,37 @@ passport.use(new LocalStrategy(
     },
     async (username, password, done) => {
         try {
-            const user = await User.findOne({
+            const member = await Member.findOne({
                 $or: [
-                    { 'account_details.username': username },
-                    { 'account_details.email': username }
-                ],
-                'account_details.role': 'Administrator'
+                    { 'username': username },
+                    { 'email': username }
+                ]
             });
 
-            if (!user) {
+            if (!member) {
                 return done(null, false, { message: 'Incorrect username or password.' });
             }
             
-            const isValid = await passwordUtils.verifyPassword(password, user.account_details.password);
+            const isValid = await passwordUtils.verifyPassword(password, member.password);
             if (!isValid) {
                 return done(null, false, { message: 'Incorrect username or password.' });
             }
 
-            return done(null, user);
+            return done(null, member);
         } catch (error) {
             return done(error);
         }
     }
 ));
 
-passport.serializeUser((user, done) => {
-    done(null, user.id);
+passport.serializeUser((member, done) => {
+    done(null, member.id);
 });
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await User.findById(id);
-        done(null, user);
+        const member = await Member.findById(id);
+        done(null, member);
     } catch (error) {
         done(error);
     }

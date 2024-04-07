@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <%- include('partials/breadcrumbs') %>
+            <%- include('partials/title') %>
+                <div>
+                    <div class="pb-3">
+                        <button class="btn btn-primary">Create User</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped  align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Public Name</th>
+                                    <th scope="col">E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% team_members.forEach(function(team_member){ %>
+
+                                    <tr>
+                                        <td>
+                                            <a href="<%= `team/${team_member._id}` %>">
+                                                <%= team_member.username %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <%= team_member.email %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </main>
+    <%- include('partials/footer') %>

@@ -26,6 +26,7 @@ const functionMap = {
     'insert_email_template_data': insert_email_template_data,
     'insert_file_data': insert_file_data,
     'insert_settings_data': insert_settings_data,
+    'insert_member_data': insert_member_data,
     'insert_user_data': insert_user_data,
     'insert_notification_data': insert_notification_data,
     'insert_status_data': insert_status_data,
@@ -164,6 +165,30 @@ async function insert_file_data() {
         console.log(`Inserted ${insertedImages.length} images and ${insertedVideos.length} videos`);
     } catch (error) {
         console.error('Error inserting files:', error);
+    }
+}
+
+async function insert_member_data() {
+    const { model, data } = load_files('member');
+
+    try {
+        // Hash the passwords for all users and create new members
+        const members = await Promise.all(data.map(async (user) => {
+            const hashedPassword = await passwordUtils.hashPassword(user.password);
+            return new model({
+                username: user.username,
+                password: hashedPassword,
+                email: user.email,
+                role: user.role || 'Editor',
+                email_notifications: user.email_notifications || false,
+                web_notifications: user.web_notifications || false
+            });
+        }));
+
+        await model.insertMany(members);
+        console.log(`Inserted ${members.length} team members`);
+    } catch (error) {
+        console.error(error);
     }
 }
 
