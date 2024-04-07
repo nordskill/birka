@@ -8,11 +8,9 @@
         "date_published": "2024-03-22T12:00:00.000Z",
         "template": "home",
         "is_home": true,
-        "img_preview": "507f1f77bcf86cd799439011",
-        "author": "507f191e810c19729de860ea",
-        "tags": [
-            "507f1f77bcf86cd799439011"
-        ],
+        "img_preview": "",
+        "author": "",
+        "tags": [],
         "title": "Hello, World!",
         "welcome_text": "Welcome to our brand new website!"
     },
@@ -25,11 +23,9 @@
         "date_published": "2024-03-22T12:00:00.000Z",
         "template": "about",
         "is_home": false,
-        "img_preview": "507f1f77bcf86cd799439012",
-        "author": "507f191e810c19729de860eb",
-        "tags": [
-            "507f1f77bcf86cd799439012"
-        ],
+        "img_preview": "",
+        "author": "",
+        "tags": [],
         "description": "Our company was founded with the mission of ...",
         "specializations": [
             {
@@ -54,11 +50,9 @@
         "date_published": "2024-03-22T12:00:00.000Z",
         "template": "article",
         "is_home": false,
-        "img_preview": "507f1f77bcf86cd799439016",
-        "author": "507f191e810c19729de860ec",
-        "tags": [
-            "507f1f77bcf86cd799439016"
-        ],
+        "img_preview": "",
+        "author": "",
+        "tags": [],
         "text": [
             {
                 "type": "heading",
@@ -359,14 +353,398 @@
         "date_published": "2024-03-22T12:00:00.000Z",
         "template": "contact",
         "is_home": false,
-        "img_preview": "507f1f77bcf86cd799439017",
-        "author": "507f191e810c19729de860ed",
-        "tags": [
-            "507f1f77bcf86cd799439017"
-        ],
+        "img_preview": "",
+        "author": "",
+        "tags": [],
         "contact_form_name": "General Inquiries",
         "address": "1234 Road St, City, Country 12345",
         "phone": "+1234567890",
         "email": "contact@ourcompany.com"
+    },
+    {
+        "type": "Article",
+        "name": "Privacy Policy",
+        "slug": "privacy-policy",
+        "excerpt": "Our commitment to privacy",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "article",
+        "is_home": false,
+        "img_preview": "",
+        "author": "",
+        "tags": [],
+        "text": [
+            {
+                "type": "heading",
+                "content": "Privacy Policy",
+                "attributes": {
+                    "level": 1
+                }
+            },
+            {
+                "type": "heading",
+                "content": "Introduction",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "This Privacy Policy outlines how we collect, use, protect, and share information about our users. We are committed to ensuring your privacy is protected."
+            },
+            {
+                "type": "heading",
+                "content": "Information Collection",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We collect various types of information, including..."
+            },
+            {
+                "type": "heading",
+                "content": "Use of Information",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "The information we collect is used to..."
+            },
+            {
+                "type": "heading",
+                "content": "Information Sharing and Disclosure",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We may share your information with third parties under certain circumstances..."
+            },
+            {
+                "type": "heading",
+                "content": "Cookies and Tracking Technologies",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Our website uses cookies and other tracking technologies to..."
+            },
+            {
+                "type": "heading",
+                "content": "Data Security",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We take measures to protect the security of your personal information..."
+            },
+            {
+                "type": "heading",
+                "content": "Children's Privacy",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Our website does not knowingly collect personal information from children under the age of..."
+            },
+            {
+                "type": "heading",
+                "content": "International Data Transfers",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Your information may be transferred to—and maintained on—computers located outside of your state, province, country, or other governmental jurisdiction..."
+            },
+            {
+                "type": "heading",
+                "content": "Your Rights",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "You have the right to access, correct, or delete your personal information..."
+            },
+            {
+                "type": "heading",
+                "content": "Data Retention",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We will retain your information for as long as your account is active or as needed to provide you services..."
+            },
+            {
+                "type": "heading",
+                "content": "Links to Other Websites",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Our website contains links to other websites that are not operated by us..."
+            },
+            {
+                "type": "heading",
+                "content": "Changes to the Privacy Policy",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We may update our Privacy Policy from time to time..."
+            },
+            {
+                "type": "heading",
+                "content": "Contact Information",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "If you have any questions about this Privacy Policy, please contact us..."
+            }
+        ]
+    },
+    {
+        "type": "Article",
+        "name": "Terms and Conditions",
+        "slug": "terms-and-conditions",
+        "excerpt": "Our terms and conditions",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "article",
+        "is_home": false,
+        "img_preview": "",
+        "author": "",
+        "tags": [],
+        "text": [
+            {
+                "type": "heading",
+                "content": "Terms & Conditions",
+                "attributes": {
+                    "level": 1
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Welcome to our website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern [Website Name]'s relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use our website."
+            },
+            {
+                "type": "heading",
+                "content": "Use of the Site",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "The content of the pages of this website is for your general information and use only. It is subject to change without notice."
+            },
+            {
+                "type": "heading",
+                "content": "Copyright",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "This website contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance, and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions."
+            },
+            {
+                "type": "heading",
+                "content": "Trademarks",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "All trademarks reproduced in this website, which are not the property of, or licensed to the operator, are acknowledged on the website."
+            },
+            {
+                "type": "heading",
+                "content": "Unauthorized Use",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Unauthorized use of this website may give rise to a claim for damages and/or be a criminal offence."
+            },
+            {
+                "type": "heading",
+                "content": "Links to Other Websites",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "From time to time, this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s)."
+            },
+            {
+                "type": "heading",
+                "content": "Governing Law",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Your use of this website and any dispute arising out of such use of the website is subject to the laws of [Jurisdiction]."
+            },
+            {
+                "type": "heading",
+                "content": "Amendments",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We reserve the right to amend these terms and conditions at any time. Any such amendments will be applicable to all persons accessing the website once the amendments have been posted on the website. You should therefore check the website from time to time to review the current terms and conditions."
+            },
+            {
+                "type": "heading",
+                "content": "Contact Information",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "If you have any questions or suggestions about our Terms & Conditions, do not hesitate to contact us at [Contact Information]."
+            }
+        ]
+    },
+    {
+        "type": "Article",
+        "name": "Cookie Policy",
+        "slug": "cookie-policy",
+        "excerpt": "Our cookie policy",
+        "published": true,
+        "date_published": "2024-03-22T12:00:00.000Z",
+        "template": "article",
+        "is_home": false,
+        "img_preview": "",
+        "author": "",
+        "tags": [],
+        "text": [
+            {
+                "type": "heading",
+                "content": "Cookies Policy",
+                "attributes": {
+                    "level": 1
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "To ensure the proper functioning of our website, we sometimes place small data files called ‘cookies’ on your device."
+            },
+            {
+                "type": "heading",
+                "content": "What are cookies?",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "A cookie is a small text file stored on your computer or mobile device by a website. It allows the website to remember your actions and preferences over time, so you don’t have to re-enter them whenever you visit the site again or navigate between pages."
+            },
+            {
+                "type": "paragraph",
+                "content": "Cookies can be 'first-party' or 'third-party', depending on whether they are set by the website you are visiting or by an external service. 'Persistent' cookies remain on your device until deleted manually or automatically, while 'session' cookies are deleted when you close your browser. Our website prompts you to accept or refuse cookies during your visit."
+            },
+            {
+                "type": "heading",
+                "content": "How do we use cookies?",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Our website uses first-party cookies for essential functions and to remember your preferences. Some pages may require you to accept third-party cookies to access certain features. You can manage these cookies in your browser settings, but blocking them may affect the functionality of the website."
+            },
+            {
+                "type": "heading",
+                "content": "Visitor Preferences",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We use cookies to remember if you have accepted our cookie policy and to record your preferences, enhancing your browsing experience without identifying you personally."
+            },
+            {
+                "type": "heading",
+                "content": "Operational Cookies",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Certain cookies are essential for the operation of our website and do not require your consent. These include authentication cookies and technical cookies necessary for the functioning of our IT systems."
+            },
+            {
+                "type": "heading",
+                "content": "Analytics Cookies",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "We use analytics cookies to collect anonymous data on how users interact with our website. This helps us improve our services. You may opt out of these cookies without affecting your use of the site."
+            },
+            {
+                "type": "heading",
+                "content": "Third-party Cookies",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "Some content on our site may require third-party cookies to function. Accepting these cookies is a condition for accessing such content. We do not control third-party cookie policies."
+            },
+            {
+                "type": "heading",
+                "content": "Managing Cookies",
+                "attributes": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "paragraph",
+                "content": "You can manage or delete cookies as you wish by adjusting your browser settings. However, disabling cookies may affect your ability to use certain features of our website."
+            }
+        ]
     }
 ]
