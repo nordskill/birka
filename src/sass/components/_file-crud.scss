@@ -1,0 +1,31 @@
+@import '../cms/meta_block';
+
+.file_crud_component {
+
+    .container{
+        padding: 0;
+
+        .icons {
+            .icon {
+                &.blue path {
+                    fill: rgb(13, 110, 253);
+                }
+                &.red path {
+                    fill: red;
+                }
+            }
+        }
+
+        .file_preview {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        &:hover {
+            .list_meta_icons {
+                opacity: 1;
+            }
+        }
+    }
+}
