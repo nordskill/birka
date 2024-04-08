@@ -15,7 +15,7 @@ router.put('/:postId/draft', async (req, res, next) => {
     }
 
     try {
-        const updatedBlogPost = await BlogPost.findByIdAndUpdate(postId, 
+        const updatedBlogPost = await BlogPost.findByIdAndUpdate(postId,
             { $set: { draft: draftData } },
             { new: true, runValidators: true }
         );
@@ -32,5 +32,35 @@ router.put('/:postId/draft', async (req, res, next) => {
         next(err);
     }
 });
+
+router.patch('/:id/preview', async (req, res, next) => {
+    const { id } = req.params;
+    const fileId = req.body;
+    let newPreview;
+
+    try {
+        try{
+            newPreview = new mongoose.Types.ObjectId(fileId);
+        } catch {
+            newPreview = fileId.id;
+        }
+
+        const updatedBlogPost = await BlogPost.findByIdAndUpdate(id,
+            { $set: { img_preview: newPreview } },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedBlogPost) {
+            throw new OperationalError(`No blog posts found with the id ${id}`, 404);
+        }
+
+        res.json({ message: 'Blog post updated successfully', updatedBlogPost});
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            return next(new OperationalError('Validation error while updating blog post', 400));
+        }
+        next(error);
+    }
+})
 
 module.exports = router;
