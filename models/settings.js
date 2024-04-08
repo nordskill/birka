@@ -26,8 +26,6 @@ const SettingsSchema = new Schema({
         },
         icon: { ref: 'File', type: Schema.Types.ObjectId }
     }],
-    custom_html: String,
-    custom_html_cookies: String,
     language: {
         type: String,
         required: true,
@@ -47,7 +45,9 @@ const SettingsSchema = new Schema({
     //     // VAT // TBD...
     //     show_with_tax: Boolean
     // },
-    // home_page: { type: Schema.Types.Mixed, required: true, default: {} }
+    // home_page: { type: Schema.Types.Mixed, required: true, default: {} },
+    custom_html: String,
+    custom_html_cookies: String
 }, { timestamps: true });
 
 const Settings = mongoose.model('Settings', SettingsSchema);
