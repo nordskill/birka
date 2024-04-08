@@ -6,6 +6,7 @@ import cms_page from './pages/page';
 import cms_files from './pages/files';
 import cms_menus from './pages/menus';
 import cms_menu from './pages/menu';
+import cms_settings from './pages/settings';
 
 import 'bootstrap';
 import bootstrapFormsValidation from '../functions/bootstrap-forms-validation';
@@ -18,7 +19,8 @@ const page = {
     cms_files,
     cms_page,
     cms_menus,
-    cms_menu
+    cms_menu,
+    cms_settings
 }
 
 document.addEventListener('DOMContentLoaded', () => {

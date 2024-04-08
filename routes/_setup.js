@@ -3,7 +3,7 @@ const path = require('path');
 
 // Navigation
 const index = require('./index');
-const users = require('./users');
+const cookies = require('./cookies');
 
 // CMS
 const cmsIndex = require('./cms/index');
@@ -73,7 +73,7 @@ module.exports = (app) => {
 
     // Navigation
     app.use('/', index);
-    app.use('/users', users);
+    app.use('/cookies', cookies);
 
 };
 

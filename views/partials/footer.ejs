@@ -1,7 +1,16 @@
+<% if (cookies_consent === undefined) { %>
+    <div id="cookies_consent">
+        <p>By using this website, you agree to our <a href="/cookie-policy">Cookie Policy</a>.</p>
+        <button id="reject_cookies" data-consent="false">Reject</button>
+        <button id="accept_cookies" data-consent="true">Accept</button>
+    </div>
+<% } else if (cookies_consent === true) { %>
+    <%- SS.custom_html_cookies %>
+<% } %>
 <% if (env === 'production') { %>
     <script src="/js/main.min.js"></script>
 <% } else { %>
-    <script src="/js/main.js"></script>
+    <script src="/dev/main.js"></script>
 <% } %>
 </body>
 </html>

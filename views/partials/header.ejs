@@ -2,6 +2,7 @@
 <html>
     <head>
         <title><%= title %></title>
+        <%- SS.custom_html %>
         <% if (env === 'production') { %>
             <link rel="preload" href="/438818947cdb992bd22c.woff2" as="font" type="font/woff2">
             <link rel="preload" href="/css/style.min.css" as="style">
@@ -9,5 +10,6 @@
         <% } else { %>
             <script src="/dev/style.js"></script>
         <% } %>
+        <meta name="csrf" content="<%= locals?.csrf_token %>">
     </head>
     <body>

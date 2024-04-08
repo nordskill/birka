@@ -157,6 +157,16 @@ async function setupMiddleware(app) {
         }
     }));
 
+    app.use((req, res, next) => {
+        const pathsToIgnore = ['/cms', '/dev', '/cms-assets'];
+        if (pathsToIgnore.some(path => req.path.startsWith(path))) {
+            next();
+        } else {
+            res.locals.cookies_consent = req.session.hasOwnProperty('cookies_consent') ? req.session.cookies_consent : undefined;
+            next();
+        }
+    });
+
     app.use(csrfToken);
     app.use(csrfProtection);
 
@@ -217,8 +227,6 @@ function csrfToken(req, res, next) {
         req.session.save();
     };
 }
-
-
 
 function csrfProtection(req, res, next) {
     if (['POST', 'PUT', 'DELETE'].includes(req.method)) {

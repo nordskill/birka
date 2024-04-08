@@ -27,6 +27,7 @@ const SettingsSchema = new Schema({
         icon: { ref: 'File', type: Schema.Types.ObjectId }
     }],
     custom_html: String,
+    custom_html_cookies: String,
     language: {
         type: String,
         required: true,
