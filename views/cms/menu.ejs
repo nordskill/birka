@@ -2,7 +2,7 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <%- include('partials/breadcrumbs') %>
             <%- include('partials/title') %>
-                <div class="ajax_table" data-id="<%= menu._id %>" data-endpoint="/api/menus/<%= menu._id %>/items">
+                <div class="ajax_table" data-endpoint="/api/menus/<%= menu._id %>/items">
                     <div class="card bg-light">
                         <div class="card-body d-flex flex-wrap justify-content-between">    
                             <div class="col-auto">
@@ -35,7 +35,7 @@
                                 <% menu.items.forEach(item=> { %>
                                     <tr data-id="<%= item._id %>">
                                         <td>
-                                            <input class="form-check-input" type="checkbox" value="" aria-label="...">
+                                            <input class="form-check-input" type="checkbox" aria-label="...">
                                         </td>
                                         <td data-field="entity_type">
                                             <%= item.entity_type %>

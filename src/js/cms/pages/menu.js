@@ -5,11 +5,6 @@ const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 
 export default async function () {
 
-    const table = document.querySelector('.table');
-    const tableBody = table.querySelector('tbody');
-
-    let ajaxTable;
-
     const dropdownOptions = {
         'entity_type': [
             {
@@ -41,7 +36,7 @@ export default async function () {
 
     const ajaxTables = document.querySelectorAll('.ajax_table');
     [...ajaxTables].map(element => {
-        ajaxTable = new AJAXTable(element, fieldsList, dropdownOptions, csrfToken);
+        const ajaxTable = new AJAXTable(element, fieldsList, dropdownOptions, csrfToken);
         ajaxTable.element.addEventListener('ajaxtable:row-edit', initSmartSearch);
     });
 
