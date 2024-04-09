@@ -89,7 +89,7 @@ class AJAXTable {
 
             cell.setAttribute('data-original-content', originalContent);
 
-            if (dataField && this.dropdownOptions[dataField]) {
+            if (dataField && this.dropdownOptions?.[dataField]) {
                 const select = document.createElement('select');
                 select.className = 'form-select';
                 select.innerHTML = this.dropdownOptions[dataField].map(option =>
@@ -120,7 +120,7 @@ class AJAXTable {
         const id = row.dataset.id;
         const url = this.element.dataset.endpoint + (id ? '/' + id : '');
         const method = id ? 'PUT' : 'POST';
-       
+
         const data = Array.from(row.cells).reduce((acc, cell, index) => {
             if (index === 0 || index === row.cells.length - 1) { // Skip the checkbox and the action buttons
                 return acc;
@@ -166,10 +166,10 @@ class AJAXTable {
             }
 
             const dataField = cell.getAttribute('data-field');
-            const value = savedItem[dataField] || '';
+            const value = savedItem[dataField] !== undefined ? savedItem[dataField] + '' : '';
             const isLink = value.includes('http') || dataField === 'url';
 
-            if (dataField && this.dropdownOptions[dataField]) {
+            if (dataField && this.dropdownOptions?.[dataField]) {
                 cell.innerHTML = this.dropdownOptions[dataField].find(option => option.value === value).value;
             } else {
                 cell.innerHTML = isLink ? `<a href="${value}">${value}</a>` : value;
