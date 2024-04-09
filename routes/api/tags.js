@@ -7,7 +7,7 @@ const OperationalError = require('../../functions/operational-error');
 router.get('/', async (req, res, next) => {
     try {
         const tags = await Tag.find()
-            .sort({ slug: 'asc' })
+            .sort({ name: 'asc' })
             .select('-_id -__v')
             .lean();
 
@@ -59,6 +59,38 @@ router.post('/', async (req, res, next) => {
 
 });
 
+router.post('/one', async (req, res, next) => {
+
+    const data = req.body;
+    const { name: tagName } = data;
+
+    if (!tagName) {
+        return next(new OperationalError('Tag name is required.', 400));
+    }
+
+    try {
+
+        const slug = slugify(tagName);
+        const tag = await Tag.findOne({ slug });
+
+        if (tag) {
+            throw new OperationalError(`Tag "${slug}" already exists.`, 400);
+        }
+
+        const newTag = new Tag({
+            name: tagName.trim(),
+            slug
+        });
+
+        await newTag.save();
+        res.json(newTag);
+
+    } catch (err) {
+        next(err);
+    }
+
+});
+
 router.put('/:slug', async (req, res, next) => {
 
     const slug = req.params.slug;
@@ -88,7 +120,54 @@ router.put('/:slug', async (req, res, next) => {
     }
 });
 
+router.put('/one/:slug', async (req, res, next) => {
+
+    const currentSlug = req.params.slug;
+    const data = req.body;
+    const { name: tagName, slug: slugName } = data;
+
+    try {
+
+        // here the slug can be changed independently of the name
+        const filter = { slug: currentSlug };
+        const update = {
+            name: tagName.trim(),
+            slug: slugify(slugName)
+        }
+        const options = { new: true, useFindAndModify: false };
+        const updatedTag = await Tag.findOneAndUpdate(filter, update, options);
+
+        if (!updatedTag) {
+            throw new OperationalError(`There is no "${currentSLug}" tag.`, 404);
+        }
+
+        res.json(updatedTag);
+
+    } catch (err) {
+        next(err);
+    }
+
+});
+
 router.delete('/:slug', async (req, res, next) => {
+
+    const slug = req.params.slug;
+
+    try {
+        const filter = { slug };
+        const deletedTag = await Tag.findOneAndDelete(filter);
+
+        if (!deletedTag) {
+            throw new OperationalError(`Tag "${slug}" does not exist.`, 404);
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/one/:slug', async (req, res, next) => {
 
     const slug = req.params.slug;
 

@@ -1,3 +1,4 @@
+import cms_tags from './pages/tags';
 import cms_dashboard from './pages/dashboard';
 import cms_customer from './pages/customer';
 import cms_product from './pages/product';
@@ -12,6 +13,7 @@ import 'bootstrap';
 import bootstrapFormsValidation from '../functions/bootstrap-forms-validation';
 
 const page = {
+    cms_tags,
     cms_dashboard,
     cms_customer,
     cms_product,
