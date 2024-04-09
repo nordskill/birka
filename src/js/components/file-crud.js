@@ -7,19 +7,41 @@ class FileCRUD {
 
             this.fileContainer = this.component.querySelector('.container > .file_preview');
             this.file = this.fileContainer.querySelector(':scope > img')
+            this.isDefaultFile = false;
 
             if (!this.file) {
                 this._handle_lack_of_file();
-            } else {
-                this._init_logic();
             }
         } else {
             // to be written
         }
+
+        this._get_icons();
+        this._init_logic();
+    }
+
+    _get_icons = () => {
+        const icons = this.component.querySelectorAll('.list_meta_icons > li > button');
+
+        this.uploadIcon = icons[0];
+        this.replaceIcon = icons[1];
+        this.deleteIcon = icons[2];
+
+        this._switch_icons();
+    }
+
+    _switch_icons = () => {
+        if (this.isDefaultFile) {
+            this.uploadIcon.parentNode.style.display = "";
+            this.replaceIcon.parentNode.style.display = "none";
+        } else {
+            this.uploadIcon.parentNode.style.display = "none";
+            this.replaceIcon.parentNode.style.display = "";
+        }
     }
 
     _get_options_from_dataset = (selector) => {
-        this.component = document.querySelector(selector + ' .file_crud_component');
+        this.component = document.querySelector(selector + ' .file_crud');
 
         try{
             const componentsInfo = this.component.dataset;
@@ -43,12 +65,11 @@ class FileCRUD {
 
     _handle_lack_of_file = () => {
         if (this.fileId == "") {
+            this.isDefaultFile = true;
             this._show_default_file();
         } else {
             this._generate_img_tag()
         }
-
-        this._init_logic();
     }
 
     _show_default_file = () => {
@@ -58,7 +79,7 @@ class FileCRUD {
 
     _generate_img_tag = async () => {
         const getFileData = async () => {
-            const req = await fetch(this.filesApi.replace(':id', this.fileId))
+            const req = await fetch(this.filesApi + '/' + this.fileId)
             const res = await req.json();
             return res
         }

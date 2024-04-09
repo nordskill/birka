@@ -6,9 +6,6 @@ export default async function () {
    const updateURL = document.querySelector('.post_editor').dataset.updateUrl;
 
    new FileCRUD('.option-1')
-   new FileCRUD('.option-2')
-   new FileCRUD('.option-3')
-
 
    new BibeEditor({
       container: '.post_editor',
