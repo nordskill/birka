@@ -33,28 +33,36 @@ router.put('/:postId/draft', async (req, res, next) => {
     }
 });
 
-router.patch('/:id/preview', async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
     const { id } = req.params;
-    const fileId = req.body;
-    let newPreview;
+    const { unset, ...updates } = req.body;
+    const updateOperation = { ...updates };
 
     try {
-        try{
-            newPreview = new mongoose.Types.ObjectId(fileId);
-        } catch {
-            newPreview = fileId.id;
+
+        if (unset) {
+            updateOperation.$unset = {};
+            unset.forEach(field => {
+                updateOperation.$unset[field] = "";
+            })
         }
 
+        const options = { new: true, runValidators: true };
+
         const updatedBlogPost = await BlogPost.findByIdAndUpdate(id,
-            { $set: { img_preview: newPreview } },
-            { new: true, runValidators: true }
+            updateOperation,
+            options
         );
 
         if (!updatedBlogPost) {
             throw new OperationalError(`No blog posts found with the id ${id}`, 404);
         }
 
-        res.json({ message: 'Blog post updated successfully', updatedBlogPost});
+        res.json({
+            message: 'Blog post updated successfully',
+            updatedBlogPost
+        })
+
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
             return next(new OperationalError('Validation error while updating blog post', 400));
