@@ -52,10 +52,13 @@ function autoUpdates() {
     const navItem = document.querySelector('.nav-item.update');
     const btnCheckUpdates = navItem.querySelector('.action');
     const navName = navItem.querySelector('.nav_name');
+    const action = navItem.querySelector('.action');
+    const token = document.querySelector('meta[name="csrf"]').content;
 
     const currentVersion = parseTagName(navName.textContent);
 
     btnCheckUpdates.onclick = checkUpdates;
+    action.onclick = update;
     
     async function checkUpdates(event) {
         event.preventDefault();
@@ -71,6 +74,20 @@ function autoUpdates() {
         }
         if (release.message) alert(release.message);
     }
+
+    async function update(event) {
+        event.preventDefault();
+        const response = await fetch('/cms/update', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-Token': token
+            }
+        });
+        const data = await response.json();
+        if (data.message) alert(data.message);
+        if (data.error) alert(data.error);
+    }
+    
 
 }
 

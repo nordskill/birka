@@ -7,7 +7,13 @@ const fs = require('fs');
 const path = require('path');
 
 
-const logDirectory = path.join(__dirname, 'logs');
+const prependTimestamp = (data) => {
+    const now = new Date();
+    const timestamp = now.toISOString();
+    return `[${timestamp}] ${data}`;
+};
+
+const logDirectory = path.join(__dirname, '../../logs');
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 const updateLogStream = fs.createWriteStream(path.join(logDirectory, 'update.log'), { flags: 'a' });
 
@@ -46,17 +52,21 @@ router.get('/', async (req, res, next) => {
 // Update the app
 router.post('/', (req, res) => {
     // Execute the update command
-    const updateProcess = exec('git pull', { cwd: path.join(__dirname, '../') }); // Set the correct working directory if needed
+    const updateProcess = exec('git pull', { cwd: path.join(__dirname, '../../') });
 
-    // Log stdout and stderr to the update.log file
-    updateProcess.stdout.pipe(updateLogStream);
-    updateProcess.stderr.pipe(updateLogStream);
+    updateProcess.stdout.on('data', (data) => {
+        updateLogStream.write(prependTimestamp(data));
+    });
+
+    updateProcess.stderr.on('data', (data) => {
+        updateLogStream.write(prependTimestamp(data));
+    });
 
     updateProcess.on('exit', (code) => {
         if (code === 0) {
-            res.status(200).json({ message: 'Update successful.'});
+            res.status(200).json({ message: 'Update successful.' });
         } else {
-            res.status(500).json({ message: 'Update failed.'});
+            res.status(500).json({ message: 'Update failed.' });
         }
     });
 
