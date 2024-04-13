@@ -1,0 +1,23 @@
+name: Sync to Public Repository
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private repository
+        uses: actions/checkout@v2
+
+      - name: Push to public repository
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_SYNC_TOKEN }}
+          repository: nordskill/birka-updates
+          branch: main
+          force: true
+          tags: true
