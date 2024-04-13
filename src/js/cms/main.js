@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const currentPage = determineCurrentPage();
 
+    autoUpdates();
+
     if (page[currentPage]) {
         page[currentPage]();
     } else {
@@ -44,3 +46,35 @@ function determineCurrentPage() {
     return metaTag ? metaTag.getAttribute('content') : undefined;
 
 }
+
+function autoUpdates() {
+
+    const navItem = document.querySelector('.nav-item.update');
+    const btnCheckUpdates = navItem.querySelector('.action');
+    const navName = navItem.querySelector('.nav_name');
+
+    const currentVersion = parseTagName(navName.textContent);
+
+    btnCheckUpdates.onclick = checkUpdates;
+    
+    async function checkUpdates(event) {
+        event.preventDefault();
+        const response = await fetch('/cms/update');
+        const release = await response.json();
+        console.log(release);
+        const latestVersion = parseTagName(release.tag_name);
+        if (currentVersion < latestVersion) {
+            navName.textContent = `Update to ${release.tag_name}`;
+            navItem.classList.add('available');
+        } else {
+            alert('You are up to date!');
+        }
+        if (release.message) alert(release.message);
+    }
+
+}
+
+function parseTagName(string) {
+    return string.replace('v.', '').split('.').map(Number);
+}
+

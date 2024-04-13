@@ -1,5 +1,4 @@
-@import
-'~bootstrap/scss/bootstrap',
+@import '~bootstrap/scss/bootstrap',
 '_tables',
 '_svg',
 '_meta_block',
@@ -38,6 +37,59 @@ svg {
 
     @media (max-width: 767.98px) {
         top: 5rem;
+    }
+
+    .nav-item {
+
+        .action {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-left: 10px;
+            background-color: #e9dfd1;
+            border-radius: 10px;
+            padding: 1px 6px;
+            transform: translateY(-1px);
+            display: inline-block;
+            text-decoration: none;
+
+            &:hover {
+                background-color: #dacdbb;
+            }
+        }
+
+        &.update {
+            .nav-link {
+                color: silver;
+
+                svg {
+                    display: none;
+                }
+
+                .action {
+                    display: inline-block;
+                }
+            }
+
+            &.available {
+                cursor: pointer;
+
+                .nav-link {
+                    color: #0d6efd;
+
+                    svg {
+                        display: inline-block;
+                        path {
+                            fill: #0d6efd;
+                        }
+                    }
+
+                    .action {
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 
     .nav-link {

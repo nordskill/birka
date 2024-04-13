@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 
 const db = require('./functions/db-connect');
+const packageJson = require('./package.json');
 const loadVars = require('./functions/vars');
 const loadData = require('./functions/data');
 const loadIcons = require('./functions/load-icons');
@@ -177,6 +178,7 @@ async function setupMiddleware(app) {
     // Attach user data to res.locals
     app.use((req, res, next) => {
         res.locals.auth_user = req.user;
+        res.locals.project_version = packageJson.version;
         next();
     });
 }

@@ -83,4 +83,16 @@
             Settings
         </a>
     </li>
+    <li class="nav-item update">
+        <span class="nav-link <%= active === 'update' ? 'active' : '' %>">
+            <%- icon({ name: 'cloud-down' }) %>
+            <span class="nav_name">v.<%= project_version %></span><a href="/cms/update" class="action">check updates</a>
+        </span>
+    </li>
+    <!-- <li class="nav-item update available">
+        <span class="nav-link <%= active === 'update' ? 'active' : '' %>">
+            <%- icon({ name: 'cloud-down' }) %>
+            <span class="nav_name">Update to v.<%= project_version %></span><a href="/cms/update" class="action">check updates</a>
+        </span>
+    </li> -->
 </ul>

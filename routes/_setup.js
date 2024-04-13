@@ -22,6 +22,7 @@ const cmsEmails = require('./cms/email-templates');
 const cmsMenus = require('./cms/menus');
 const cmsTeam = require('./cms/team');
 const cmsSettings = require('./cms/settings');
+const cmsUpdate = require('./cms/update');
 
 // JSON API
 const apiAuth = require('./api/auth');
@@ -60,6 +61,7 @@ module.exports = (app) => {
     cmsRoutes.use('/menus', cmsMenus);
     cmsRoutes.use('/team', cmsTeam);
     cmsRoutes.use('/settings', cmsSettings);
+    cmsRoutes.use('/update', cmsUpdate);
 
     app.use('/cms', cmsRoutes);
 
