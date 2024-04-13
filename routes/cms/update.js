@@ -52,7 +52,8 @@ router.get('/', async (req, res, next) => {
 // Update the app
 router.post('/', (req, res) => {
     // Execute the update command
-    const updateProcess = exec('git pull', { cwd: path.join(__dirname, '../../') });
+    const updateCommand = 'git pull && pm2 reload birka --force';
+    const updateProcess = exec(updateCommand, { cwd: path.join(__dirname, '../../') });
 
     updateProcess.stdout.on('data', (data) => {
         updateLogStream.write(prependTimestamp(data));
