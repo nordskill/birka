@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -52,7 +51,8 @@ module.exports = (env, argv) => {
                 port: 3001,
                 proxy: 'http://localhost:3000',
                 files: [
-                    'public/**/*.*',
+                    'public/**/*.css',
+                    'public/**/*.js',
                     '!public/files/**/*.*', // Exclude files in public/files
                     'views/**/*.ejs'
                 ]
@@ -85,7 +85,13 @@ module.exports = (env, argv) => {
             hints: false
         },
         watch: !isProduction,
-        // devtool: 'source-map',
+        watchOptions: {
+            ignored: [
+                path.resolve(__dirname, 'node_modules'),
+                path.resolve(__dirname, 'public')
+            ]
+        },
+        devtool: isProduction ? 'source-map' : false
     };
 };
 

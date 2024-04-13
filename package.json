@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "concurrently -k \"nodemon ./bin/www\" \"npm run watch\"",
-        "watch": "webpack --watch --config webpack.config.js --mode development",
+        "watch": "webpack --watch --config webpack.config.js --mode development --profile",
         "prod": "cross-env NODE_ENV=production node ./bin/www",
         "build": "webpack --config webpack.config.js --mode production",
         "demo-content": "node ./scripts/demo-content.js"
