@@ -84,12 +84,12 @@ router.post('/', async (req, res) => {
 
         const packageJson = require('../../package.json');
         res.status(200).json({
+            success: true,
             message: 'Update successful.',
-            version: packageJson.version,
             modified_files: modifiedFiles.split('\n').filter(Boolean)
         });
 
-        await execLog('pm2 reload birka --update-env');
+        // await execLog('pm2 reload birka --update-env');
 
     } catch (error) {
         updateLogStream.write(`[ERROR] ${error.message}\n`);
