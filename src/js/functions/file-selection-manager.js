@@ -3,9 +3,10 @@ import FileDetails from "../components/file-details";
 const fileDetails = new FileDetails();
 
 class FilesSelectionManager {
-    constructor({token, parent}) {
+    constructor({token, parent, single}) {
         this.token = token;
         this.parent = parent;
+        this.single = single;
         this.btnDelete = parent.querySelector('.delete-btn');
         this.delNumber = this.btnDelete.querySelector('var');
         this.btnDeselect = parent.querySelector('.deselect-btn');
@@ -21,7 +22,7 @@ class FilesSelectionManager {
         this.filesContainer.addEventListener('dblclick', this.onFileDoubleClick.bind(this));
         this.btnDeselect.addEventListener('click', this.deselectAll.bind(this));
         this.btnDelete.addEventListener('click', this.deleteSelected.bind(this));
-        this.parent.querySelector('.file-types').addEventListener('click', this.handleFilterchange.bind(this));
+        this.parent.querySelector('.file-types')?.addEventListener('click', this.handleFilterchange.bind(this));
 
         window.addEventListener('keydown', this.onKeyDown.bind(this));
     }
@@ -42,7 +43,7 @@ class FilesSelectionManager {
         const isShiftPressed = event.shiftKey;
         const clickedItem = wrapper;
 
-        if (isShiftPressed && this.lastSelected) {
+        if (isShiftPressed && this.lastSelected && !this.single) {
             let inRange = false;
             for (const item of this.filesContainer.querySelectorAll('.file')) {
                 if (item === this.lastSelected || item === clickedItem) {
@@ -56,7 +57,7 @@ class FilesSelectionManager {
                     this.selectedItems.add(item);
                 }
             }
-        } else if (isModifierPressed) {
+        } else if (isModifierPressed && !this.single) {
             clickedItem.classList.toggle('selected');
             if (clickedItem.classList.contains('selected')) {
                 this.selectedItems.add(clickedItem);
@@ -97,7 +98,7 @@ class FilesSelectionManager {
             this.selectedItems.add(item);
         });
         this.showControlButtons();
-        this.dispatchFileSelectionUpdate(); 
+        this.dispatchFileSelectionUpdate();
 
     }
 
@@ -105,7 +106,7 @@ class FilesSelectionManager {
         this.selectedItems.forEach(item => item.classList.remove('selected'));
         this.selectedItems.clear();
         this.hideControlButtons();
-        this.dispatchFileSelectionUpdate(); 
+        this.dispatchFileSelectionUpdate();
     }
 
     deleteSelected() {
@@ -130,7 +131,7 @@ class FilesSelectionManager {
                 if (res.success) {
                     const deletedFiles = res.deletedFiles;
                     this.selectedItems.clear();
-                    
+
                     deletedFiles.forEach(fileId => {
                         const deletedFile = this.filesContainer.querySelector(`[data-id="${fileId}"]`)
                         const fileType = deletedFile.dataset.type;
@@ -143,7 +144,7 @@ class FilesSelectionManager {
                         deletedFile.remove();
                     });
 
-                    this.dispatchFileSelectionUpdate(); 
+                    this.dispatchFileSelectionUpdate();
 
                 } else {
                     console.error(res.message);

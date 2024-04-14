@@ -10,7 +10,6 @@ class FilePicker {
         this.win = this.modal.querySelector('.win');
         this.selectBtn = this.win.querySelector('.select-btn');
         this.cancelBtn = this.win.querySelector('.cancel-btn');
-
         this.setupEventListeners();
     }
 
@@ -18,11 +17,18 @@ class FilePicker {
         this.cancelBtn.addEventListener('click', this.close);
     }
 
-    open() {
-        this.fileManager = new FileManager({
+    open(settings) {
+
+        const options = {
             token: csrfToken,
-            target: '.win .items'
-        });
+            target: '.win .items',
+        }
+
+        if (settings) {
+            options.settings = settings;
+        }
+
+        this.fileManager = new FileManager(options);
 
         document.addEventListener('file-selection:update', this._handleFileSelectionUpdate);
 

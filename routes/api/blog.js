@@ -59,6 +59,7 @@ router.patch('/:id', async (req, res, next) => {
         }
 
         res.json({
+            success: true,  
             message: 'Blog post updated successfully',
             updatedBlogPost
         })

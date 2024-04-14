@@ -32,7 +32,7 @@
                                     <%- include('partials/file-crud', {
                                         files_api: '/api/files',
                                         endpoint: '/api/blog',
-                                        file_id: '661472e53f7b859bfcc1cd05',
+                                        file_id: blog_post.img_preview ? blog_post.img_preview._id : "",
                                         size: '300'
                                     }) %>
                                         <div class="card-body">

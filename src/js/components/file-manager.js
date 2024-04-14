@@ -1,7 +1,7 @@
 import FilesSelectionManager from "../functions/file-selection-manager";
 
 class FileManager {
-    constructor({ token, target }) {
+    constructor({ token, target, settings }) {
 
         this.token = token;
         this.target = document.querySelector(target);
@@ -10,14 +10,20 @@ class FileManager {
             return;
         }
 
+        this.settings = settings || {};
+
         this._generate_template();
+
+        if (this.settings?.type) {
+            document.querySelector('.file-types').remove();
+        }
 
         this.files = this.target.querySelector('.files');
         this.containerToScroll = document.querySelector('.files_container');
 
         this.maxPages = 0 //default value
         this.nextPage = 1;
-        this.typeOfFilesToShow = '';
+        this.typeOfFilesToShow = this.settings?.type || "";
         this.blockScrollEvent = false;
 
         this._get_files();
@@ -26,6 +32,7 @@ class FileManager {
 
         this._init_files_upload();
         this._init_files()
+
     }
 
     get selected() {
@@ -221,7 +228,7 @@ class FileManager {
 
     _init_files = () => {
         this._detect_processing_files();
-        this.selectionManager = new FilesSelectionManager({token: this.token, parent: this.target});
+        this.selectionManager = new FilesSelectionManager({token: this.token, parent: this.target, single: this.settings?.single});
     }
 
     _add_file(file) {
@@ -330,7 +337,6 @@ class FileManager {
     }
 
     async _get_files() {
-
         try {
             const req = await fetch(`/api/files?page=1&type=${this.typeOfFilesToShow}`, {
                 method: 'GET',
@@ -345,7 +351,7 @@ class FileManager {
             this.maxPages = Math.ceil(res.totalCount / AMOUNT_OF_FILES_PER_PAGE);
 
             this._generate_content(res);
-            this._generate_markup_for_filter(res);
+            this.settings?.type || this._generate_markup_for_filter(res);
             this.nextPage++;
 
             if (this.blockScrollEvent) this.blockScrollEvent = false;
