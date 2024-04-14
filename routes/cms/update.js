@@ -35,8 +35,6 @@ router.get('/', async (req, res, next) => {
 
             resp.on('end', () => {
                 const release = JSON.parse(data);
-                console.log(release);
-
                 res.json(release);
             });
 
