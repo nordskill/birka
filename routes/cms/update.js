@@ -18,7 +18,7 @@ const updateLogStream = fs.createWriteStream(path.join(logDirectory, 'update.log
 // Check for updates
 router.get('/', async (req, res, next) => {
 
-    updateLogStream.write(`------------ Updating Birka : ${new Date().toISOString()} ------------\n`);
+    updateLogStream.write(`------------ Checking Updates : ${new Date().toISOString()} ------------\n`);
 
     try {
 
