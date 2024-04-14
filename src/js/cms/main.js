@@ -58,17 +58,19 @@ function autoUpdates() {
     const currentVersion = parseTagName(navName.textContent);
 
     btnCheckUpdates.onclick = checkUpdates;
-    action.onclick = update;
     
     async function checkUpdates(event) {
         event.preventDefault();
+        
         const response = await fetch('/cms/update');
         const release = await response.json();
         console.log(release);
         const latestVersion = parseTagName(release.tag_name);
+
         if (currentVersion < latestVersion) {
             navName.textContent = `Update to ${release.tag_name}`;
             navItem.classList.add('available');
+            navItem.onclick = update;
         } else {
             alert('You are up to date!');
         }
