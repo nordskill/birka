@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 
+const repoPath = path.join(__dirname, '../../');
 const logDirectory = path.join(__dirname, '../../logs');
 const backupDirectory = path.join(__dirname, '../../_backup');
 
@@ -51,12 +52,21 @@ router.get('/', async (req, res, next) => {
 
 // Update the app
 router.post('/', async (req, res) => {
-    const repoPath = path.join(__dirname, '../../');
+    
     updateLogStream.write(`------------ Updating Birka : ${new Date().toISOString()} ------------\n`);
 
     try {
         await execLog('git fetch origin');
         const modifiedFiles = await execLog('git diff --name-only HEAD origin/main');
+
+        if (modifiedFiles.trim().length === 0) {
+            res.status(200).json({
+                success: false,
+                message: 'No updates found.',
+                version: require('../../package.json').version
+            });
+            return; // Exit early if no updates
+        }
 
         modifiedFiles.split('\n').filter(Boolean).forEach(file => {
             const fullPath = path.join(repoPath, file);
