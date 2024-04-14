@@ -82,40 +82,42 @@ router.post('/', async (req, res) => {
             await execLog('npm run build');
         }
 
-        await execLog('pm2 reload birka --update-env');
-
         const packageJson = require('../../package.json');
         res.status(200).json({
             message: 'Update successful.',
             version: packageJson.version,
             modified_files: modifiedFiles.split('\n').filter(Boolean)
         });
+
+        await execLog('pm2 reload birka --update-env');
+        
     } catch (error) {
         updateLogStream.write(`[ERROR] ${error.message}\n`);
         res.status(500).json({ message: 'Update process encountered an error.', error: error.message });
     }
 
-    function execLog(command, options = {}) {
-        return new Promise((resolve, reject) => {
-            const process = exec(command, { ...options, cwd: repoPath });
-            let output = '';
-
-            process.stdout.on('data', data => {
-                updateLogStream.write(data);
-                output += data;
-            });
-
-            process.stderr.on('data', data => {
-                updateLogStream.write(`[ERROR] ${data}`);
-            });
-
-            process.on('exit', code => {
-                if (code === 0) resolve(output);
-                else reject(new Error(`Command failed with exit code ${code}`));
-            });
-        });
-    }
 });
 
 
 module.exports = router;
+
+function execLog(command, options = {}) {
+    return new Promise((resolve, reject) => {
+        const process = exec(command, { ...options, cwd: repoPath });
+        let output = '';
+
+        process.stdout.on('data', data => {
+            updateLogStream.write(data);
+            output += data;
+        });
+
+        process.stderr.on('data', data => {
+            updateLogStream.write(`[ERROR] ${data}`);
+        });
+
+        process.on('exit', code => {
+            if (code === 0) resolve(output);
+            else reject(new Error(`Command failed with exit code ${code}`));
+        });
+    });
+}
