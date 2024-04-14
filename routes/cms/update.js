@@ -82,7 +82,6 @@ router.post('/', async (req, res) => {
             await execLog('npm run build');
         }
 
-        const packageJson = require('../../package.json');
         res.status(200).json({
             success: true,
             message: 'Update successful.',
@@ -100,9 +99,6 @@ router.post('/', async (req, res) => {
 
 });
 
-
-module.exports = router;
-
 function execLog(command, options = {}) {
     return new Promise((resolve, reject) => {
         const process = exec(command, { ...options, cwd: repoPath });
@@ -114,7 +110,7 @@ function execLog(command, options = {}) {
         });
 
         process.stderr.on('data', data => {
-            updateLogStream.write(`[ERROR] ${data}`);
+            updateLogStream.write(data);
         });
 
         process.on('exit', code => {
@@ -123,3 +119,6 @@ function execLog(command, options = {}) {
         });
     });
 }
+
+
+module.exports = router;
