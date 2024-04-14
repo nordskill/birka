@@ -89,8 +89,8 @@ router.post('/', async (req, res) => {
             modified_files: modifiedFiles.split('\n').filter(Boolean)
         });
 
-        await execLog('pm2 reload birka --update-env');
-        
+        // await execLog('pm2 reload birka --update-env');
+
     } catch (error) {
         updateLogStream.write(`[ERROR] ${error.message}\n`);
         res.status(500).json({ message: 'Update process encountered an error.', error: error.message });
