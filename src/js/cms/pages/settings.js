@@ -27,4 +27,26 @@ export default async function () {
     });
 
 
+    const btnSitemap = document.querySelector('#regenerate_sitemap');
+
+    btnSitemap.onclick = async function () {
+        try {
+            const response = await fetch('/api/sitemap', {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-Token': token
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Success:', data);
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
+    }
+
 }
