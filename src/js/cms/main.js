@@ -64,7 +64,6 @@ function autoUpdates() {
         
         const response = await fetch('/cms/update');
         const release = await response.json();
-        console.log(release);
         const latestVersion = parseTagName(release.tag_name);
 
         if (currentVersion < latestVersion) {
