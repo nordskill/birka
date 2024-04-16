@@ -93,6 +93,8 @@ class FilesSelectionManager {
         if (fileDetails.opened) return;
 
         event.preventDefault();
+        if (this.single) return;
+
         this.filesContainer.querySelectorAll('.file').forEach(item => {
             item.classList.add('selected');
             this.selectedItems.add(item);

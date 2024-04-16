@@ -31,7 +31,7 @@
                                 <div class="card meta_block mb-4">
                                     <%- include('partials/file-crud', {
                                         files_api: '/api/files',
-                                        endpoint: '/api/blog',
+                                        endpoint: '/api/blog/' + blog_post._id,
                                         file_id: blog_post.img_preview ? blog_post.img_preview._id : "",
                                         size: '300'
                                     }) %>
