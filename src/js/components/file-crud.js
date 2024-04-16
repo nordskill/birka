@@ -44,15 +44,15 @@ class FileCRUD {
             }
         }
 
-        this.isDefaultFile = false;
+        this.isEmpty = false;
 
         if (typeof options === 'string') {
             this._get_options_from_dataset(options);
 
-            this.fileContainer = this.component.querySelector('.container > .file_preview');
+            this.previewContainer = this.component.querySelector('.container > .file_preview');
             this.buttonsContainer = this.component.querySelector('.container > .icons > ul');
 
-            this.file = this.fileContainer.querySelector(':scope > img')
+            this.file = this.previewContainer.querySelector(':scope > img')
 
             if (!this.file) {
                 this._handle_lack_of_file();
@@ -70,7 +70,7 @@ class FileCRUD {
         this.replaceBtn = this._get_button(this.BUTTONS.replace);
         this.deleteBtn = this._get_button(this.BUTTONS.delete);
 
-        if (this.isDefaultFile) {
+        if (this.isEmpty) {
             this.buttonsContainer.insertAdjacentElement('beforeend', this.addBtn);
         } else {
             this.buttonsContainer.insertAdjacentElement('beforeend', this.replaceBtn);
@@ -81,21 +81,15 @@ class FileCRUD {
     _get_button = ({title, icon, onclick}) => {
         const container = document.createElement('li');
         container.className = 'px-1';
+        container.onclick = onclick;
 
-        const btn = document.createElement('button');
-
-        btn.title = title;
-        btn.innerHTML = icon;
-        btn.onclick = onclick;
-        btn.className = 'btn circle_btn bg-white rounded-circle';
-
-        container.appendChild(btn);
+        container.innerHTML = `
+            <button title='${title}' class='btn circle_btn bg-white rounded-circle'>
+                ${icon}
+            </button>
+        `;
 
         return container;
-    }
-
-    _switch_icons = (btn) => {
-        this.buttonsContainer.querySelector('li > button > svg').innerHTML = btn.icon;
     }
 
     _get_options_from_dataset = (selector) => {
@@ -123,7 +117,7 @@ class FileCRUD {
 
     _handle_lack_of_file = () => {
         if (this.fileId == '') {
-            this.isDefaultFile = true;
+            this.isEmpty = true;
         } else {
             this._generate_img_from_id(this.fileId)
         }
@@ -158,7 +152,7 @@ class FileCRUD {
 
         const img = this._create_img('card-img-top', path, alt);
 
-        this.fileContainer.insertAdjacentElement('beforeend', img);
+        this.previewContainer.insertAdjacentElement('beforeend', img);
     }
 
     _remove_preview = async (e) => {
@@ -166,28 +160,19 @@ class FileCRUD {
         const decision = confirm('Are you sure you want to remove the preview?');
 
         if (decision) {
-            const req = await this._update_blogpost(this.endpoint, {
+            const req = await this._send_update(this.endpoint, {
                 img_preview: null
             });
 
             const res = await req.json();
 
             if (res.success) {
-                this.fileContainer.innerHTML = '';
-                this._remove_delete_btn();
-                this._switch_icons(this.BUTTONS.add);
+                this.previewContainer.innerHTML = '';
+                this._update_buttons('no preview');
             } else {
                 console.error('Deleting file preview went wrong.');
             }
         }
-    }
-
-    _remove_delete_btn = () => {
-        this.deleteBtn.remove();
-    }
-
-    _show_delete_btn = () => {
-        this.buttonsContainer.insertAdjacentElement('beforeend', this.deleteBtn);
     }
 
     _handle_picker = async (e) => {
@@ -203,9 +188,9 @@ class FileCRUD {
             const fileData = await res.json();
 
             if (fileData._id) {
-                this.fileContainer.innerHTML = '';
+                this.previewContainer.innerHTML = '';
 
-                const req = await this._update_blogpost(this.endpoint, {
+                const req = await this._send_update(this.endpoint, {
                     img_preview: id
                 });
 
@@ -213,8 +198,7 @@ class FileCRUD {
 
                 if (res.success) {
                     this._generate_img_from_id(fileData._id);
-                    this._switch_icons(this.BUTTONS.replace);
-                    this._show_delete_btn();
+                    this._update_buttons();
                 } else {
                     alert('Error occured. Try again.');
                 }
@@ -222,7 +206,21 @@ class FileCRUD {
         }
     }
 
-    _update_blogpost = async (url, data) => {
+    _update_buttons(state) {
+        
+        this.buttonsContainer.innerHTML = '';
+
+        switch (state) {
+            case 'no preview':
+                this.buttonsContainer.append(this.addBtn);
+                break;
+            default:
+                this.buttonsContainer.append(this.replaceBtn, this.deleteBtn);
+                break;
+        }
+    }
+
+    _send_update = async (url, data) => {
         return await fetch(url, {
             method: 'PATCH',
             headers: {
