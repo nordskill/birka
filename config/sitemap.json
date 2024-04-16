@@ -1,0 +1,11 @@
+{
+    "check_interval": 24,
+    "protocol": "https",
+    "models": [
+        {
+            "model": "Product",
+            "changefreq": "monthly",
+            "priority": 1
+        }
+    ]
+}
