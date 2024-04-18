@@ -39,6 +39,12 @@ const SettingsSchema = new Schema({
     img_sizes: [{
         type: Number
     }],
+    skin: {
+        type: String,
+        trim: true,
+        default: 'birka',
+        required: true
+    },
     // tax: {
     //     rate: Number,
     //     tax_included: Boolean,

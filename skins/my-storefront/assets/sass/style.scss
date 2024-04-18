@@ -1,0 +1,15 @@
+@import "_typography",
+        "components/_cookies-consent";
+
+body {
+    padding: 20px 40px;
+    font: 14px "roboto", sans-serif;
+}
+
+a {
+    color: blue;
+}
+
+svg.blue {
+    stroke: blue;
+}

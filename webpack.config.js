@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
@@ -5,20 +6,23 @@ const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
+    const skinEntries = generateThemeEntries();
 
     return {
         mode: isProduction ? 'production' : 'development',
         entry: {
-            main: './src/js/main.js',
+            ...skinEntries,
             cms_main: './src/js/cms/main.js',
-            style: './src/sass/style.scss',
             cms_style: './src/sass/cms/style.scss',
         },
         output: {
             filename: (chunkData) => {
-                const folder = chunkData.chunk.name.includes('cms_') ? 'cms-assets/js/' : 'js/';
-                return isProduction
-                    ? `${folder}[name].min.js`
+                const isCMSAsset = chunkData.chunk.name.startsWith('cms_');
+                const isStyleChunk = chunkData.chunk.name.endsWith('_style');
+                const skinName = chunkData.chunk.name.split('_')[0];
+                const folder = isCMSAsset ? 'cms-assets/js/' : `${skinName}/js/`;
+                return isProduction && !isStyleChunk
+                    ? `${folder}main.min.js`
                     : `dev/[name].js`;
             },
             path: path.resolve(__dirname, 'public')
@@ -26,7 +30,7 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.scss$/,
+                    test: /\.(scss|sass)$/,
                     use: [
                         isProduction
                             ? MiniCssExtractPlugin.loader
@@ -34,16 +38,28 @@ module.exports = (env, argv) => {
                         'css-loader',
                         'sass-loader'
                     ],
+                },
+                {
+                    test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (pathData) => {
+                            const skinName = pathData.filename.split('/')[1];
+                            return `${skinName}/fonts/[name][ext][query]`;
+                        }
+                    }
                 }
             ],
         },
         plugins: [
             new MiniCssExtractPlugin({
                 filename: (chunkData) => {
-                    const folder = chunkData.chunk.name.includes('cms_') ? 'cms-assets/css/' : 'css/';
+                    const isCMSAsset = chunkData.chunk.name.startsWith('cms_');
+                    const skinName = chunkData.chunk.name.split('_')[0];
+                    const folder = isCMSAsset ? 'cms-assets/css/' : `${skinName}/css/`;
                     return isProduction
-                        ? `${folder}[name].min.css`
-                        : `dev/[name].js`;
+                        ? `${folder}style.min.css`
+                        : `dev/[name].css`;
                 },
             }),
             new BrowserSyncPlugin({
@@ -53,11 +69,11 @@ module.exports = (env, argv) => {
                 files: [
                     'public/**/*.css',
                     'public/**/*.js',
-                    '!public/files/**/*.*', // Exclude files in public/files
-                    'views/**/*.ejs'
+                    '!public/files/**/*.*',
+                    'views/**/*.ejs',
+                    'skins/**/*.ejs'
                 ]
             }),
-            // new BundleAnalyzerPlugin()
         ].filter(Boolean),
         optimization: {
             minimize: isProduction,
@@ -65,11 +81,11 @@ module.exports = (env, argv) => {
                 terserOptions: {
                     compress: {
                         drop_console: true, // Remove console logs
-                        dead_code: true, // Remove unreachable code
-                        unused: true, // Remove unused variables and functions
-                        warnings: false, // display warnings when dropping unreachable code or unused declarations etc.
-                        drop_debugger: true,
-                        inline: 2, // Inline functions with arguments used < 2 times
+                        dead_code: true,    // Remove unreachable code
+                        unused: true,       // Remove unused variables and functions
+                        warnings: false,    // display warnings when dropping unreachable code or unused declarations etc.
+                        drop_debugger: true,// Remove debugger statements
+                        inline: 2,          // Inline functions with arguments used < 2 times
                     },
                     output: {
                         comments: false, // remove all comments
@@ -95,3 +111,20 @@ module.exports = (env, argv) => {
     };
 };
 
+
+function generateThemeEntries() {
+    const skinsDir = path.resolve(__dirname, 'skins');
+    const skinFolders = fs.readdirSync(skinsDir);
+    const entries = {};
+
+    skinFolders.forEach(folder => {
+        const skinPath = path.join(skinsDir, folder, 'assets');
+        if (fs.existsSync(skinPath)) {
+            // Assuming each skin has a 'js' and 'scss' folder with 'main.js' and 'style.scss'
+            entries[`${folder}_main`] = path.join(skinPath, 'js', 'main.js');
+            entries[`${folder}_style`] = path.join(skinPath, 'sass', 'style.scss');
+        }
+    });
+
+    return entries;
+}

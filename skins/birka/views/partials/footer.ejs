@@ -10,9 +10,9 @@
     <%- SS.custom_html_cookies %>
 <% } %>
 <% if (env === 'production') { %>
-    <script src="/js/main.min.js"></script>
+    <script src="/<%= SS.skin %>/js/main.min.js"></script>
 <% } else { %>
-    <script src="/dev/main.js"></script>
+    <script src="/dev/<%= SS.skin %>_main.js"></script>
 <% } %>
 </body>
 </html>

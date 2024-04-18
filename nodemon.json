@@ -10,7 +10,8 @@
         "node_modules/",
         "public/",
         "src/",
-        "views/"
+        "views/",
+        "skins/"
     ],
     "ext": "js,json"
 }

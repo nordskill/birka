@@ -9,7 +9,7 @@ router.get('/:slug', async (req, res, next) => {
         const slug = req.params.slug;
         const page = await Page.findOne({ slug: slug });
         if (page) {
-            res.render(page.template, { // Assuming you have a generic page template
+            res.render(page.template, {
                 title: page.name,
                 excerpt: page.excerpt,
                 template_name: page.template
@@ -32,7 +32,7 @@ router.get('/', async (req, res, next) => {
                 excerpt: page.excerpt,
                 template_name: page.template
             });
-        } else {
+        } else { // if no home page is set, render a default template
             const defaultTemplate = 'default_home';
             res.render(defaultTemplate, {
                 title: 'This is a Default Home Page',

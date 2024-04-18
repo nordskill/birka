@@ -60,9 +60,6 @@ function setupApp() {
 
     app.disable('x-powered-by');
 
-    app.set('views', path.join(__dirname, 'views'));
-    app.set('view engine', 'ejs');
-
     app.locals.rmWhitespace = true;
     app.locals.icon = icon;
 
@@ -82,6 +79,9 @@ async function setupMiddleware(app) {
     // if 'access.log' does not exist—create one
     fs.existsSync(path.join(logDirectory, 'access.log')) || fs.writeFileSync(path.join(logDirectory, 'access.log'), '');
     const accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' });
+
+    app.set('view engine', 'ejs');
+    app.use(skinSetter);
 
     app.use((req, res, next) => {
         res.locals.env = process.env.NODE_ENV;
@@ -181,6 +181,15 @@ async function setupMiddleware(app) {
         res.locals.project_version = packageJson.version;
         next();
     });
+
+    function skinSetter(req, res, next) {
+        app.set('views', [
+            path.join(__dirname, `skins/${SS.skin}/views`),
+            path.join(__dirname, 'views')
+        ]);
+        next();
+    }
+
 }
 
 function setupErrorHandler(app) {

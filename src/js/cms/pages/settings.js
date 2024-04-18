@@ -2,29 +2,10 @@ export default async function () {
 
     const token = document.querySelector('meta[name="csrf"]').content;
     const customHtmlForm = document.forms.custom_html;
+    const identityBasicForm = document.forms.identity_basic;
 
-    customHtmlForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-
-        fetch('/cms/settings', {
-            method: 'PATCH',
-            headers: {
-                'X-CSRF-Token': token
-            },
-            body: formData
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        }).then(data => {
-            console.log('Success:', data);
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    });
+    customHtmlForm.addEventListener('submit', submitForm);
+    identityBasicForm.addEventListener('submit', submitForm);
 
 
     const btnSitemap = document.querySelector('#regenerate_sitemap');
@@ -47,6 +28,29 @@ export default async function () {
         } catch (error) {
             console.error('There has been a problem with your fetch operation:', error);
         }
+    }
+
+    function submitForm(ev) {
+        ev.preventDefault();
+    
+        const formData = new FormData(ev.target);
+    
+        fetch('/cms/settings', {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-Token': token
+            },
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            console.log('Success:', data);
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
     }
 
 }

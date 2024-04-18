@@ -1,0 +1,18 @@
+<% if (cookies_consent === undefined) { %>
+    <div id="cookies_consent">
+        <p>We use cookies to optimize and personalize your experience. Select 'Accept All' to consent to all cookies, helping us to improve the website. For basic functionality, choose 'Essential Only'. Review our <a href="/cookie-policy">Cookie Policy</a> for more information.</p>
+        <div class="buttons">
+            <button id="reject_cookies" data-consent="false">Essential Only</button>
+            <button id="accept_cookies" data-consent="true">Accept All</button>
+        </div>
+    </div>
+<% } else if (cookies_consent === true) { %>
+    <%- SS.custom_html_cookies %>
+<% } %>
+<% if (env === 'production') { %>
+    <script src="/<%= SS.skin %>/js/main.min.js"></script>
+<% } else { %>
+    <script src="/dev/<%= SS.skin %>_main.js"></script>
+<% } %>
+</body>
+</html>

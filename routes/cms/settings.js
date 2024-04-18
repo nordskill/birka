@@ -1,20 +1,42 @@
+const fs = require('fs').promises;
+const path = require('path');
 const express = require('express');
 const router = express.Router();
 const SiteSettings = require('../../models/settings');
 const OperationalError = require('../../functions/operational-error');
-const multer  = require('multer');
+const multer = require('multer');
 const upload = multer();
 
 const SLUG = 'settings';
 const TITLE = 'Settings';
 
+
+const skinsFolder = path.join(__dirname, '../../skins');
+
 // CMS Tags
 router.get('/', async (req, res, next) => {
-    res.render(`cms/${SLUG}`, {
-        title: TITLE,
-        template_name: `cms_${SLUG}`,
-        active: SLUG,
-        breadcrumbs: [{
+
+    let availableSkins = [];
+
+    try {
+        // read package.json from every directory inside skins/ and if it exists add it to the array as JS object
+        const skins = await fs.readdir(skinsFolder);
+        const skinData = await Promise.all(skins.map(async skin => {
+            try {
+                const package = await fs.readFile(path.join(`${skinsFolder}/${skin}/package.json`), 'utf8');
+                return JSON.parse(package);
+            } catch (error) {
+                return null;
+            }
+        }));
+        availableSkins = skinData.filter(skin => skin !== null); 3
+
+        res.render(`cms/${SLUG}`, {
+            title: TITLE,
+            template_name: `cms_${SLUG}`,
+            active: SLUG,
+            skins: availableSkins,
+            breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'
             },
@@ -22,11 +44,17 @@ router.get('/', async (req, res, next) => {
                 name: TITLE,
                 href: `/cms/${SLUG}`
             }
-        ],
-        scripts: [
-            'validation-form.js'
-        ]
-    });
+            ],
+            scripts: [
+                'validation-form.js'
+            ]
+        });
+
+    } catch (error) {
+        next(error);
+    }
+
+
 });
 
 router.patch('/', upload.none(), async (req, res, next) => {
@@ -37,12 +65,11 @@ router.patch('/', upload.none(), async (req, res, next) => {
     }
     for (const key in req.body) {
         if (settings[key] !== undefined) {
-            console.log(req.body[key]);
             settings[key] = req.body[key];
             SS[key] = req.body[key];
         }
     }
-    
+
     await settings.save();
 
     res.json({
