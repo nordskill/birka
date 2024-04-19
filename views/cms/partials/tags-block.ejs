@@ -1,5 +1,7 @@
-<div class="card tags_block <%= typeof additionalClass !='undefined' ? additionalClass : '' %>">
-
+<div class="card tags_block <%= additionalClass || '' %>"
+    data-tags-api="<%= tags_api || '' %>"
+    data-endpoint="<%= endpoint || '' %>"
+    >
     <div class="card-header fs-6">
         Tags
     </div>
@@ -9,19 +11,18 @@
             <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add</button>
         </div>
         <div class="d-flex flex-wrap gap-1">
-            <% if (typeof array !=='undefined' && array) { %>
-                <% array.forEach(function(tag){ %>
+            <% if (array) { %>
+                <% for (const tag of array) { %>
                     <span class="badge_tag">
                         <span class="text-truncate">
                             <%= tag.name%>
                         </span>
                         <a href="#" class="btn-close bg-transparent"></a>
                     </span>
-                    <% }); %>
-                        <% }else{ %>
-                            <p class="text-danger fw-bolder">---No input array---</p>
-                            <% }%>
-
+                <% } %>
+            <% } else { %>
+                <p class="text-danger fw-bolder">---No input array---</p>
+            <% } %>
 
         </div>
 

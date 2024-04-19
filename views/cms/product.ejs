@@ -241,8 +241,12 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
-                                        <%- include('partials/tags-block', { additionalClass: 'h-100' ,
-                                            array:product.tags }) %>
+                                        <%- include('partials/tags-block', {
+                                            tags_api: '/api/tags',
+                                            endpoint: '/api/products' + product._id,
+                                            additionalClass: 'h-100' ,
+                                            array: product.tags
+                                        }) %>
                                     </div>
                                     <div class="col-12">
                                         <div class="card">
