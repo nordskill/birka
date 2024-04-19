@@ -353,8 +353,8 @@
                                 <div class="card meta_block mb-4">
                                     <%- include('partials/file-crud', {
                                         files_api: '/api/files',
-                                        endpoint: '/api/blog',
-                                        file_id: '661472e53f7b859bfcc1cd05',
+                                        endpoint: '/api/products' + product._id,
+                                        file_id: product.thumbnail ? product.thumbnail._id : "",
                                         size: '300'
                                     }) %>
                                         <div class="card-body">
