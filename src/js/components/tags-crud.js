@@ -90,8 +90,10 @@ class TagsCRUD {
             this.processInput(input);
         };
 
-        input.onchange = ev => {
-            this.processInput(ev.target);
+        input.onkeydown = ev => {
+            if (ev.key === 'Enter') {
+                this.processInput(ev.target);
+            }
         };
 
         this.element.onclick = ev => {
