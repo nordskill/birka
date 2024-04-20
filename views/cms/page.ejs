@@ -26,6 +26,7 @@
                                     <%- include('partials/file-crud', {
                                         files_api: '/api/files',
                                         endpoint: '/api/pages/' + page._id,
+                                        field_name: 'img_preview',
                                         file_id: page.img_preview ? page.img_preview._id : "",
                                         size: '300'
                                     }) %>
