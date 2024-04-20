@@ -5,40 +5,51 @@ const slugify = require('../functions/slugify');
 function addTags(Model) {
     return async (req, res, next) => {
         const { id } = req.params;
-        const tagsToAdd = req.body; // Expecting the body to be an array of tags directly
-
-        console.log('tagsToAdd', tagsToAdd);
+        const tagNamesToAdd = req.body;
 
         try {
-            if (!Array.isArray(tagsToAdd) || tagsToAdd.length === 0) {
-                throw new OperationalError('The request body must be an array of tags', 400);
+            if (!Array.isArray(tagNamesToAdd) || tagNamesToAdd.length === 0) {
+                throw new OperationalError('The request body must be an array of tag names', 400);
             }
 
-            // Ensure tags exist or create them if they don't
-            const tagsToSet = await Promise.all(tagsToAdd.map(async tag => {
-                const slug = slugify(tag);
-                let tagDoc = await Tag.findOne({ slug }).exec();
-                if (!tagDoc) {
-                    tagDoc = new Tag({ name: tag, slug });
-                    await tagDoc.save();
-                }
-                return tagDoc._id;
-            }));
+            // Pair tag names with their slugs
+            const tagsWithSlugs = tagNamesToAdd.map(tagName => {
+                return { name: tagName.trim(), slug: slugify(tagName.trim()) };
+            });
 
-            const updatedDocument = await Model.findByIdAndUpdate(id, {
-                $addToSet: { tags: { $each: tagsToSet } }
+            // Determine which slugs already exist
+            const slugs = tagsWithSlugs.map(tag => tag.slug);
+            const existingTags = await Tag.find({ slug: { $in: slugs } });
+            const existingSlugs = existingTags.map(tag => tag.slug);
+
+            // Filter out tags that need to be created
+            const newTagsData = tagsWithSlugs.filter(tag => !existingSlugs.includes(tag.slug));
+            
+            // Create non-existing tags
+            const newTags = await Tag.insertMany(newTagsData, { ordered: false }).catch(err => {
+                console.error('Error inserting new tags:', err);
+                return [];
+            });
+
+            // Fetch all tags, including newly created ones
+            const allRelevantTags = [...existingTags, ...newTags];
+
+            // Update the document in the Model
+            const modelUpdate = await Model.findByIdAndUpdate(id, {
+                $addToSet: { tags: { $each: allRelevantTags.map(tag => tag._id) } }
             }, { new: true }).populate('tags');
 
-            if (!updatedDocument) {
+            if (!modelUpdate) {
                 throw new OperationalError(`No document found with the id ${id}`, 404);
             }
 
-            res.json({ success: true, message: 'Tags added successfully', data: updatedDocument });
+            res.json({ success: true, message: 'Tags added successfully', data: allRelevantTags });
         } catch (error) {
             next(error);
         }
     };
 }
+
 
 function removeTags(Model) {
     return async (req, res, next) => {
@@ -51,7 +62,7 @@ function removeTags(Model) {
             }
 
             // Convert the slugs to ObjectIds
-            const tagsToRemove = await Tag.find({ slug: { $in: slugsToRemove } }).select('_id').exec();
+            const tagsToRemove = await Tag.find({ slug: { $in: slugsToRemove } }).lean();
             const tagIdsToRemove = tagsToRemove.map(tag => tag._id);
 
             // Proceed to remove the tags by their ObjectIds
@@ -59,11 +70,13 @@ function removeTags(Model) {
                 $pull: { tags: { $in: tagIdsToRemove } }
             }, { new: true }).populate('tags');
 
+            // get removed tag
+
             if (!updatedDocument) {
                 throw new OperationalError(`No document found with the id ${id}`, 404);
             }
 
-            res.json({ success: true, message: 'Tags removed successfully', data: updatedDocument });
+            res.json({ success: true, message: 'Tags removed successfully', data: tagsToRemove });
         } catch (error) {
             next(error);
         }

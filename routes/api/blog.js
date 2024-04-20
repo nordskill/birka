@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const BlogPost = require('../../models/blog-post');
 const OperationalError = require('../../functions/operational-error');
+const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 // update posts draft
 router.put('/:postId/draft', async (req, res, next) => {
@@ -70,6 +71,9 @@ router.patch('/:id', async (req, res, next) => {
         }
         next(error);
     }
-})
+});
+
+router.patch('/:id/tags', addTags(BlogPost));
+router.delete('/:id/tags', removeTags(BlogPost));
 
 module.exports = router;

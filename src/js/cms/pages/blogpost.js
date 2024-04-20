@@ -1,5 +1,6 @@
 import BibeEditor from '../../components/bibe-editor';
 import FileCRUD from '../../components/file-crud';
+import TagsCRUD from "../../components/tags-crud";
 
 export default async function () {
 
@@ -16,11 +17,12 @@ export default async function () {
       size: 300
    })
 
+   new TagsCRUD('.tags_crud');
+
    new BibeEditor({
       container: '.post_editor',
       update_url: updateURL,
       token: document.querySelector('meta[name="csrf"]').content
    });
-
 
 }
