@@ -56,8 +56,8 @@ class FileCRUD {
             this._insert_template();
         }
 
-        this.previewContainer = this.componentsContainer.querySelector('.container > .file_preview');
-        this.buttonsContainer = this.componentsContainer.querySelector('.container > .icons > ul');
+        this.previewContainer = this.container.querySelector('.container > .file_preview');
+        this.buttonsContainer = this.container.querySelector('.container > .icons > ul');
 
         if (!this.file) {
             if (this.fileId == '') {
@@ -82,7 +82,7 @@ class FileCRUD {
                 }
             })
 
-            this.componentsContainer = document.querySelector(options.container);
+            this.container = document.querySelector(options.container);
             this.filesApi = options.files_api;
             this.endpoint = options.endpoint;
             this.file = (options.file && Object.keys(options.file).length === 0) ? undefined : options.file;
@@ -95,7 +95,7 @@ class FileCRUD {
     }
 
     _get_options_from_dataset = (selector) => {
-        this.componentsContainer = document.querySelector(selector);
+        this.container = document.querySelector(selector);
         const component = componentsContainer.querySelector(' .file_crud');
 
         try{
@@ -119,7 +119,7 @@ class FileCRUD {
     }
 
     _insert_template = () => {
-        const template = `
+        this.container.innerHTML = `
             <div class="file_crud position-relative static">
                 <div class="container">
                     <div class="file_preview"></div>
@@ -134,8 +134,6 @@ class FileCRUD {
                 </div>
             </div>
         `;
-
-        this.componentsContainer.insertAdjacentHTML('beforeend', template);
     }
 
     _insert_buttons = () => {
@@ -165,15 +163,6 @@ class FileCRUD {
         return container;
     }
 
-    _create_img = (className, src, alt) => {
-        const img = document.createElement('img');
-        img.className = className;
-        img.src = src;
-        img.alt = alt;
-
-        return img;
-    }
-
     _generate_img_from_id = async (id) => {
         const res = await fetch(this.filesApi + '/' + id)
         const fileData = await res.json();
@@ -196,9 +185,8 @@ class FileCRUD {
         const fileName = file_name + '.' + optimized_format;
         const path = folder + '/' + fileSize + '/' + fileName;
 
-        const img = this._create_img('card-img-top', path, alt);
-
-        this.previewContainer.insertAdjacentElement('beforeend', img);
+        this.previewContainer.innerHTML = `
+            <img class='card-img-top' src='${path}' alt='${alt}'>`;
     }
 
     _remove_preview = async (e) => {
