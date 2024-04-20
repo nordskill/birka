@@ -12,6 +12,7 @@ export default async function () {
       container: '.option-1',
       files_api: '/api/files/',
       endpoint: '/api/blog/' + post._id,
+      field_name: 'img_preview',
       file: post.img_preview,
       file_id: post.img_preview?._id || "",
       size: 300

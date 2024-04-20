@@ -357,30 +357,31 @@
                                 <div class="card meta_block mb-4">
                                     <%- include('partials/file-crud', {
                                         files_api: '/api/files',
-                                        endpoint: '/api/products' + product._id,
-                                        file_id: product.thumbnail ? product.thumbnail._id : "",
+                                        endpoint: '/api/products/' + product._id,
+                                        field_name: 'thumbnail',
+                                        file_id: product.thumbnail?._id,
                                         size: '300'
                                     }) %>
-                                        <div class="card-body">
-                                            <label class="form-check-label d-flex user-select-none mb-3">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    <%=product.published===true ? 'checked' : '' %>>
-                                                <span class="ms-2">Published</span>
-                                            </label>
-                                            <dl class="d-table mb-3">
-                                                <div class="d-table-row">
-                                                    <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
-                                                    <dd class="d-table-cell">
-                                                        <%=formatDate(product.createdAt,'dd mon yyyy')%>
-                                                    </dd>
-                                                </div>
-                                            </dl>
-                                            <div class="d-flex flex-wrap">
-                                                <button class="btn btn-primary me-2 mb-2">Update</button>
-                                                <button class="btn btn-danger mb-2">Delete
-                                                    Product</button>
+                                    <div class="card-body">
+                                        <label class="form-check-label d-flex user-select-none mb-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                <%=product.published===true ? 'checked' : '' %>>
+                                            <span class="ms-2">Published</span>
+                                        </label>
+                                        <dl class="d-table mb-3">
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                                <dd class="d-table-cell">
+                                                    <%=formatDate(product.createdAt,'dd mon yyyy')%>
+                                                </dd>
                                             </div>
+                                        </dl>
+                                        <div class="d-flex flex-wrap">
+                                            <button class="btn btn-primary me-2 mb-2">Update</button>
+                                            <button class="btn btn-danger mb-2">Delete
+                                                Product</button>
                                         </div>
+                                    </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-header fs-6">Categories</div>
