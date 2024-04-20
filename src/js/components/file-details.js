@@ -1,4 +1,5 @@
 import Debouncer from '../functions/debouncer';
+import TagsCRUD from './tags-crud';
 
 /**
  * FileDetails class for handling file details in a modal.
@@ -12,7 +13,7 @@ import Debouncer from '../functions/debouncer';
  */
 class FileDetails {
 
-    constructor() {
+    constructor(options) {
         this.modal = document.createElement('div');
         this.modal.className = 'file_details';
         this.win = document.createElement('div');
@@ -20,6 +21,7 @@ class FileDetails {
         this.modal.appendChild(this.win);
         this.modal.setAttribute('hidden', '');
         this._opened = false;
+        this.token = options.token;
         document.body.appendChild(this.modal);
 
         // Close window
@@ -47,6 +49,12 @@ class FileDetails {
             const data = await response.json();
             const html = this._compileTemplate(data);
             this.win.innerHTML = html;
+            new TagsCRUD({
+                container: '#file_tags_container',
+                endpoint: `/api/files/${id}/tags`,
+                tags: data.tags,
+                token: this.token
+            });
             this._initFieldUpdates(id);
         } catch (error) {
             console.error('Error fetching file details:', error);
@@ -160,6 +168,7 @@ class FileDetails {
                         <textarea class="form-control" id="file_description" rows="3" name="description">${data.description ?? ''}</textarea>
                         <div class="invalid-feedback"></div>
                     </div>
+                    <div class="pb-2" id="file_tags_container"></div>
                 </main>
             </section>`;
     }

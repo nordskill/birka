@@ -1,8 +1,7 @@
 import FileDetails from "../components/file-details";
 
-const fileDetails = new FileDetails();
-
 class FilesSelectionManager {
+
     constructor({token, parent, single}) {
         this.token = token;
         this.parent = parent;
@@ -13,6 +12,8 @@ class FilesSelectionManager {
         this.filesContainer = parent.querySelector('.files');
         this.lastSelected = null;
         this.selectedItems = new Set();
+
+        this.fileDetails = new FileDetails({ token });
 
         this.attachEventListeners();
     }
@@ -85,12 +86,12 @@ class FilesSelectionManager {
     onFileDoubleClick(event) {
         const wrapper = event.target.closest('.file');
         if (!wrapper) return;
-        fileDetails.open(wrapper.dataset.id);
+        this.fileDetails.open(wrapper.dataset.id);
     }
 
     selectAll(event) {
 
-        if (fileDetails.opened) return;
+        if (this.fileDetails.opened) return;
 
         event.preventDefault();
         if (this.single) return;
@@ -113,7 +114,7 @@ class FilesSelectionManager {
 
     deleteSelected() {
 
-        if (fileDetails.opened) return;
+        if (this.fileDetails.opened) return;
 
         this.btnDelete.setAttribute('disabled', '');
 

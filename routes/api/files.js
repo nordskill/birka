@@ -6,7 +6,7 @@ const multer = require('multer');
 const crypto = require('crypto');
 
 const { File, Image, Video } = require('../../models/file');
-const Tag = require('../../models/tag');
+const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 const OperationalError = require('../../functions/operational-error');
 const generateHash = require('../../functions/generate-hash');
@@ -184,46 +184,6 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-router.put('/:id/tags', async (req, res, next) => {
-    const fileId = req.params.id;
-    const newTagNames = req.body;
-
-    try {
-        const file = await File.findById(fileId);
-
-        if (!file) {
-            throw new OperationalError('File not found. ', 404);
-        }
-
-        const tags = await Tag.find().lean();
-        const fileTags = file.tags.map(tag => tag.toString());
-
-        const newTags = newTagNames.map(name => {
-            const slug = slugify(name);
-
-            const foundSlug = tags.find(tag => tag.slug == slug);
-
-            if (!foundSlug) {
-                throw new OperationalError(`Tag '${name}' does not exist in the database.`, 400);
-            }
-
-            const tagId = foundSlug._id.toString();
-
-            if (fileTags.includes(tagId)) {
-                throw new OperationalError(`Tag '${name}' is already a tag of this file.`, 400);
-            }
-
-            return tagId;
-        });
-
-        await File.findByIdAndUpdate(fileId, { $push: { tags: newTags } })
-        res.json({ success: true });
-
-    } catch (err) {
-        next(err);
-    }
-});
-
 router.delete('/:id', async (req, res, next) => {
     const id = req.params.id;
 
@@ -321,6 +281,9 @@ router.delete('/', async (req, res, next) => {
     }
 
 });
+
+router.patch('/:id/tags', addTags(File));
+router.delete('/:id/tags', removeTags(File));
 
 module.exports = router;
 
