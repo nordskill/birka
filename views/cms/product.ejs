@@ -240,12 +240,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-lg-6">
-                                        <%- include('partials/tags-block', {
-                                            tags_api: '/api/tags',
-                                            endpoint: '/api/products' + product._id,
+                                    <div class="col-12 col-lg-6" id="tags_container">
+                                        <%- include('partials/tags-crud', {
+                                            endpoint: `/api/products/${product._id}/tags`,
                                             additionalClass: 'h-100' ,
-                                            array: product.tags
+                                            tags: product.tags,
+                                            token: locals.csrf_token
                                         }) %>
                                     </div>
                                     <div class="col-12">

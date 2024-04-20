@@ -1,0 +1,30 @@
+<div class="card tags_crud <%= locals.additionalClass || '' %>"
+    data-endpoint="<%= locals.endpoint || '' %>"
+    data-token="<%= token %>"
+    >
+    <div class="card-header fs-6">
+        Tags
+    </div>
+    <div class="card-body">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Add tags">Add</button>
+        </div>
+        <div class="d-flex flex-wrap gap-1 tags_container">
+            <% if (tags && tags.length > 0) { %>
+                <% for (const tag of tags) { %>
+                    <span class="badge_tag" data-slug="<%= tag.slug %>">
+                        <span class="text-truncate">
+                            <%= tag.name %>
+                        </span>
+                        <button type="button" title="remove this tag" class="btn-close bg-transparent"></button>
+                    </span>
+                <% } %>
+            <% } else { %>
+                <p class="empty">No Tags</p>
+            <% } %>
+
+        </div>
+
+    </div>
+</div>

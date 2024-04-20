@@ -84,7 +84,11 @@
                                             </div>
                                         </div>
                                 </div>
-                                <%- include('partials/tags-block',{array:blog_post.tags}) %>
+                                <%- include('partials/tags-crud', {
+                                    endpoint: `/api/blog/${blog_post._id}/tags`,
+                                    tags: blog_post.tags,
+                                    token: locals.csrf_token
+                                }) %>
                             </div>
                         </div>
                     </form>

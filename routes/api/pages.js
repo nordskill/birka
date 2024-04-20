@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Page = require('../../models/page');
+const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 router.get('/search', async (req, res, next) => {
     try {
@@ -16,5 +17,8 @@ router.get('/search', async (req, res, next) => {
         next(err);
     }
 });
+
+router.patch('/:id/tags', addTags(Page));
+router.delete('/:id/tags', removeTags(Page));
 
 module.exports = router;

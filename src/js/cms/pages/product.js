@@ -1,4 +1,5 @@
 import FilePicker from "../../components/file-picker";
+import TagsCRUD from "../../components/tags-crud";
 
 const filePicker = new FilePicker();
 
@@ -16,8 +17,10 @@ export default async function () {
         }
     });
 
-    document.querySelectorAll('.list_meta_icons .px-1')[0].addEventListener('click', async () => {
-        const files = await filePicker.open();
-        console.log(files);
-    })
+    new TagsCRUD('.tags_crud');
+
+    // document.querySelectorAll('.list_meta_icons .px-1')[0].addEventListener('click', async () => {
+    //     const files = await filePicker.open();
+    //     console.log(files);
+    // })
 }
