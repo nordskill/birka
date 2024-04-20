@@ -49,20 +49,93 @@ class FileCRUD {
         if (typeof options === 'string') {
             this._get_options_from_dataset(options);
 
-            this.previewContainer = this.component.querySelector('.container > .file_preview');
-            this.buttonsContainer = this.component.querySelector('.container > .icons > ul');
-
             this.file = this.previewContainer.querySelector(':scope > img')
 
-            if (!this.file) {
-                this._handle_lack_of_file();
+        } else {
+            this._get_options_from_object(options);
+            this._insert_template();
+        }
+
+        this.previewContainer = this.componentsContainer.querySelector('.container > .file_preview');
+        this.buttonsContainer = this.componentsContainer.querySelector('.container > .icons > ul');
+
+        if (!this.file) {
+            if (this.fileId == '') {
+                this.isEmpty = true;
+            } else {
+                this._generate_img_from_id(this.fileId)
             }
         } else {
-            // to be written
+            this._generate_img_from_file_data(this.file);
         }
 
         this._insert_buttons();
+    }
 
+    _get_options_from_object = (options) => {
+        const keysToCheck = ['container', 'files_api', 'endpoint'];
+
+        try {
+            keysToCheck.forEach( key => {
+                if (options[key] === undefined) {
+                    throw new Error(`${key} is undefined.`)
+                }
+            })
+
+            this.componentsContainer = document.querySelector(options.container);
+            this.filesApi = options.files_api;
+            this.endpoint = options.endpoint;
+            this.file = (options.file && Object.keys(options.file).length === 0) ? undefined : options.file;
+            this.fileId = options.file_id || this.file?._id || "";
+            this.size = options.size || "";
+
+        } catch (err) {
+            console.error('Provide required information. ', err);
+        }
+    }
+
+    _get_options_from_dataset = (selector) => {
+        this.componentsContainer = document.querySelector(selector);
+        const component = componentsContainer.querySelector(' .file_crud');
+
+        try{
+            const componentsInfo = component.dataset;
+            const keysToCheck = ['filesApi', 'endpoint', 'fileId', 'size'];
+
+            keysToCheck.forEach( key => {
+                if (componentsInfo[key] === undefined) {
+                    throw new Error(`'${key}' is undefined.`)
+                }
+            })
+
+            this.filesApi = componentsInfo.filesApi;
+            this.endpoint = componentsInfo.endpoint;
+            this.fileId = componentsInfo.fileId;
+            this.size = parseInt(componentsInfo.size);
+
+        } catch (error) {
+            console.error('Provide required information. ', error)
+        }
+    }
+
+    _insert_template = () => {
+        const template = `
+            <div class="file_crud position-relative static">
+                <div class="container">
+                    <div class="file_preview"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 18.373">
+                        <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
+                        <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968" />
+                    </svg>
+                    <div class="icons">
+                        <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.componentsContainer.insertAdjacentHTML('beforeend', template);
     }
 
     _insert_buttons = () => {
@@ -92,37 +165,6 @@ class FileCRUD {
         return container;
     }
 
-    _get_options_from_dataset = (selector) => {
-        this.component = document.querySelector(selector + ' .file_crud');
-
-        try{
-            const componentsInfo = this.component.dataset;
-            const keysToCheck = ['filesApi', 'endpoint', 'fileId', 'size'];
-
-            keysToCheck.forEach( key => {
-                if (componentsInfo[key] === undefined) {
-                    throw new Error(`'${key}' is undefined.`)
-                }
-            })
-
-            this.filesApi = componentsInfo.filesApi;
-            this.endpoint = componentsInfo.endpoint;
-            this.fileId = componentsInfo.fileId;
-            this.size = parseInt(componentsInfo.size);
-
-        } catch (error) {
-            console.error('Provide required information. ', error)
-        }
-    }
-
-    _handle_lack_of_file = () => {
-        if (this.fileId == '') {
-            this.isEmpty = true;
-        } else {
-            this._generate_img_from_id(this.fileId)
-        }
-    }
-
     _create_img = (className, src, alt) => {
         const img = document.createElement('img');
         img.className = className;
@@ -136,6 +178,10 @@ class FileCRUD {
         const res = await fetch(this.filesApi + '/' + id)
         const fileData = await res.json();
 
+        this._generate_img_from_file_data(fileData);
+    }
+
+    _generate_img_from_file_data = (fileData) => {
         const { file_name, hash, optimized_format, sizes, alt } = fileData;
 
         let fileSize;
@@ -207,7 +253,7 @@ class FileCRUD {
     }
 
     _update_buttons(state) {
-        
+
         this.buttonsContainer.innerHTML = '';
 
         switch (state) {

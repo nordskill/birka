@@ -29,60 +29,61 @@
                             </div>
                             <div class="col-12 col-lg-3 mt-5 mt-lg-0">
                                 <div class="card meta_block mb-4">
-                                    <%- include('partials/file-crud', {
+                                    <!-- <%- include('partials/file-crud', {
                                         files_api: '/api/files',
                                         endpoint: '/api/blog/' + blog_post._id,
                                         file_id: blog_post.img_preview ? blog_post.img_preview._id : "",
                                         size: '300'
-                                    }) %>
-                                        <div class="card-body">
-                                            <label class="form-check-label d-flex user-select-none mb-3">
-                                                <input class="form-check-input" type="checkbox"
-                                                    <%=blog_post.published===true ? 'checked' : '' %>>
-                                                <span class="ms-2">Published</span>
-                                            </label>
-                                            <dl class="d-table mb-3">
-                                                <div class="d-table-row">
-                                                    <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
-                                                    <dd class="d-table-cell">
-                                                        <%=formatDate(blog_post.createdAt,'dd mon yyyy')%>
-                                                    </dd>
-                                                </div>
-                                                <div class="d-table-row">
-                                                    <dt class="d-table-cell pe-2 fw-normal">Published:</dt>
-                                                    <dd class="d-table-cell">
-                                                        <%=formatDate(blog_post.date_published,'dd mon yyyy')%>
-                                                    </dd>
-                                                </div>
-                                                <div class="d-table-row">
-                                                    <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
-                                                    <dd class="d-table-cell">
-                                                        <%=formatDate(blog_post.updatedAt,'dd mon yyyy')%>
-                                                    </dd>
-                                                </div>
-                                                <div class="d-table-row">
-                                                    <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
-                                                    <dd class="d-table-cell">
-                                                        <a href="#" class="link-underline link-underline-opacity-0">
-                                                            <%= blog_post.author.account_details.username %>
-                                                        </a>
-                                                    </dd>
-                                                </div>
-                                            </dl>
-                                            <div class="mb-3">
-                                                <label for="meta_3" class="form-label">Excerpt:</label>
-                                                <textarea rows="5" class="form-control form-control-sm" id="meta_3"
-                                                    required=""><%=blog_post.excerpt%></textarea>
-                                                <div class="invalid-feedback">
-                                                    Please enter a message in the textarea.
-                                                </div>
+                                    }) %> -->
+                                    <div class="option-1"></div>
+                                    <div class="card-body">
+                                        <label class="form-check-label d-flex user-select-none mb-3">
+                                            <input class="form-check-input" type="checkbox"
+                                                <%=blog_post.published===true ? 'checked' : '' %>>
+                                            <span class="ms-2">Published</span>
+                                        </label>
+                                        <dl class="d-table mb-3">
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                                <dd class="d-table-cell">
+                                                    <%=formatDate(blog_post.createdAt,'dd mon yyyy')%>
+                                                </dd>
                                             </div>
-                                            <div class="d-flex flex-wrap">
-                                                <button class="btn btn-primary me-2 mb-2">Update</button>
-                                                <button class="btn btn-danger mb-2">Delete
-                                                    Product</button>
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Published:</dt>
+                                                <dd class="d-table-cell">
+                                                    <%=formatDate(blog_post.date_published,'dd mon yyyy')%>
+                                                </dd>
+                                            </div>
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
+                                                <dd class="d-table-cell">
+                                                    <%=formatDate(blog_post.updatedAt,'dd mon yyyy')%>
+                                                </dd>
+                                            </div>
+                                            <div class="d-table-row">
+                                                <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
+                                                <dd class="d-table-cell">
+                                                    <a href="#" class="link-underline link-underline-opacity-0">
+                                                        <%= blog_post.author.account_details.username %>
+                                                    </a>
+                                                </dd>
+                                            </div>
+                                        </dl>
+                                        <div class="mb-3">
+                                            <label for="meta_3" class="form-label">Excerpt:</label>
+                                            <textarea rows="5" class="form-control form-control-sm" id="meta_3"
+                                                required=""><%=blog_post.excerpt%></textarea>
+                                            <div class="invalid-feedback">
+                                                Please enter a message in the textarea.
                                             </div>
                                         </div>
+                                        <div class="d-flex flex-wrap">
+                                            <button class="btn btn-primary me-2 mb-2">Update</button>
+                                            <button class="btn btn-danger mb-2">Delete
+                                                Product</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <%- include('partials/tags-block',{array:blog_post.tags}) %>
                             </div>
@@ -90,5 +91,11 @@
                     </form>
                     <!-- content -->
                 </div>
+                <pre>
+                    <code id="blogpost_data">
+                        <%= JSON.stringify(blog_post, null, 2) %>
+                    </code>
+                </pre>
     </main>
+
     <%- include('partials/footer') %>
