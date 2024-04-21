@@ -6,6 +6,21 @@
             "model": "Product",
             "changefreq": "monthly",
             "priority": 1
+        },
+        {
+            "model": "Category",
+            "changefreq": "monthly",
+            "priority": 0.9
+        },
+        {
+            "model": "BlogPost",
+            "changefreq": "yearly",
+            "priority": 0.8
+        },
+        {
+            "model": "Page",
+            "changefreq": "monthly",
+            "priority": 0.6
         }
     ]
 }

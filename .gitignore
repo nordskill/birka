@@ -4,7 +4,10 @@ public/css/
 public/js/
 public/dev/
 public/cms-assets/
+public/robots.txt
+public/*.xml
 logs/
+scripts/sitemap-checked.json
 _backup/
 .vars
 .DS_Store

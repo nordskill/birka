@@ -105,6 +105,32 @@ class SiteMap {
         sitemapindex += `</sitemapindex>\n`;
 
         await fs.writeFile(path.join(this.basePath, 'sitemap_index.xml'), sitemapindex, 'utf8');
+        await this.#update_robots();
+    }
+
+    async #update_robots() {
+        const robotsPath = path.join(this.basePath, 'robots.txt');
+        const sitemapLine = `Sitemap: ${this.config.protocol}://${SS.domain}/sitemap_index.xml`;
+
+        try {
+            const robotsExists = await fs.stat(robotsPath);
+            if (robotsExists) {
+                let content = await fs.readFile(robotsPath, 'utf8');
+                if (!content.includes(sitemapLine)) {
+                    content += `\n${sitemapLine}\n`;
+                    await fs.writeFile(robotsPath, content, 'utf8');
+                }
+            } else {
+                await fs.writeFile(robotsPath, sitemapLine + '\n', 'utf8');
+            }
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                // File does not exist, create it with the sitemap line
+                await fs.writeFile(robotsPath, sitemapLine + '\n', 'utf8');
+            } else {
+                console.error(`Error handling robots.txt: ${error}`);
+            }
+        }
     }
 
     async #check_for_updates() {
