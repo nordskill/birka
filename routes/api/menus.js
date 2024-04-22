@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Menu = require('../../models/menu');
+const updateDoc = require('../../controllers/update-doc');
+const updateSubDoc = require('../../controllers/update-subdoc');
 const OperationalError = require('../../functions/operational-error');
 
 
@@ -127,38 +129,7 @@ router.get('/:menuId/items', async (req, res, next) => {
 });
 
 // Update a menu item by menu ID and item ID
-router.put('/:menuId/items/:itemId', async (req, res, next) => {
-    try {
-        if (!isValidObjectId(req.params.menuId)) {
-            throw new OperationalError("Invalid menu ID format", 400); // Using 400 for Bad Request
-        }
-    
-        if (!isValidObjectId(req.params.itemId)) {
-            throw new OperationalError("Invalid menu item ID format", 400); // Using 400 for Bad Request
-        }
-
-        const menu = await Menu.findOne({ "_id": req.params.menuId });
-        if (!menu) {
-            throw new OperationalError("Menu not found", 404);
-        }
-
-        // Get the index of the item to update
-        const itemIndex = menu.items.findIndex(item => item._id.toString() === req.params.itemId);
-        if (itemIndex === -1) {
-            throw new OperationalError("Menu item not found", 404);
-        }
-
-        // Update the item with req.body
-        menu.items[itemIndex] = { ...menu.items[itemIndex].toObject(), ...req.body };
-        
-        await menu.save();
-
-        // Return the updated item. Note that you need to re-fetch or manually construct the updated item object.
-        res.json(menu.items[itemIndex]);
-    } catch (err) {
-        next(err);
-    }
-});
+router.patch('/:docId/items/:subdocId', updateSubDoc(Menu, 'items'));
 
 // Delete a menu item by menu ID and item ID
 router.delete('/:menuId/items/:itemId', async (req, res, next) => {

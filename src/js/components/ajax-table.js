@@ -119,7 +119,7 @@ class AJAXTable {
 
         const id = row.dataset.id;
         const url = this.element.dataset.endpoint + (id ? '/' + id : '');
-        const method = id ? 'PUT' : 'POST';
+        const method = id ? 'PATCH' : 'POST';
 
         const data = Array.from(row.cells).reduce((acc, cell, index) => {
             if (index === 0 || index === row.cells.length - 1) { // Skip the checkbox and the action buttons
