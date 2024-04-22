@@ -50,8 +50,17 @@ class FileCRUD {
             this.element = document.querySelector(options);
             this.container = this.element.parentElement;
             this._get_options_from_dataset(options);
+        } else if (options instanceof HTMLElement) {
+            this.element = options;
+            this.container = this.element.parentElement;
+            this._get_options_from_dataset(options);
         } else {
-            this.container = options.container;
+            this.container = undefined;
+            if (options.container instanceof HTMLElement) {
+                this.container = options.container;
+            } else {
+                this.container = document.querySelector(options.container);
+            }
             this._get_options_from_object(options);
             this._insert_template();
         }
@@ -82,7 +91,6 @@ class FileCRUD {
                 }
             })
 
-            this.container = document.querySelector(options.container);
             this.filesApi = options.files_api;
             this.endpoint = options.endpoint;
             this.fieldName = options.field_name;
