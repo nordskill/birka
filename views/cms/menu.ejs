@@ -25,6 +25,7 @@
                                         <input class="form-check-input" type="checkbox" value="" aria-label="...">
                                     </th>
                                     <th scope="col">Page Type</th>
+                                    <th scope="col">Image/Icon</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">URL</th>
                                     <th scope="col">Open in:</th>
@@ -39,6 +40,14 @@
                                         </td>
                                         <td data-field="entity_type">
                                             <%= item.entity_type %>
+                                        </td>
+                                        <td data-field="image">
+                                            <%- include('partials/file-crud', {
+                                                files_api: '/api/files',
+                                                endpoint: '/api/menus/' + menu._id + '/items/' + item._id,
+                                                field_name: 'image',
+                                                file_id: item.image?._id
+                                            }) %>
                                         </td>
                                         <td data-field="name">
                                             <%= item.name %>

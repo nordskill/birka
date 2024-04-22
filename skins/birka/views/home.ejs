@@ -4,4 +4,18 @@
     <p>"Birka" skin.</p>
     <p>template name: <%= template_name %></p>
     <p><a href="/cms">CMS</a></p>
+
+    <p>Cosial media links:</p>
+    <nav class="social_media">
+        <% if (menus['social media']) { %>
+            <ul><% menus['social media'].forEach(item => { %>
+                <li>
+                    <a href="<%= item.url %>" target="<%= item.target %>">
+                        <% const path = `/files/${item.image.hash.substring(0,2)}/${item.image.file_name}.${item.image.extension}` %>
+                        <img src="<%= path %>">
+                    </a>
+                </li><% }); %>
+            </ul>
+        <% } %>
+    </nav>
 <%- include('partials/footer') %>

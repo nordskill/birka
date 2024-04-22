@@ -1,5 +1,6 @@
 import AJAXTable from '../../components/ajax-table.js';
 import SmartSearch from '../../functions/smart-search.js';
+import FileCRUD from '../../components/file-crud';
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 
@@ -32,12 +33,24 @@ export default async function () {
         ]
     };
 
-    const fieldsList = [ 'entity_type', 'name', 'url', 'target', 'title' ];
+    const fieldsList = [ 'entity_type', 'image', 'name', 'url', 'target', 'title' ];
 
     const ajaxTables = document.querySelectorAll('.ajax_table');
     [...ajaxTables].map(element => {
-        const ajaxTable = new AJAXTable(element, fieldsList, dropdownOptions, csrfToken);
+
+        const fileCRUDs = {
+            files_api: '/api/files/',
+            endpoint: element.dataset.endpoint,
+            field_name: 'image'
+        }
+
+        const ajaxTable = new AJAXTable(element, fieldsList, dropdownOptions, csrfToken, fileCRUDs);
         ajaxTable.element.addEventListener('ajaxtable:row-edit', initSmartSearch);
+
+        const images = ajaxTable.element.querySelectorAll('.file_crud');
+        
+        [...images].forEach(fileCrudComponent => new FileCRUD(fileCrudComponent));
+
     });
 
 }

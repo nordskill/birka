@@ -20,6 +20,41 @@
 		object-fit: cover;
 	}
 
+	.file_crud {
+		height: 36px;
+		width: 36px;
+
+		.container svg {
+			width: 24px;
+			height: 24px;
+		}
+
+		.icons {
+			position: absolute;
+			left: 36px;
+
+			ul {
+				position: relative !important;
+				margin: 0;
+
+				li {
+					padding: 0;
+					display: block;
+
+					button {
+						width: 32px;
+						height: 32px;
+
+						svg {
+							width: 16px;
+							height: 16px;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	tr {
 		td {
 			.btn {

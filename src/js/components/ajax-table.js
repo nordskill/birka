@@ -1,11 +1,14 @@
+import FileCRUD from './file-crud';
+
 class AJAXTable {
-    constructor(element, fieldsList, dropdownOptions, csrfToken) {
+    constructor(element, fieldsList, dropdownOptions, csrfToken, fc = null) {
         this.element = element;
         this.table = element.querySelector('table');
         this.btnAddItem = element.querySelector('.add_item');
         this.fieldsList = fieldsList;
         this.dropdownOptions = dropdownOptions;
         this.token = csrfToken;
+        this.fc = fc;
         this._attachEventListeners();
 
         this.btnAddItem.addEventListener('click', this.add_row);
@@ -16,12 +19,23 @@ class AJAXTable {
         const row = this.table.insertRow();
         row.className = 'new_row';
         row.insertCell().innerHTML = '<input class="form-check-input" type="checkbox">';
-        
+
         this.fieldsList.forEach(field => {
+
             const cell = row.insertCell();
             cell.dataset.field = field;
+
+            if (field === 'image') {
+                const fileCrud = new FileCRUD({
+                    container: cell,
+                    files_api: this.fc.files_api,
+                    endpoint: this.fc.endpoint,
+                    field_name: this.fc.field_name
+                });
+            }
+
         });
-        
+
         row.insertCell().innerHTML = `
             <button class="btn btn-link btn-sm edit_item">
                 <svg class="icon">
@@ -83,6 +97,8 @@ class AJAXTable {
                 return;
             }
 
+            if (cell.dataset.field === 'image') return;
+
             const dataField = cell.getAttribute('data-field');
             const originalContent = cell.innerHTML.trim();
             const isLink = originalContent.includes('href');
@@ -126,6 +142,8 @@ class AJAXTable {
                 return acc;
             }
 
+            if (cell.dataset.field === 'image') return acc;
+
             const input = cell.querySelector('input, select');
             const key = input.name || cell.getAttribute('data-field');
             const value = input.value;
@@ -165,6 +183,8 @@ class AJAXTable {
                 return;
             }
 
+            if (cell.dataset.field === 'image') return;
+
             const dataField = cell.getAttribute('data-field');
             const value = savedItem[dataField] !== undefined ? savedItem[dataField] + '' : '';
             const isLink = value.includes('http') || dataField === 'url';
@@ -175,7 +195,7 @@ class AJAXTable {
                 cell.innerHTML = isLink ? `<a href="${value}">${value}</a>` : value;
             }
         });
-        
+
     }
 
     _cancel_edit(row) {
