@@ -412,16 +412,6 @@ async function insert_page_data() {
 
 async function insert_settings_data() {
     const { model: settingsModel, data: settingsData } = load_files('settings');
-    const { File } = require(path.join(pathToModels, 'file.js'));
-
-    const fbID = (await File.findOne({ file_name: 'facebook_icon' }, '_id'))._id.toString();
-    const twitterID = (await File.findOne({ file_name: 'twitter_icon' }, '_id'))._id.toString();
-    const instagramID = (await File.findOne({ file_name: 'instagram_icon' }, '_id'))._id.toString();
-
-    settingsData.social_links[0].icon = fbID;
-    settingsData.social_links[1].icon = twitterID;
-    settingsData.social_links[2].icon = instagramID;
-
     try {
         await settingsModel.insertMany(settingsData);
         console.log(`inserted settings data`);

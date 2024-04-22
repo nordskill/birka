@@ -15,17 +15,6 @@ const SettingsSchema = new Schema({
         type: String,
         trim: true
     },
-    social_links: [{
-        name: {
-            type: String,
-            trim: true
-        },
-        url: {
-            type: String,
-            trim: true
-        },
-        icon: { ref: 'File', type: Schema.Types.ObjectId }
-    }],
     language: {
         type: String,
         required: true,

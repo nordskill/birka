@@ -44,10 +44,7 @@ async function getSiteSettings() {
     try {
         global.SS = await SiteSettings
             .findOne()
-            .populate({
-                path: 'social_links.icon logo',
-                model: 'File'
-            })
+            .populate('logo')
             .lean();
 
     } catch (error) {
