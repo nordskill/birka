@@ -24,7 +24,7 @@ const updateDocument = Model => async (req, res, next) => {
         res.json({
             success: true,
             message: `${Model.modelName} updated successfully`,
-            document: updatedDocument
+            data: updatedDocument
         });
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {

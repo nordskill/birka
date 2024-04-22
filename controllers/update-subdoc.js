@@ -40,7 +40,11 @@ const updateSubDocument = (Model, subdocArrayPath) => async (req, res, next) => 
             return next(new OperationalError(`Updated subdocument not found`, 404));
         }
 
-        res.json(updatedSubdoc);
+        res.json({
+            success: true,
+            message: `Subdocument updated successfully`,
+            data: updatedSubdoc
+        });
 
     } catch (error) {
         next(error);
