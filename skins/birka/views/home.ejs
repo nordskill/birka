@@ -2,10 +2,11 @@
 <%- include('partials/nav') %>
     <h1><%= title %></h1>
     <p>"Birka" skin.</p>
+    <p><%= page.welcome_text %></p>
     <p>template name: <%= template_name %></p>
     <p><a href="/cms">CMS</a></p>
 
-    <p>Cosial media links:</p>
+    <p>Social media links:</p>
     <nav class="social_media">
         <% if (menus['social media']) { %>
             <ul><% menus['social media'].forEach(item => { %>
