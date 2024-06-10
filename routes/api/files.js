@@ -291,7 +291,6 @@ async function deleteFile(filePath) {
     try {
         await fs.unlink(filePath);
     } catch (err) {
-        console.log('dupa')
         throw new Error('Error deleting file: ' + err.message);
     }
 }
