@@ -10,19 +10,19 @@ const passport = require('passport');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 
-const db = require('./functions/db-connect');
-const packageJson = require('./package.json');
-const loadVars = require('./functions/vars');
-const loadData = require('./functions/data');
-const loadIcons = require('./functions/load-icons');
-const icon = require('./functions/icon');
-const generateSvgSprites = require('./functions/generate-svg-sprites');
-const formatDate = require('./functions/format-date');
-const loadMenus = require('./functions/menus');
+const db = require('./core/functions/db-connect');
+const packageJson = require('./core/package.json');
+const loadVars = require('./core/functions/vars');
+const loadData = require('./core/functions/data');
+const loadIcons = require('./core/functions/load-icons');
+const icon = require('./core/functions/icon');
+const generateSvgSprites = require('./core/functions/generate-svg-sprites');
+const formatDate = require('./core/functions/format-date');
+const loadMenus = require('./core/functions/menus');
 
-const SiteSettings = require('./models/settings');
-const setupRoutes = require('./routes/_setup');
-const OperationalError = require('./functions/operational-error');
+const SiteSettings = require('./core/models/settings');
+const setupRoutes = require('./core/routes/_setup');
+const OperationalError = require('./core/functions/operational-error');
 
 // Object to track exceeded request counts and initial exceedance flag per IP
 let exceededRequests = {};
@@ -181,8 +181,8 @@ async function setupMiddleware(app) {
 
     function skinSetter(req, res, next) {
         app.set('views', [
-            path.join(__dirname, `skins/${SS.skin}/views`),
-            path.join(__dirname, 'views')
+            path.join(__dirname, `custom/${SS.skin}/views`),
+            path.join(__dirname, 'core/views')
         ]);
         next();
     }

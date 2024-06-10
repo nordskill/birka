@@ -12,8 +12,8 @@ module.exports = (env, argv) => {
         mode: isProduction ? 'production' : 'development',
         entry: {
             ...skinEntries,
-            cms_main: './src/js/cms/main.js',
-            cms_style: './src/sass/cms/style.scss',
+            cms_main: './core/assets/js/cms/main.js',
+            cms_style: './core/assets/sass/cms/style.scss',
         },
         output: {
             filename: (chunkData) => {
@@ -44,7 +44,9 @@ module.exports = (env, argv) => {
                     type: 'asset/resource',
                     generator: {
                         filename: (pathData) => {
-                            const skinName = pathData.filename.split('/')[1];
+                            const pathSegments = pathData.filename.split('/');
+                            const isCore = pathSegments[0] === 'core';
+                            const skinName = isCore ? 'birka' : pathSegments[1];
                             return `${skinName}/fonts/[name][ext][query]`;
                         }
                     }
@@ -70,8 +72,8 @@ module.exports = (env, argv) => {
                     'public/**/*.css',
                     'public/**/*.js',
                     '!public/files/**/*.*',
-                    'views/**/*.ejs',
-                    'skins/**/*.ejs'
+                    'core/views/**/*.ejs',
+                    'custom/views/**/*.ejs'
                 ]
             }),
         ].filter(Boolean),
@@ -113,9 +115,12 @@ module.exports = (env, argv) => {
 
 
 function generateThemeEntries() {
-    const skinsDir = path.resolve(__dirname, 'skins');
+    const skinsDir = path.resolve(__dirname, 'custom');
     const skinFolders = fs.readdirSync(skinsDir);
-    const entries = {};
+    const entries = {
+        birka_main: path.resolve(__dirname, 'core/assets/js/main.js'),
+        birka_style: path.resolve(__dirname, 'core/assets/sass/style.scss')
+    };
 
     skinFolders.forEach(folder => {
         const skinPath = path.join(skinsDir, folder, 'assets');

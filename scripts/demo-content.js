@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const db = require('../functions/db-connect');
+const db = require('../core/functions/db-connect');
 const path = require('path');
 const mongoose = require('mongoose');
 const loadVars = require('../functions/vars');

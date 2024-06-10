@@ -3,16 +3,15 @@
     "watch": [
         "config/**/*.*",
         "app.js",
-        "routes/",
-        "data/",
-        "controllers/"
+        "core/routes/",
+        "core/controllers/",
+        "data/"
     ],
     "ignore": [
         "node_modules/",
         "public/",
-        "src/",
-        "views/",
-        "skins/"
+        "core/assets/",
+        "core/views/"
     ],
     "ext": "js,json"
 }

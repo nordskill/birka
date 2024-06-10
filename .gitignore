@@ -1,7 +1,8 @@
 node_modules/
+custom/*
+!custom/my-storefront/
+!custom/my-storefront/**/*
 public/files/
-public/css/
-public/js/
 public/dev/
 public/cms-assets/
 public/robots.txt
