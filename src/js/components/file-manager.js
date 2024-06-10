@@ -268,7 +268,7 @@ class FileManager {
 
         const folder = `/files/${hash.slice(0, 2)}/`;
         const IMG_SIZE = 300;
-        const fileName = file_name + '.' + optimized_format;
+        const fileName = decodeURIComponent(file_name) + '.' + optimized_format;
         const filePath = folder + IMG_SIZE + '/' + fileName;
 
         let html;
@@ -376,7 +376,7 @@ class FileManager {
                 if (file.status === 'processing') {
                     fileMarkup = '<div class="spinner"></div>';
                 } else {
-                    let path = `/files/${file.hash.slice(0, 2)}/300/${file.file_name}.${file.optimized_format}`
+                    let path = `/files/${file.hash.slice(0, 2)}/300/${decodeURIComponent(file.file_name)}.${file.optimized_format}`
                     fileMarkup = `<img src=${path} alt="${file.alt}">`
                 }
             } else if (file.type === 'video') {
