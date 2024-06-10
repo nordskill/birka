@@ -47,7 +47,7 @@ async function resizeImage(originalPath, widths, targetPath) {
                     throw new Error('Error with path:', pathResult.error);
                 }
 
-                const outputPath = path.join(sizeFolderPath, `${originalFileName}${isWebP ? '' : '.' + FORMAT}`);
+                const outputPath = path.join(sizeFolderPath, `${originalFileName}.${FORMAT}`);
                 const image = sharp(originalPath);
                 if (metadata.width > width) {
                     image.resize(width);
