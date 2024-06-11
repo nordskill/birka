@@ -320,7 +320,7 @@ async function insert_product_data() {
     const randomTags = await getTags();
 
     const jacketsIDs = (await File.find({ file_name: /^jacket/ }).exec()).map(obj => obj._id.toString());
-    const backpackID = (await File.find({ file_name: 'backpack', mime_type: 'image/png' }, '_id').exec())[0]._id.toString();
+    const backpackID = (await File.find({ file_name: 'backpack' }, '_id').exec())[0]._id.toString();
     const tentID = (await File.find({ file_name: 'tent' }, '_id').exec())[0]._id.toString();
     const satteliteInternetID = (await File.find({ file_name: 'satellite-internet' }, '_id').exec())[0]._id.toString();
     const sleepingBagID = (await File.find({ file_name: 'sleeping-bag' }, '_id').exec())[0]._id.toString();
