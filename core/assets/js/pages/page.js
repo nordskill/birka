@@ -1,8 +1,8 @@
 import { update } from 'immutable';
-import BibeEditor from '../../components/bibe-editor';
-import TagsCRUD from "../../components/tags-crud";
+import BibeEditor from '../components/bibe-editor';
+import TagsCRUD from "../components/tags-crud";
 import { color } from 'chart.js/helpers';
-const slugify = require('../../../../functions/slugify');
+const slugify = require('../../../functions/slugify');
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 

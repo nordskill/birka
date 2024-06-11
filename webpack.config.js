@@ -3,17 +3,18 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
+const { copyFiles } = require('./core/functions/copy-files');
 
-module.exports = (env, argv) => {
+module.exports = async (env, argv) => {
     const isProduction = argv.mode === 'production';
-    const skinEntries = generateThemeEntries();
+    const skinEntries = await generateThemeEntries();
 
     return {
         mode: isProduction ? 'production' : 'development',
         entry: {
             ...skinEntries,
-            cms_main: './core/assets/js/cms/main.js',
-            cms_style: './core/assets/sass/cms/style.scss',
+            cms_main: './core/assets/js/main.js',
+            cms_style: './core/assets/sass/style.scss',
         },
         output: {
             filename: (chunkData) => {
@@ -21,9 +22,11 @@ module.exports = (env, argv) => {
                 const isStyleChunk = chunkData.chunk.name.endsWith('_style');
                 const skinName = chunkData.chunk.name.split('_')[0];
                 const folder = isCMSAsset ? 'cms-assets/js/' : `${skinName}/js/`;
-                return isProduction && !isStyleChunk
+                const filename = isProduction && !isStyleChunk
                     ? `${folder}main.min.js`
                     : `dev/[name].js`;
+                console.log(`Output filename for ${chunkData.chunk.name}:`, filename);
+                return filename;
             },
             path: path.resolve(__dirname, 'public')
         },
@@ -114,19 +117,28 @@ module.exports = (env, argv) => {
 };
 
 
-function generateThemeEntries() {
+async function generateThemeEntries() {
     const skinsDir = path.resolve(__dirname, 'custom');
     const skinFolders = fs.readdirSync(skinsDir);
+    console.log('Scanning directory:', skinsDir);
+    console.log('Found skin folders:', skinFolders);
     const entries = {};
 
-    skinFolders.forEach(folder => {
+    for (let folder of skinFolders) {
         const skinPath = path.join(skinsDir, folder, 'assets');
         if (fs.existsSync(skinPath)) {
-            // Assuming each skin has a 'js' and 'scss' folder with 'main.js' and 'style.scss'
-            entries[`${folder}_main`] = path.join(skinPath, 'js', 'main.js');
-            entries[`${folder}_style`] = path.join(skinPath, 'sass', 'style.scss');
-        }
-    });
+            entries[`${folder}_main`] = path.join(skinPath, 'js/main.js');
+            entries[`${folder}_style`] = path.join(skinPath, 'sass/style.scss');
+            console.log(`Generated entry for: ${folder}`, entries[`${folder}_main`], entries[`${folder}_style`]);
 
+            const imgSourcePath = path.join(skinPath, 'img');
+            if (fs.existsSync(imgSourcePath)) {
+                const imgDestPath = path.resolve(__dirname, 'public', folder, 'img');
+                fs.mkdirSync(imgDestPath, { recursive: true });
+                await copyFiles(imgSourcePath, imgDestPath);
+            }
+        }
+    }
+    console.log('All generated entries:', entries);
     return entries;
 }

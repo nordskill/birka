@@ -12,9 +12,5 @@ custom/*
 !custom/my-storefront/**/*
 
 public/*
-!public/my-storefront/
-!public/my-storefront/**/*
-!public/birka/
-!public/birka/**/*
 !public/img/
 !public/img/**/*

@@ -1,4 +1,4 @@
-import AJAXTable from '../../components/ajax-table.js';
+import AJAXTable from '../components/ajax-table.js';
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 

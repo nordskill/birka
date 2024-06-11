@@ -1,6 +1,6 @@
-import BibeEditor from '../../components/bibe-editor';
-import FileCRUD from '../../components/file-crud';
-import TagsCRUD from "../../components/tags-crud";
+import BibeEditor from '../components/bibe-editor';
+import FileCRUD from '../components/file-crud';
+import TagsCRUD from "../components/tags-crud";
 
 export default async function () {
 

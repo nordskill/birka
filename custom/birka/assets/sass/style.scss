@@ -1,0 +1,27 @@
+@import "_typography",
+        "components/_cookies-consent";
+
+body {
+    padding: 20px 40px;
+    font: 14px "Teko", sans-serif;
+}
+
+a {
+    color: red;
+}
+
+svg.blue {
+    stroke: green;
+}
+
+.social_media ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 10px;
+
+    img {
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -1,6 +1,6 @@
-import FilePicker from "../../components/file-picker";
-import FileCRUD from '../../components/file-crud';
-import TagsCRUD from "../../components/tags-crud";
+import FilePicker from "../components/file-picker";
+import FileCRUD from '../components/file-crud';
+import TagsCRUD from "../components/tags-crud";
 
 new FilePicker();
 

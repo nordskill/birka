@@ -1,4 +1,4 @@
-import FileManager from '../../components/file-manager';
+import FileManager from '../components/file-manager';
 
 const csrfToken = document.querySelector('meta[name="csrf"]').content;
 const template = document.querySelector('meta[name="template"]').content;
