@@ -10,15 +10,3 @@
 @font-face{font-family:"roboto";src:url(../../birka/fonts/RobotoFlex.woff2) format("woff2-variations");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
 }
 }
-@media (min-width: 1920px) {
-@font-face{font-family:"roboto";src:url(../../birka/fonts/RobotoFlex.woff2) format("woff2-variations");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}#cookies_consent .buttons{gap:0.52vw}body{padding:1.04vw 2.08vw;font:0.73vw "Teko",sans-serif}.social_media ul{gap:0.52vw}.social_media ul img{width:1.25vw;height:1.25vw}
-@media (min-width: 1920px) {
-@font-face{font-family:"roboto";src:url(../../birka/fonts/RobotoFlex.woff2) format("woff2-variations");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
-}
-@media (min-width: 1920px) {
-@font-face{font-family:"roboto";src:url(../../birka/fonts/RobotoFlex.woff2) format("woff2-variations");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
-@media (min-width: 1920px) {
-@font-face{font-family:"roboto";src:url(../../birka/fonts/RobotoFlex.woff2) format("woff2-variations");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
-}
-}
-}

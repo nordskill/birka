@@ -117,10 +117,7 @@ module.exports = (env, argv) => {
 function generateThemeEntries() {
     const skinsDir = path.resolve(__dirname, 'custom');
     const skinFolders = fs.readdirSync(skinsDir);
-    const entries = {
-        birka_main: path.resolve(__dirname, 'core/assets/js/main.js'),
-        birka_style: path.resolve(__dirname, 'core/assets/sass/style.scss')
-    };
+    const entries = {};
 
     skinFolders.forEach(folder => {
         const skinPath = path.join(skinsDir, folder, 'assets');
