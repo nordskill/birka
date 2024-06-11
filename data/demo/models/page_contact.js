@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Page = require('../../../core/models/page');
+const Page = require('./page');
 
 const PAGE_TYPE = 'Contact';
 const modelName = `${PAGE_TYPE}Page`;
