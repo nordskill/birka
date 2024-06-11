@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const Page = require('./page');
+const Page = require('../../../core/models/page');
+const ModelRegistry = require('../../../core/functions/model-registry');
 
-const PAGE_TYPE = 'Home';
-const modelName = `${PAGE_TYPE}Page`;
+const TYPE = 'Home';
+const modelName = `${TYPE}Page`;
 
 const SchemaObject = new mongoose.Schema({
     title: {
@@ -15,6 +16,10 @@ const SchemaObject = new mongoose.Schema({
     }
 });
 
-const modelVariable = Page.discriminator(PAGE_TYPE, SchemaObject);
+class AboutPagePlugin extends ModelRegistry {
+    constructor() {
+        super(Page, TYPE, modelName, SchemaObject);
+    }
+}
 
-module.exports = { [modelName]: modelVariable }[modelName];
+module.exports = AboutPagePlugin;

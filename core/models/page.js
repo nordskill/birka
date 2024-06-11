@@ -13,7 +13,9 @@ const PageSchema = new Schema({
     },
     slug: {
         type: String,
-        trim: true
+        trim: true,
+        required: true,
+        unique: true
     },
     excerpt: {
         type: String,
@@ -26,8 +28,8 @@ const PageSchema = new Schema({
         trim: true
     },
     is_home: Boolean,
+    author:         { ref: 'Member',type: Schema.Types.ObjectId },
     img_preview:    { ref: 'File', type: Schema.Types.ObjectId },
-    author:         { ref: 'User', type: Schema.Types.ObjectId },
     tags: [         { ref: 'Tag', type: Schema.Types.ObjectId }]
 }, options);
 

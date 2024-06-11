@@ -6,6 +6,8 @@ _backup/
 .DS_Store
 
 custom/*
+!custom/birka/
+!custom/birka/**/*
 !custom/my-storefront/
 !custom/my-storefront/**/*
 

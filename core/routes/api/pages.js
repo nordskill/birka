@@ -1,6 +1,8 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Page = require('../../models/page');
+const OperationalError = require('../../functions/operational-error');
 const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 router.get('/search', async (req, res, next) => {
@@ -15,6 +17,95 @@ router.get('/search', async (req, res, next) => {
         res.json(pages);
     } catch (err) {
         next(err);
+    }
+});
+
+router.post('/', async (req, res, next) => {
+    const { type, ...pageData } = req.body;
+
+    pageData.author = req.user._id;
+
+    try {
+
+        const PageModel = type ? Page.discriminators[type] : Page;
+
+        if (!PageModel) {
+            return next(new OperationalError(`Invalid page type: ${type}`, 400));
+        }
+
+        const page = new PageModel(pageData);
+        await page.save();
+
+        res.status(201).json({
+            success: true,
+            message: 'Page created successfully',
+            page
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.patch('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const updateData = req.body;
+        const type = updateData.type;
+
+        if (!mongoose.isValidObjectId(id)) {
+            throw new OperationalError("Invalid ID format", 400);
+        }
+
+        // Find model based on discriminator 'type'
+        const PageModel = type ? Page.discriminators[type] : Page;
+        if (!PageModel) {
+            throw new OperationalError(`Invalid page type: ${type}`, 400);
+        }
+
+        // Check if updateData requests is_home to be true
+        if (updateData.is_home === true) {
+            // Set is_home to false for all other pages
+            await Page.updateMany({ _id: { $ne: id }, is_home: true }, { $set: { is_home: false } });
+        }
+
+        const updatedPage = await PageModel.findByIdAndUpdate(id, updateData, {
+            new: true,
+            runValidators: true
+        });
+
+        if (!updatedPage) {
+            throw new OperationalError("Page not found", 404);
+        }
+
+        res.json({
+            success: true,
+            message: 'Page updated successfully',
+            page: updatedPage
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.delete('/:id', async (req, res, next) => {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            throw new OperationalError("Invalid ID format", 400);
+        }
+
+        const deletedPage = await Page.findByIdAndDelete(req.params.id);
+        if (!deletedPage) {
+            throw new OperationalError("Page not found", 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Page deleted successfully',
+            page: deletedPage
+        });
+
+    } catch (error) {
+        next(error);
     }
 });
 

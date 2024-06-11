@@ -5,9 +5,15 @@
                 <div>
                     <div class="card bg-light">
                         <div class="card-body d-flex flex-wrap justify-content-between">
-                            <div class="col-auto">
-                                <button class="btn btn-primary me-2">Add New</button>
-                                <button class="btn btn-danger">Delete <span>2</span> Selected</button>
+                            <div class="col-auto d-flex align-items-center">
+                                <select class="form-select me-2" name="author" id="page_submodels"n style="width: 130px">
+                                    <option value="">Common</option>
+                                    <% submodels.forEach(model => { %>
+                                        <option value="<%= model %>"><%= model %></option>
+                                    <% }) %>
+                                </select>
+                                <button class="btn btn-primary me-2" id="add_page" style="height: 38px;">Add New</button>
+                                <button class="btn btn-danger" id="delete_page" style="height: 38px;display:none">Delete <span>2</span> Selected</button>
                             </div>
                             <div class="col-auto">
                                 <form action="#" class="needs-validation" novalidate="">
@@ -30,13 +36,14 @@
                         </div>
                     </div>
                     <div class="table-responsive mt-4">
-                        <table class="table table-striped  align-middle table-hover">
+                        <table name="pages"" class="table table-striped  align-middle table-hover">
                             <thead>
                                 <tr>
                                     <th scope="col">
                                         <input class="form-check-input" type="checkbox" value="" aria-label="select all rows">
                                     </th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Type</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Author</th>
                                     <th scope="col">Tags</th>
@@ -44,21 +51,19 @@
                             </thead>
                             <tbody>
                                 <% for (const page of pages) { %>
-                                    <tr>
+                                    <tr data-id="<%= page._id %>">
                                         <td><input class="form-check-input" type="checkbox" aria-label="select row"></td>
                                         <td>
                                             <a href="/cms/pages/<%= page._id %>"><%= page.name %></a>
                                         </td>
+                                        <td><%= page.type %></td>
                                         <td><%= formatDate(page.createdAt, 'dd mon yyyy') %></td>
-                                        <td><a href="/cms/customers/<%= page.author._id %>"><%= page.author.account_details.username %></a></td>
+                                        <td><a href="/cms/team/<%= page.author._id %>"><%= page.author.username %></a></td>
                                         <td><%- page.tags.map(tag => tag.name).join(', ') %></td>
                                     </tr>
                                 <% } %>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pt-1">
-                        <button class="btn btn-danger">Delete Selected</button>
                     </div>
                     <nav aria-label="Page navigation" class="pt-3">
                         <ul class="pagination justify-content-center">

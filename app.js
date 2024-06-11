@@ -11,7 +11,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 
 const db = require('./core/functions/db-connect');
-const packageJson = require('./core/package.json');
+const packageJson = require('./package.json');
 const loadVars = require('./core/functions/vars');
 const loadData = require('./core/functions/data');
 const loadIcons = require('./core/functions/load-icons');
@@ -23,6 +23,8 @@ const loadMenus = require('./core/functions/menus');
 const SiteSettings = require('./core/models/settings');
 const setupRoutes = require('./core/routes/_setup');
 const OperationalError = require('./core/functions/operational-error');
+
+const { loadModels, getAllSubmodels, getSubmodels } = require('./core/functions/model-loader');
 
 // Object to track exceeded request counts and initial exceedance flag per IP
 let exceededRequests = {};
@@ -46,10 +48,17 @@ async function getSiteSettings() {
             .findOne()
             .populate('logo')
             .lean();
-
+        loadCustomModels();
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
+}
+
+function loadCustomModels() {
+
+    const modelDirectory = path.join(__dirname, `./custom/${SS.skin}/models`);
+    loadModels(modelDirectory);
+
 }
 
 function setupApp() {

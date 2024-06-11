@@ -12,7 +12,7 @@ const TITLE = 'Settings';
 
 
 const skinsFolder = path.join(__dirname, '../../../custom');
-const defaultSkin = path.join(__dirname, '../../package.json');
+// const defaultSkin = path.join(__dirname, '../../package.json');
 
 // CMS Tags
 router.get('/', async (req, res, next) => {
@@ -33,13 +33,13 @@ router.get('/', async (req, res, next) => {
         availableSkins = skinData.filter(skin => skin !== null);
 
         // Add default skin to the availableSkins array
-        try {
-            const defaultPackage = await fs.readFile(defaultSkin, 'utf8');
-            const defaultSkinData = JSON.parse(defaultPackage);
-            availableSkins.push(defaultSkinData);
-        } catch (error) {
-            return next(new OperationalError('Error reading default skin package.json', 500));
-        }
+        // try {
+        //     const defaultPackage = await fs.readFile(defaultSkin, 'utf8');
+        //     const defaultSkinData = JSON.parse(defaultPackage);
+        //     availableSkins.push(defaultSkinData);
+        // } catch (error) {
+        //     return next(new OperationalError('Error reading default skin package.json', 500));
+        // }
 
         res.render(`cms/${SLUG}`, {
             title: TITLE,

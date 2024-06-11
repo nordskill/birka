@@ -13,10 +13,10 @@ export default async function () {
     createMenuBtn.onclick = createMenu;
     deleteMenuBtn.onclick = deleteMenu;
 
-    newFunction();
-    tableBody.addEventListener('DOMNodeInserted', newFunction);
+    assignCheckboxListeners();
+    tableBody.addEventListener('DOMNodeInserted', assignCheckboxListeners);
 
-    function newFunction() {
+    function assignCheckboxListeners() {
         checkboxes = tableBody.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => checkbox.onchange = toggleDeleteMenuBtn);
     }

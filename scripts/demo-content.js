@@ -359,18 +359,28 @@ async function insert_product_data() {
 async function insert_page_data() {
 
     const from = path.join(__dirname, '../data/demo/models');
-    const to = path.join(__dirname, '../core/models');
+    const to = path.join(__dirname, '../custom/birka/models');
     await copyFiles(from, to);
 
     const { data: pageData } = load_files('page'); // Assuming this returns an array of page objects
-    const { model: userModel } = load_files('user');
+    const { model: memberModel } = load_files('member');
     const { File } = require(path.join(pathToModels, 'file.js'));
-    const HomePage = require(path.join(pathToModels, 'page_home.js'));
-    const AboutPage = require(path.join(pathToModels, 'page_about.js'));
-    const ArticlePage = require(path.join(pathToModels, 'page_article.js'));
-    const ContactPage = require(path.join(pathToModels, 'page_contact.js'));
+    const HomePage = require(path.join(to, 'page_home.js'));
+    const AboutPage = require(path.join(to, 'page_about.js'));
+    const ArticlePage = require(path.join(to, 'page_article.js'));
+    const ContactPage = require(path.join(to, 'page_contact.js'));
 
-    const secondAdminID = (await userModel.find({}, '_id').limit(2).exec())[1]?._id;
+    // Instantiate and register models
+    const homePluginInstance = new HomePage();
+    homePluginInstance.register();
+    const aboutPluginInstance = new AboutPage();
+    aboutPluginInstance.register();
+    const articlePluginInstance = new ArticlePage();
+    articlePluginInstance.register();
+    const contactPluginInstance = new ContactPage();
+    contactPluginInstance.register();
+
+    const admin = await memberModel.findOne({}).exec();
     const imagesIDs = (await File.find({
         $or: [
             { file_name: 'about_icon' },
@@ -384,23 +394,22 @@ async function insert_page_data() {
     for (let i = 0; i < pageData.length; i++) {
         const data = pageData[i];
         data.img_preview = imagesIDs[i % imagesIDs.length];
-        data.author = secondAdminID;
+        data.author = admin._id;
         data.tags = randomTags().slice(0, 3);
 
-        // Determine the correct model based on the type field and insert the data.
         let model;
         switch (data.type) {
             case 'Home':
-                model = HomePage;
+                model = homePluginInstance.get_model();
                 break;
             case 'About':
-                model = AboutPage;
+                model = aboutPluginInstance.get_model();
                 break;
             case 'Article':
-                model = ArticlePage;
+                model = articlePluginInstance.get_model();
                 break;
             case 'Contact':
-                model = ContactPage;
+                model = contactPluginInstance.get_model();
                 break;
             default:
                 console.error(`Unsupported page type: ${data.type}`);
@@ -408,7 +417,7 @@ async function insert_page_data() {
         }
 
         try {
-            await model.create(data); // Use model.create for individual documents
+            await model.create(data);
             console.log(`Inserted page of type ${data.type}`);
         } catch (error) {
             console.error(`Error inserting data for page of type ${data.type}:`, error);

@@ -3,6 +3,7 @@ import cms_dashboard from './pages/dashboard';
 import cms_customer from './pages/customer';
 import cms_product from './pages/product';
 import cms_blogpost from './pages/blogpost';
+import cms_pages from './pages/pages';
 import cms_page from './pages/page';
 import cms_files from './pages/files';
 import cms_menus from './pages/menus';
@@ -19,6 +20,7 @@ const page = {
     cms_product,
     cms_blogpost,
     cms_files,
+    cms_pages,
     cms_page,
     cms_menus,
     cms_menu,
