@@ -2,10 +2,10 @@ const fs = require('fs').promises;
 const db = require('../core/functions/db-connect');
 const path = require('path');
 const mongoose = require('mongoose');
-const loadVars = require('../functions/vars');
-const passwordUtils = require('../functions/password-utils');
-const generateHash = require('../functions/generate-hash');
-const resizeImage = require('../functions/image-resizer');
+const loadVars = require('../core/functions/vars');
+const passwordUtils = require('../core/functions/password-utils');
+const generateHash = require('../core/functions/generate-hash');
+const resizeImage = require('../core/functions/image-resizer');
 
 const pathToModels = path.join(__dirname, '..', 'models');
 const pathToData = path.join(__dirname, '..', 'data', 'demo');
