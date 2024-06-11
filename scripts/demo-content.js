@@ -7,8 +7,8 @@ const passwordUtils = require('../core/functions/password-utils');
 const generateHash = require('../core/functions/generate-hash');
 const resizeImage = require('../core/functions/image-resizer');
 
-const pathToModels = path.join(__dirname, '..', 'models');
-const pathToData = path.join(__dirname, '..', 'data', 'demo');
+const pathToModels = path.join(__dirname, '../core/models');
+const pathToData = path.join(__dirname, '../data/demo');
 
 loadVars();
 
