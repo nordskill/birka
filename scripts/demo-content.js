@@ -6,6 +6,7 @@ const loadVars = require('../core/functions/vars');
 const passwordUtils = require('../core/functions/password-utils');
 const generateHash = require('../core/functions/generate-hash');
 const resizeImage = require('../core/functions/image-resizer');
+const { copyFiles } = require('../core/functions/copy-files');
 
 const pathToModels = path.join(__dirname, '../core/models');
 const pathToData = path.join(__dirname, '../data/demo');
@@ -356,6 +357,11 @@ async function insert_product_data() {
 }
 
 async function insert_page_data() {
+
+    const from = path.join(__dirname, '../data/demo/models');
+    const to = path.join(__dirname, '../core/models');
+    await copyFiles(from, to);
+
     const { data: pageData } = load_files('page'); // Assuming this returns an array of page objects
     const { model: userModel } = load_files('user');
     const { File } = require(path.join(pathToModels, 'file.js'));
