@@ -76,7 +76,7 @@ module.exports = async (env, argv) => {
                     'public/**/*.js',
                     '!public/files/**/*.*',
                     'core/views/**/*.ejs',
-                    'custom/views/**/*.ejs'
+                    'custom/**/*.ejs'
                 ]
             }),
         ].filter(Boolean),
