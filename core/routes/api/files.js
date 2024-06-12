@@ -13,7 +13,8 @@ const generateHash = require('../../functions/generate-hash');
 const slugify = require('../../functions/slugify');
 const resizeImage = require('../../functions/image-resizer');
 
-const tempFilesDirectory = path.join('public', 'files', '_temp');
+const filesDirectory = path.join(__dirname, '../../../public/files');
+const tempFilesDirectory = path.join(filesDirectory, '_temp');
 
 const storage = multer.diskStorage(
     {
@@ -201,7 +202,7 @@ router.delete('/:id', async (req, res, next) => {
     try {
         const subfolder = file.hash.substring(0, 2);
         const fileName = file.file_name + '.' + file.extension;
-        const filePath = path.join('public', 'files', subfolder, fileName);
+        const filePath = path.join(filesDirectory, subfolder, fileName);
 
         if (file.sizes.length) {
             undeletedFiles = await deleteResizedImages(subfolder, file);
@@ -246,7 +247,7 @@ router.delete('/', async (req, res, next) => {
 
             const subfolder = file.hash.substring(0, 2);
             const fileName = file.file_name + '.' + file.extension;
-            const filePath = path.join('public', 'files', subfolder, fileName);
+            const filePath = path.join(filesDirectory, subfolder, fileName);
 
             if (file.sizes?.length) {
                 undeletedFiles = await deleteResizedImages(subfolder, file);
@@ -306,7 +307,7 @@ async function deleteFilesFromTemp() {
 async function deleteResizedImages(subfolder, file) {
     const { id, file_name, sizes, optimized_format } = file;
 
-    let basePath = path.join('public', 'files', subfolder);
+    let basePath = path.join(filesDirectory, subfolder);
 
     let filesNotFound = [];
     let sizesNotFound = [];
@@ -387,7 +388,7 @@ async function saveFile(file, fileType, fileAdditionalData, hash, fileName) {
 
 async function moveFile(file, hash) {
     try {
-        const newFolderPath = path.join(__dirname, '..', '..', 'public', 'files', hash.substring(0, 2));
+        const newFolderPath = path.join(filesDirectory, hash.substring(0, 2));
         await ensureDirectoryExists(newFolderPath);
 
         let fileName = file.filename;
@@ -441,10 +442,17 @@ function addUniqueSuffix(filename) {
 async function optimizeImage(file) {
 
     const IMAGE_SIZES = [150, 300, 600, 1024, 1500, 2048, 2560];
-    const folder = path.join('public', 'files', file.hash.substring(0, 2));
+    const folder = path.join(filesDirectory, file.hash.substring(0, 2));
 
-    const optimization = await resizeImage(`${folder}/${file.file_name}.${file.extension}`, IMAGE_SIZES, folder);
-    console.log(file.file_name, ':', Math.round(optimization.time), 'ms');
+    const pathToImage = path.join(folder, file.file_name + '.' + file.extension);
+    const optimization = await resizeImage(pathToImage, IMAGE_SIZES, folder);
+    
+    if (optimization.success) {
+        console.log('optimized:', file.file_name, ':', Math.round(optimization.time), 'ms');
+    } else {
+        console.error('error optimizing:', file.file_name, ':', optimization.message);
+    }
+    
     file.status = 'optimized';
     file.sizes = optimization.sizes;
     file.optimized_format = optimization.format;
