@@ -16,6 +16,7 @@ const loadVars = require('./core/functions/vars');
 const loadData = require('./core/functions/data');
 const loadIcons = require('./core/functions/load-icons');
 const icon = require('./core/functions/icon');
+const getImgTag = require('./core/functions/get-img-tag');
 const generateSvgSprites = require('./core/functions/generate-svg-sprites');
 const formatDate = require('./core/functions/format-date');
 const loadMenus = require('./core/functions/menus');
@@ -68,6 +69,7 @@ function setupApp() {
 
     app.locals.rmWhitespace = true;
     app.locals.icon = icon;
+    app.locals.getImgTag = getImgTag;
 
     setupMiddleware(app);
     setupRoutes(app);

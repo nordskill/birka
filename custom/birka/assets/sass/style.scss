@@ -14,6 +14,12 @@ svg.blue {
     stroke: green;
 }
 
+img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+}
+
 .social_media ul {
     display: flex;
     list-style: none;
