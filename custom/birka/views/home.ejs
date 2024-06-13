@@ -1,5 +1,5 @@
-<%- include('partials/header') %>
-<%- include('partials/nav') %>
+<%- await include('partials/header') -%>
+<%- await include('partials/nav') -%>
     <h1><%= title %></h1>
     <p>"Birka" skin.</p>
     <p><%= page.welcome_text %></p>
@@ -8,17 +8,28 @@
 
     <p>Social media links:</p>
     <nav class="social_media">
-        <% if (menus['social media']) { %>
-            <ul><% menus['social media'].forEach(item => { %>
+        <% if (menus['social media']) { -%>
+            <ul><% menus['social media'].forEach(item => { -%>
                 <li>
                     <a href="<%= item.url %>" target="<%= item.target %>">
-                        <% if (item.image) { %>
-                            <% const socImgPath = `/files/${item.image.hash.substring(0,2)}/${item.image.file_name}.${item.image.extension}` %>
+                        <% if (item.image) { -%>
+                            <% const socImgPath = `/files/${item.image.hash.substring(0,2)}/${item.image.file_name}.${item.image.extension}` -%>
                             <img src="<%= socImgPath %>">
-                        <% } %>
+                        <% } -%>
                     </a>
-                </li><% }); %>
+                </li><% }); -%>
             </ul>
-        <% } %>
+        <% } -%>
     </nav>
-<%- include('partials/footer') %>
+    <% const image = await getData('Image', {},
+    {
+        findOne: true
+    }); -%>
+    <% const admin = await getData('Member'); -%>
+    <pre>
+        <%= JSON.stringify(admin, null, 2) %>
+    </pre>
+    <%- getImgTag(image, {
+            size: 300
+        }) -%>
+<%- await include('partials/footer') %>
