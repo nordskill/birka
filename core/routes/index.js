@@ -13,6 +13,7 @@ async function renderTemplate(res, page, next) {
             env: res.locals.env,
             menus: res.locals.menus,
             cookies_consent: res.locals.cookies_consent,
+            csrf_token: res.locals.csrf_token,
             getData: res.locals.getData,
             getImgTag: res.locals.getImgTag,
             title: page.name,
