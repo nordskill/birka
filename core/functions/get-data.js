@@ -1,4 +1,5 @@
 const models = require('../models');
+const { distinct } = require('../models/tag');
 
 /**
  * Loads data from a specified model with optional query parameters and options.
@@ -48,7 +49,7 @@ const models = require('../models');
  * });
  */
 async function getData(modelName, query = {}, options = {}) {
-    const { sort, limit, skip, where, count, findOne, and, or } = options;
+    const { sort, limit, skip, where, count, findOne, and, or, distinct } = options;
 
     try {
         let model;
@@ -80,6 +81,7 @@ async function getData(modelName, query = {}, options = {}) {
         if (where) queryBuilder = queryBuilder.where(where);
         if (and) queryBuilder = queryBuilder.and(and);
         if (or) queryBuilder = queryBuilder.or(or);
+        if (distinct) queryBuilder = queryBuilder.distinct(distinct);
         if (sort) queryBuilder = queryBuilder.sort(sort);
         if (skip) queryBuilder = queryBuilder.skip(skip);
         if (limit) queryBuilder = queryBuilder.limit(limit);
