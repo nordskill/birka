@@ -24,7 +24,7 @@ const BlogPostSchema = new Schema({
     // img_cover:      { ref: 'File', type: Schema.Types.ObjectId },
     date_published: Date,
     author: {
-        ref: 'User',
+        ref: 'Member',
         type: Schema.Types.ObjectId,
     },
     body: [Schema.Types.Mixed],

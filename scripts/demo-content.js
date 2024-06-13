@@ -264,12 +264,12 @@ async function insert_status_data() {
 async function insert_blog_post_data() {
     const { model: blogModel, data: blogData } = load_files('blog-post');
     const { File } = require(path.join(pathToModels, 'file.js'));
-    const { model: userModel } = load_files('user');
+    const { model: memberModel } = load_files('member');
 
     const blogs = await File.find({}, '_id').limit(25);
     const blogImagesID = blogs.map(obj => obj._id.toString());
 
-    const firstAdmin = await userModel.findOne({}, '_id');
+    const firstAdmin = await memberModel.findOne({}, '_id');
     const firstAdminsID = firstAdmin._id.toString();
 
     const randomTags = await getTags();
