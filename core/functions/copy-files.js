@@ -15,7 +15,7 @@ async function copyFiles(from, to) {
             if (stat.isFile()) {
                 await fs.copyFile(fromPath, toPath);
             } else if (stat.isDirectory()) {
-                await copy_files(fromPath, toPath);
+                await copyFiles(fromPath, toPath);
             }
         });
 
