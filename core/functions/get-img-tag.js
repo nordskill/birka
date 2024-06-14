@@ -75,16 +75,14 @@ function getImgTag(imageData, options = {}) {
         largestSrc = `${baseUrl}/${selectedSize}/${file_name}.${optimized_format}`;
     }
 
-    return `
-        <img 
-            src="${largestSrc}" 
-            srcset="${srcset}" 
-            sizes="${sizes}" 
-            alt="${alt || ''}" 
-            width="${selectedSize}" 
-            height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" 
-        />
-    `;
+    return `<img 
+    src="${largestSrc}" 
+    srcset="${srcset}" 
+    sizes="${sizes}" 
+    alt="${alt || ''}" 
+    width="${selectedSize}" 
+    height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" 
+/>`;
 }
 
 /**
