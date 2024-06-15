@@ -2,19 +2,6 @@ const express = require('express');
 const router = express.Router();
 const OperationalError = require('../../functions/operational-error');
 
-const nodemailer = require('nodemailer');
-
-const mailTransporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-        user: 'xxx',
-        pass: 'xxx'
-    }
-});
-
 // Email validation function
 function validateEmail(email) {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -38,7 +25,6 @@ router.post('/', async (req, res, next) => {
     };
 
     try {
-        // await mailTransporter.sendMail(mailOptions);
         res.json({ success: true, message: 'Email sent successfully' });
     } catch (err) {
         next(err);
