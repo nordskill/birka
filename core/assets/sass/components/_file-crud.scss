@@ -2,7 +2,7 @@
 
 .file_crud {
 
-    .container{
+    .container {
         padding: 0;
 
         display: flex;
@@ -16,6 +16,7 @@
                 &.blue path {
                     fill: rgb(13, 110, 253);
                 }
+
                 &.red path {
                     fill: red;
                 }
@@ -23,24 +24,32 @@
         }
 
         .file_preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
+            height: 100%;
 
-            &:empty{
+            &>img {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            &:empty {
                 background: rgb(220, 220, 220);
-                
-                & ~ svg{
+
+                &~svg {
                     display: block;
                 }
             }
         }
 
-        & > svg {
+        &>svg {
             display: none;
             width: 50px;
             height: 50px;
