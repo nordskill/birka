@@ -10,7 +10,13 @@ export default async function () {
     updatePage();
 
     const page = document.querySelector('#meta_preview');
-    const preview =  JSON.parse(page.dataset.img);
+    let preview;
+
+    try {
+        preview = JSON.parse(page.dataset.img);
+    } catch (error) {
+        preview = '';
+    }
     
 
     new FileCRUD({
@@ -20,7 +26,7 @@ export default async function () {
         field_name: 'img_preview',
         file: preview,
         size: 300
-     });
+    });
 
     new TagsCRUD('.tags_crud');
 
@@ -87,7 +93,7 @@ function updatePage() {
 
             if (response.ok) {
                 console.log(await response.json());
-                
+
                 alert('Page updated successfully');
             } else {
                 alert('Failed to update page');
