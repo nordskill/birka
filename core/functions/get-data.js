@@ -49,7 +49,18 @@ const { distinct } = require('../models/tag');
  * });
  */
 async function getData(modelName, query = {}, options = {}) {
-    const { sort, limit, skip, where, count, findOne, and, or, distinct } = options;
+    const {
+        sort,
+        limit,
+        skip,
+        where,
+        count,
+        findOne,
+        and,
+        or,
+        distinct,
+        tagName
+    } = options;
 
     try {
         let model;
@@ -88,6 +99,13 @@ async function getData(modelName, query = {}, options = {}) {
 
         if (modelName === 'User') {
             queryBuilder = queryBuilder.select('-account_details.password');
+        }
+
+        // Handling tag filtering
+        if (tagName && ['BlogPost', 'Product'].includes(modelName)) {
+            const tags = await models['Tag'].find({ name: tagName }).select('_id');
+            const tagIds = tags.map(tag => tag._id);
+            queryBuilder = queryBuilder.where('tags').in(tagIds);
         }
 
         if (count) return await queryBuilder.countDocuments();
