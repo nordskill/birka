@@ -47,13 +47,23 @@ router.post('/', async (req, res, next) => {
 });
 
 router.patch('/:id', async (req, res, next) => {
+
+    const id = req.params.id;
+    const { unset, ...updates } = req.body;
+    const updateOperation = { ...updates };
+    const type = updateOperation.type;
+
     try {
-        const id = req.params.id;
-        const updateData = req.body;
-        const type = updateData.type;
 
         if (!mongoose.isValidObjectId(id)) {
             throw new OperationalError("Invalid ID format", 400);
+        }
+
+        if (unset) {
+            updateOperation.$unset = {};
+            unset.forEach(field => {
+                updateOperation.$unset[field] = "";
+            })
         }
 
         // Find model based on discriminator 'type'
@@ -62,16 +72,14 @@ router.patch('/:id', async (req, res, next) => {
             throw new OperationalError(`Invalid page type: ${type}`, 400);
         }
 
-        // Check if updateData requests is_home to be true
-        if (updateData.is_home === true) {
+        // Check if updateOperation requests is_home to be true
+        if (updateOperation.is_home === true) {
             // Set is_home to false for all other pages
             await Page.updateMany({ _id: { $ne: id }, is_home: true }, { $set: { is_home: false } });
         }
 
-        const updatedPage = await PageModel.findByIdAndUpdate(id, updateData, {
-            new: true,
-            runValidators: true
-        });
+        const options = { new: true, runValidators: true };
+        const updatedPage = await PageModel.findByIdAndUpdate(id, updateOperation, options);
 
         if (!updatedPage) {
             throw new OperationalError("Page not found", 404);

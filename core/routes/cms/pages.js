@@ -58,7 +58,7 @@ router.get(`/:id`, async (req, res, next) => {
             path: 'author',
             select: '_id username'
         })
-        .populate('tags')
+        .populate('tags img_preview')
         .lean();
 
     if (!page) {

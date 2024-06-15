@@ -1,7 +1,6 @@
-import { update } from 'immutable';
 import BibeEditor from '../components/bibe-editor';
+import FileCRUD from '../components/file-crud';
 import TagsCRUD from "../components/tags-crud";
-import { color } from 'chart.js/helpers';
 const slugify = require('../../../functions/slugify');
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
@@ -9,6 +8,19 @@ const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 export default async function () {
 
     updatePage();
+
+    const page = document.querySelector('#meta_preview');
+    const preview =  JSON.parse(page.dataset.img);
+    
+
+    new FileCRUD({
+        container: '#meta_preview',
+        files_api: '/api/files/',
+        endpoint: '/api/pages/' + page.dataset.id,
+        field_name: 'img_preview',
+        file: preview,
+        size: 300
+     });
 
     new TagsCRUD('.tags_crud');
 
