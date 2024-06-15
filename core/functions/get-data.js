@@ -102,10 +102,11 @@ async function getData(modelName, query = {}, options = {}) {
         }
 
         // Handling tag filtering
-        if (tagName && ['BlogPost', 'Product'].includes(modelName)) {
-            const tags = await models['Tag'].find({ name: tagName }).select('_id');
-            const tagIds = tags.map(tag => tag._id);
-            queryBuilder = queryBuilder.where('tags').in(tagIds);
+        if (tagName && model.schema.paths.tags) {
+            const tag = await models['Tag'].findOne({ name: tagName }, '_id');
+            if (tag) {
+                queryBuilder = queryBuilder.where('tags', tag._id);
+            }
         }
 
         if (count) return await queryBuilder.countDocuments();
