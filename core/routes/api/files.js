@@ -33,7 +33,14 @@ const storage = multer.diskStorage(
     }
 );
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB
+});
+
+const fileLocks = {};
+
+
 
 router.get('/', async (req, res, next) => {
     const countsByType = await File.aggregate([
@@ -71,7 +78,7 @@ router.get('/', async (req, res, next) => {
             .lean();
 
         let totalCount;
-        
+
         totalCount = countsByType.reduce((sum, fileType) => sum + fileType.count, 0);
 
         // sort countsByType by _id
@@ -81,7 +88,7 @@ router.get('/', async (req, res, next) => {
             return 0;
         });
 
-        res.json({files, countsByType, totalCount});
+        res.json({ files, countsByType, totalCount });
     } catch (err) {
         next(err);
     }
@@ -127,13 +134,14 @@ router.post('/', upload.single('file'), async (req, res, next) => {
     const foundFile = await File.findOne({ hash }).lean();
 
     if (foundFile) {
-        deleteFilesFromTemp();
+        await deleteFile(file.path);
         return next(
-            new OperationalError('File is already in the database.', 400)
+            new OperationalError(`The file ${file.originalname} was not uploaded because it is already in the library (may be with a different name or meta data, but identical content).`, 400)
         );
     }
 
     try {
+
         const fileName = await moveFile(file, hash);
         let fileData = await saveFile(file, fileType, fileAdditionalData, hash, fileName);
 
@@ -144,8 +152,12 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         }
 
         res.json({ success: true, file: fileData });
+
     } catch (err) {
+
+        await deleteFile(file.path);
         next(err);
+
     }
 });
 
@@ -288,19 +300,47 @@ router.delete('/:id/tags', removeTags(File));
 
 module.exports = router;
 
-async function deleteFile(filePath) {
+
+
+async function moveFile(file, hash) {
+    const newFolderPath = path.join(filesDirectory, hash.substring(0, 2));
+    await ensureDirectoryExists(newFolderPath);
+
+    let fileName = file.filename;
+    let newFilePath = path.join(newFolderPath, fileName);
+
+    if (!acquireLock(file.path)) {
+        throw new Error('File is currently being processed by another operation.');
+    }
+
     try {
-        await fs.unlink(filePath);
-    } catch (err) {
-        throw new Error('Error deleting file: ' + err.message);
+        if (await fileExists(newFilePath)) {
+            fileName = addUniqueSuffix(file.filename);
+            newFilePath = path.join(newFolderPath, fileName);
+        }
+
+        // Apply retryOperation to the renaming process
+        await retryOperation(fs.rename, [file.path, newFilePath]);
+        return fileName;
+    } catch (error) {
+        console.error('Error in moveFile:', error);
+        throw error;
+    } finally {
+        releaseLock(file.path);
     }
 }
 
-async function deleteFilesFromTemp() {
-    const files = await fs.readdir(tempFilesDirectory);
-    for (const file of files) {
-        const filePath = path.join(tempFilesDirectory, file);
-        await deleteFile(filePath);
+async function deleteFile(filePath) {
+    if (!acquireLock(filePath)) {
+        throw new Error('File is currently being processed by another operation.');
+    }
+
+    try {
+        await retryOperation(fs.unlink, [filePath]);
+    } catch (err) {
+        throw new Error('Error deleting file: ' + err.message);
+    } finally {
+        releaseLock(filePath);
     }
 }
 
@@ -386,29 +426,6 @@ async function saveFile(file, fileType, fileAdditionalData, hash, fileName) {
 
 }
 
-async function moveFile(file, hash) {
-    try {
-        const newFolderPath = path.join(filesDirectory, hash.substring(0, 2));
-        await ensureDirectoryExists(newFolderPath);
-
-        let fileName = file.filename;
-        let newFilePath = path.join(newFolderPath, fileName);
-
-        if (await fileExists(newFilePath)) {
-            // Add a unique suffix to the file name
-            fileName = addUniqueSuffix(file.filename);
-            newFilePath = path.join(newFolderPath, fileName);
-        }
-
-        await fs.rename(file.path, newFilePath);
-        return fileName; // Return the final name of the file
-
-    } catch (error) {
-        console.error('Error in moveFile:', error);
-        throw error; // Re-throw the error to be handled by the caller
-    }
-}
-
 async function ensureDirectoryExists(directoryPath) {
     try {
         await fs.access(directoryPath);
@@ -446,16 +463,47 @@ async function optimizeImage(file) {
 
     const pathToImage = path.join(folder, file.file_name + '.' + file.extension);
     const optimization = await resizeImage(pathToImage, IMAGE_SIZES, folder);
-    
+
     if (optimization.success) {
         console.log('optimized:', file.file_name, ':', Math.round(optimization.time), 'ms');
     } else {
         console.error('error optimizing:', file.file_name, ':', optimization.message);
     }
-    
+
     file.status = 'optimized';
     file.sizes = optimization.sizes;
     file.optimized_format = optimization.format;
     await file.save();
 
+}
+
+function acquireLock(filePath) {
+    if (fileLocks[filePath]) {
+        return false; // Lock is already acquired
+    } else {
+        fileLocks[filePath] = true;
+        return true;
+    }
+}
+
+function releaseLock(filePath) {
+    delete fileLocks[filePath];
+}
+
+async function retryOperation(operation, args, maxRetries = 5, attempt = 1) {
+    try {
+        return await operation(...args);
+    } catch (error) {
+        if (error.message.includes('currently being processed') && attempt <= maxRetries) {
+            // Wait for an exponentially increasing delay
+            const delayTime = Math.pow(2, attempt) * 100; // Increasing delay time
+            console.log(`Waiting ${delayTime}ms to retry... (Attempt: ${attempt})`);
+            await new Promise(resolve => setTimeout(resolve, delayTime));
+            return retryOperation(operation, args, maxRetries, attempt + 1);
+        } else {
+            // If the operation still fails after maximum retries, throw the error
+            console.error(`Operation failed after ${attempt} attempts:`, error);
+            throw error;  // Re-throw the error to be handled by the caller
+        }
+    }
 }
