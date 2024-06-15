@@ -1,5 +1,3 @@
-const path = require('path');
-
 /**
  * Generates an HTML img tag with responsive image sizes.
  * 
