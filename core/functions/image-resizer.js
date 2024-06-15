@@ -39,7 +39,12 @@ async function resizeImage(originalPath, widths, targetPath) {
 
         let convertedSizes = [];
 
-        const resizeTasks = widths.map(async (width) => {
+        // Load the image into a buffer to reuse it
+        const imageBuffer = await sharp(originalPath).toBuffer(); // Added to reuse the buffer
+
+        // Sequential processing instead of parallel to conserve memory
+        const start = performance.now();
+        for (const width of widths) {
             if (metadata.width >= width) {
                 const sizeFolderPath = path.join(targetPath, String(width));
                 const pathResult = await ensurePathExists(sizeFolderPath);
@@ -48,20 +53,17 @@ async function resizeImage(originalPath, widths, targetPath) {
                 }
 
                 const outputPath = path.join(sizeFolderPath, `${originalFileName}.${FORMAT}`);
-                const image = sharp(originalPath);
+                const image = sharp(imageBuffer); // Reuse the buffer
                 if (metadata.width > width) {
                     image.resize(width);
                 }
                 if (!isWebP) {
-                    image.toFormat(FORMAT);
+                    image.toFormat(FORMAT); // Format conversion only if necessary
                 }
                 convertedSizes.push(width);
-                return image.toFile(outputPath);
+                await image.toFile(outputPath);
             }
-        });
-
-        const start = performance.now();
-        await Promise.all(resizeTasks.filter(task => task !== undefined));
+        }
         const duration = performance.now() - start;
 
         return {
