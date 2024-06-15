@@ -4,6 +4,7 @@ scripts/sitemap-checked.json
 _backup/
 .vars
 .DS_Store
+ecosystem.config.js
 
 custom/*
 !custom/birka/
