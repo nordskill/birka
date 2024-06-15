@@ -32,6 +32,7 @@ const apiPage = require('./api/pages');
 const apiMenu = require('./api/menus');
 const apiBlog = require('./api/blog');
 const apiProducts = require('./api/products');
+const apiSend = require('./api/send');
 const apiSitemap = require('./api/sitemap');
 
 module.exports = (app) => {
@@ -75,6 +76,7 @@ module.exports = (app) => {
     app.use('/api/menus', apiMenu);
     app.use('/api/blog', apiBlog);
     app.use('/api/products', apiProducts);
+    app.use('/api/send', apiSend);
     app.use('/api/sitemap', apiSitemap);
 
     // Navigation
