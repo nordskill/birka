@@ -70,7 +70,6 @@ function setupApp() {
 
     app.locals.rmWhitespace = true;
     app.locals.icon = icon;
-    app.locals.env = process.env.NODE_ENV;
 
     setupMiddleware(app);
     setupRoutes(app);
@@ -93,6 +92,7 @@ async function setupMiddleware(app) {
     app.use(skinSetter);
 
     app.use((req, res, next) => {
+        res.locals.env = process.env.NODE_ENV;
         res.locals.getImgTag = getImgTag;
         res.locals.getData = getData;
         next();
