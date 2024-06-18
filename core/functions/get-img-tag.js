@@ -41,7 +41,8 @@ function getImgTag(imageData, options = {}) {
     const {
         sizes = '100vw',
         maxWidth = 1024,
-        size
+        size,
+        attributes = {}
     } = options;
 
     if (!imageData || !imageData.hash || !imageData.file_name || !imageData.optimized_format) {
@@ -67,11 +68,16 @@ function getImgTag(imageData, options = {}) {
             const largestAvailableSize = Math.min(maxWidth, Math.max(...imageSizes));
             largestSrc = `${baseUrl}/${largestAvailableSize}/${file_name}.${optimized_format}`;
         }
-    } 
+    }
 
     if (!largestSrc) {
         largestSrc = `${baseUrl}/${selectedSize}/${file_name}.${optimized_format}`;
     }
+
+    const additionalAttributes = Object.entries(attributes)
+        .filter(([key, value]) => value !== false)
+        .map(([key, value]) => value === true ? key : `${key}="${value}"`)
+        .join(' ');
 
     return `<img 
     src="${largestSrc}" 
@@ -79,7 +85,8 @@ function getImgTag(imageData, options = {}) {
     sizes="${sizes}" 
     alt="${alt || ''}" 
     width="${selectedSize}" 
-    height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" 
+    height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}"
+    ${additionalAttributes}
 />`;
 }
 
@@ -91,7 +98,7 @@ function getImgTag(imageData, options = {}) {
  * @returns {number} - The closest size.
  */
 function getClosestSize(targetSize, sizesArray) {
-    return sizesArray.reduce((prev, curr) => 
+    return sizesArray.reduce((prev, curr) =>
         Math.abs(curr - targetSize) < Math.abs(prev - targetSize) ? curr : prev
     );
 }
