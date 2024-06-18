@@ -10,7 +10,6 @@ const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 const OperationalError = require('../../functions/operational-error');
 const generateHash = require('../../functions/generate-hash');
-const slugify = require('../../functions/slugify');
 const resizeImage = require('../../functions/image-resizer');
 
 const filesDirectory = path.join(__dirname, '../../../public/files');
@@ -146,9 +145,13 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         let fileData = await saveFile(file, fileType, fileAdditionalData, hash, fileName);
 
         if (fileData.type === 'image') {
-            fileData.status = 'processing';
-            await fileData.save();
-            optimizeImage(fileData);
+            if (fileData.mime_type === 'image/svg+xml') {
+                await fileData.save();
+            } else {
+                fileData.status = 'processing';
+                await fileData.save();
+                optimizeImage(fileData);
+            }
         }
 
         res.json({ success: true, file: fileData });
@@ -397,19 +400,12 @@ async function saveFile(file, fileType, fileAdditionalData, hash, fileName) {
 
     switch (fileType) {
         case 'image':
-            if (mimetype === 'image/svg+xml') {
-                savedFile = await new SVG({
-                    ...fileProps,
-                    title: ''
-                }).save();
-            } else {
-                savedFile = await new Image({
-                    ...fileProps,
-                    alt: '',
-                    height: fileAdditionalData.height,
-                    width: fileAdditionalData.width,
-                }).save();
-            }
+            savedFile = await new Image({
+                ...fileProps,
+                alt: '',
+                height: fileAdditionalData.height,
+                width: fileAdditionalData.width,
+            }).save();
             break;
         case 'video':
             savedFile = await new Video({

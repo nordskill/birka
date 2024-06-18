@@ -93,10 +93,15 @@ class FileDetails {
 
         if (type == 'image') {
 
-            const { optimized_format, alt, title } = data;
-            const IMG_SIZE = Math.max(...data.sizes);
-            fileName = file_name + '.' + optimized_format;
-            filePath = folder + IMG_SIZE + '/' + fileName;
+            const { optimized_format, alt, title, mime_type, extension } = data;
+            if (mime_type === 'image/svg+xml') {
+                filePath = originalFile;
+            } else {
+                const IMG_SIZE = Math.max(...data.sizes);
+                fileName = file_name + '.' + optimized_format;
+                filePath = folder + IMG_SIZE + '/' + fileName;
+            }
+            
             media = `<img src="${filePath}" alt="${alt}">`;
 
             if (data.mime_type === 'image/svg+xml') {

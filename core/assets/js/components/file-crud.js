@@ -178,19 +178,23 @@ class FileCRUD {
     }
 
     _generate_img_from_file_data = (fileData) => {
-        const { file_name, hash, optimized_format, sizes, alt } = fileData;
+        const { file_name, hash, optimized_format, sizes, alt, extension, mime_type } = fileData;
 
-        let fileSize;
+        let fileSize, path;
 
-        if (this.size === '') {
-            fileSize = sizes[0];
+        if (mime_type === 'image/svg+xml') {
+            path = `/files/${hash.slice(0, 2)}/${file_name}.${extension}`;
         } else {
-            fileSize = findClosestNumber(this.size, sizes);
+            if (this.size === '') {
+                fileSize = sizes[0];
+            } else {
+                fileSize = findClosestNumber(this.size, sizes);
+            }
+    
+            const folder = `/files/${hash.slice(0, 2)}`;
+            const fileName = file_name + '.' + optimized_format;
+            path = folder + '/' + fileSize + '/' + fileName;
         }
-
-        const folder = `/files/${hash.slice(0, 2)}`;
-        const fileName = file_name + '.' + optimized_format;
-        const path = folder + '/' + fileSize + '/' + fileName;
 
         this.previewContainer.innerHTML = `
             <img class='card-img-top' src='${path}' alt='${alt}'>`;

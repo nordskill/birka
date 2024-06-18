@@ -1,4 +1,5 @@
 import FilesSelectionManager from "../functions/file-selection-manager";
+import findClosestNumber from '../functions/find-closest-number';
 
 class FileManager {
     constructor({ token, target, settings }) {
@@ -62,14 +63,14 @@ class FileManager {
         const DISTANCE_TO_PAGE_BOTTOM = 500;
 
         const handleLackOfFiles = async () => {
-            while(getDistanceToPageBottom() < DISTANCE_TO_PAGE_BOTTOM && this.nextPage <= this.maxPages) {
+            while (getDistanceToPageBottom() < DISTANCE_TO_PAGE_BOTTOM && this.nextPage <= this.maxPages) {
                 await loadFiles();
             }
         }
 
         const handleScroll = async () => {
 
-            if(this.blockScrollEvent) return;
+            if (this.blockScrollEvent) return;
 
             if (getDistanceToPageBottom() < DISTANCE_TO_PAGE_BOTTOM) {
                 this.containerToScroll.removeEventListener("scroll", handleScroll);
@@ -228,7 +229,7 @@ class FileManager {
 
     _init_files = () => {
         this._detect_processing_files();
-        this.selectionManager = new FilesSelectionManager({token: this.token, parent: this.target, single: this.settings?.single});
+        this.selectionManager = new FilesSelectionManager({ token: this.token, parent: this.target, single: this.settings?.single });
     }
 
     _add_file(file) {
@@ -252,7 +253,7 @@ class FileManager {
             fetch(`/api/files/${id}`)
                 .then(res => res.json())
                 .then(file => {
-                    if (file.status == 'optimized') {
+                    if (file.status !== 'processing') {
                         clearInterval(interval);
                         this._add_file_preview(fileElement, file);
                     }
@@ -275,7 +276,15 @@ class FileManager {
 
         switch (type) {
             case 'image':
-                html = `<img src="${filePath}" alt="">`;
+                let filePath = '';
+                if (file.mime_type === 'image/svg+xml') {
+                    filePath = `/files/${file.hash.slice(0, 2)}/${file.file_name}.${file.extension}`;
+                } else {
+                    const size = findClosestNumber(300, file.sizes);
+                    const fileName = decodeURIComponent(file.file_name) + '.' + file.optimized_format;
+                    filePath = `/files/${file.hash.slice(0, 2)}/${size}/${fileName}`;
+                }
+                html = `<img src="${filePath}" alt="${file.alt}">`;
                 break;
 
             case 'video':
@@ -376,8 +385,15 @@ class FileManager {
                 if (file.status === 'processing') {
                     fileMarkup = '<div class="spinner"></div>';
                 } else {
-                    let path = `/files/${file.hash.slice(0, 2)}/300/${decodeURIComponent(file.file_name)}.${file.optimized_format}`
-                    fileMarkup = `<img src=${path} alt="${file.alt}">`
+                    let path = '';
+                    if (file.mime_type === 'image/svg+xml') {
+                        path = `/files/${file.hash.slice(0, 2)}/${file.file_name}.${file.extension}`;
+                    } else {
+                        const size = findClosestNumber(300, file.sizes);
+                        const fileName = decodeURIComponent(file.file_name) + '.' + file.optimized_format;
+                        path = `/files/${file.hash.slice(0, 2)}/${size}/${fileName}`;
+                    }
+                    fileMarkup = `<img src="${path}" alt="${file.alt}">`;
                 }
             } else if (file.type === 'video') {
                 fileMarkup = `
