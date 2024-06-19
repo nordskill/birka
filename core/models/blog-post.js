@@ -34,7 +34,8 @@ const BlogPostSchema = new Schema({
     tags: [{
         ref: 'Tag',
         type: Schema.Types.ObjectId
-    }]
+    }],
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const BlogPost = mongoose.model('BlogPost', BlogPostSchema);

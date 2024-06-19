@@ -15,6 +15,7 @@ async function renderTemplate(res, page, next) {
             cookies_consent: res.locals.cookies_consent,
             csrf_token: res.locals.csrf_token,
             getData: res.locals.getData,
+            getField: res.locals.getField,
             getImgTag: res.locals.getImgTag,
             title: page.name,
             template_name: page.template,

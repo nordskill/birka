@@ -13,7 +13,8 @@ const EmailTemplateSchema = new Schema({
     note: {
         type: String,
         trim: true
-    }
+    },
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);

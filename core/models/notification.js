@@ -17,7 +17,8 @@ const NotificationSchema = new Schema({
     notify_customer: Boolean,
     notify_users:   [{ ref: 'User', type: Schema.Types.ObjectId }],
     notify_team:    [{ ref: 'Member', type: Schema.Types.ObjectId }],
-    email_template:  { ref: 'EmailTemplate', type: Schema.Types.ObjectId }
+    email_template:  { ref: 'EmailTemplate', type: Schema.Types.ObjectId },
+    custom:         [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const Notification = mongoose.model('Notification', NotificationSchema);

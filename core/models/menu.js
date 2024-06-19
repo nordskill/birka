@@ -14,7 +14,8 @@ const MenuItemSchema = new Schema({
 
 const MenuSchema = new Schema({
     name: { type: String, required: true, trim: true, unique: true },
-    items: [MenuItemSchema]
+    items: [MenuItemSchema],
+    custom: [Schema.Types.Mixed]
 }, {
     timestamps: true
 });

@@ -11,6 +11,7 @@
         "demo-content": "node ./scripts/demo-content.js"
     },
     "dependencies": {
+        "ajaxforms": "^1.0.6",
         "bootstrap": "^5.3.2",
         "chart.js": "^4.4.1",
         "connect-mongo": "^5.1.0",

@@ -6,6 +6,10 @@
 
     padding: $paddings $paddings $paddings calc($anchor_width + 1ch);
     position: relative;
+    border: thin solid #ddd;
+    background-color: hsl(27, 27%, 95%);
+    border-radius: 5px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 
     .content {
         position: relative;

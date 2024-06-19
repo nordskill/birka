@@ -1,12 +1,20 @@
 import BibeEditor from '../components/bibe-editor';
 import FileCRUD from '../components/file-crud';
 import TagsCRUD from "../components/tags-crud";
+import CustomFields from '../components/custom-fields';
 const slugify = require('../../../functions/slugify');
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 
 export default async function () {
 
+    new BibeEditor({
+        container: '.editor',
+        update_url: document.querySelector('.editor').dataset.updateUrl,
+        token: csrfToken
+    });
+
+    new CustomFields();
     updatePage();
 
     const page = document.querySelector('#meta_preview');
@@ -17,7 +25,7 @@ export default async function () {
     } catch (error) {
         preview = '';
     }
-    
+
 
     new FileCRUD({
         container: '#meta_preview',
@@ -40,7 +48,8 @@ export default async function () {
 function updatePage() {
 
     const pageFields = document.querySelector('#page_fields');
-    const pageCustomFields = document.querySelector('#page_custom_fields');
+    const fieldsExtension = document.querySelector('#fields_extension');
+    const customFields = document.querySelector('#custom_fields');
 
     const updateBtn = document.querySelector('#update_btn');
     const deleteBtn = document.querySelector('#delete_btn');
@@ -74,11 +83,35 @@ function updatePage() {
             author: pageFields.querySelector('[name="author"]').value,
         }
 
-        // add custom fields
-        pageCustomFields.querySelectorAll('[name]').forEach(field => {
+        // add extended fields
+        fieldsExtension.querySelectorAll('[name]').forEach(field => {
             data[field.name] = field.value;
         });
 
+        // add custom fields
+        const customFieldsData = JSON.parse(customFields.dataset.fields);
+
+        customFields.querySelectorAll('[name]').forEach(field => {
+            const customField = customFieldsData.find(item => {
+                if (item.element === 'fieldset') {
+                    return item.content.some(child => matchesField(child, field.name, field.value, field.type));
+                }
+                return matchesField(item, field.name, field.value, field.type);
+            });
+        
+            if (customField) {
+                if (customField.element === 'fieldset') {
+                    // Update the specific child within the fieldset
+                    const childField = customField.content.find(child => matchesField(child, field.name, field.value, field.type));
+                    updateField(childField, field);
+                } else {
+                    // Update the field directly
+                    updateField(customField, field);
+                }
+            }
+        });
+
+        data.custom = customFieldsData;
         console.log(data);
 
         try {
@@ -106,3 +139,32 @@ function updatePage() {
     }
 
 }
+
+// Function to match field by name and value for checkboxes and radios or by name for other inputs
+function matchesField(item, fieldName, fieldValue, fieldType) {
+    if (['checkbox', 'radio'].includes(fieldType)) {
+        return item.name === fieldName && item.value === fieldValue;
+    }
+    return item.name === fieldName;
+}
+
+// Function to update the field properties in the data model
+function updateField(item, htmlField) {
+    switch (htmlField.type) {
+        case 'checkbox':
+        case 'radio':
+            item.checked = htmlField.checked;
+            break;
+        case 'number':
+            item.value = Number(htmlField.value);
+            break;
+        case 'textarea':
+            item.content = htmlField.value;
+            break;
+        default:
+            item.value = htmlField.value;
+            break;
+    }
+}
+
+

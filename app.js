@@ -17,6 +17,7 @@ const loadData = require('./core/functions/data');
 const loadIcons = require('./core/functions/load-icons');
 const icon = require('./core/functions/icon');
 const getData = require('./core/functions/get-data');
+const getField = require('./core/functions/get-field');
 const getImgTag = require('./core/functions/get-img-tag');
 const generateSvgSprites = require('./core/functions/generate-svg-sprites');
 const formatDate = require('./core/functions/format-date');
@@ -95,6 +96,7 @@ async function setupMiddleware(app) {
         res.locals.env = process.env.NODE_ENV;
         res.locals.getImgTag = getImgTag;
         res.locals.getData = getData;
+        res.locals.getField = getField;
         next();
     });
 

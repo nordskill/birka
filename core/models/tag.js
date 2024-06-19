@@ -15,7 +15,8 @@ const TagSchema = new Schema({
     used: {
         type: Number,
         default: 0
-    }
+    },
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 TagSchema.index({ slug: 1 });

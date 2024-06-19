@@ -42,7 +42,8 @@ const SettingsSchema = new Schema({
     // },
     // home_page: { type: Schema.Types.Mixed, required: true, default: {} },
     custom_html: String,
-    custom_html_cookies: String
+    custom_html_cookies: String,
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const Settings = mongoose.model('Settings', SettingsSchema);

@@ -70,6 +70,18 @@ router.get(`/:id`, async (req, res, next) => {
     const viewsPath = req.app.get('views')[0];
     const templates = [];
 
+    let content = page.content;
+    let content_rendered = '';
+
+    if (Array.isArray(page.draft) && page.draft.length > 0) {
+        const firstBlock = page.draft[0];
+        if (Object.keys(firstBlock).length > 0) {
+            content = page.draft;
+        }
+    }
+
+    if (content) content_rendered = OBJtoHTML(content);
+
     try {
         const files = await fs.readdir(viewsPath);
 
@@ -91,6 +103,7 @@ router.get(`/:id`, async (req, res, next) => {
             page,
             templates,
             team,
+            content_rendered,
             renderHTML: OBJtoHTML,
             breadcrumbs: [{
                 name: 'CMS',
@@ -101,11 +114,7 @@ router.get(`/:id`, async (req, res, next) => {
             }, {
                 name: page.name,
                 href: `/cms/${SLUG}s/${page.slug}`
-            }],
-            scripts: [
-                'validation-form.js'
-            ]
-
+            }]
         });
 
     } catch (error) {

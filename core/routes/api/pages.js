@@ -117,6 +117,33 @@ router.delete('/:id', async (req, res, next) => {
     }
 });
 
+router.put('/:id/draft', async (req, res, next) => {
+    const { id } = req.params;
+    const draftData = req.body;
+
+    if (!mongoose.isValidObjectId(id)) {
+        return next(new OperationalError(`No page found with the id ${id}`, 404));
+    }
+
+    try {
+        const updatedPage = await Page.findByIdAndUpdate(id,
+            { $set: { draft: draftData } },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedPage) {
+            throw new OperationalError(`No page found with the id ${id}`, 404);
+        }
+
+        res.json({ message: 'Draft updated successfully', updatedPage });
+    } catch (err) {
+        if (err instanceof mongoose.Error.ValidationError) {
+            return next(new OperationalError('Validation error while updating draft', 400));
+        }
+        next(err);
+    }
+});
+
 router.patch('/:id/tags', addTags(Page));
 router.delete('/:id/tags', removeTags(Page));
 

@@ -90,7 +90,8 @@ const UserSchema = new Schema({
 	cart: {
 		products: [{ ref: 'Product', type: Schema.Types.ObjectId }],
 		// expires: Date
-	}
+	},
+	custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
