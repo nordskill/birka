@@ -20,8 +20,6 @@ module.exports = {
         dbLink += `/${dbName}`;
 
         const options = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             authSource
         };
 
