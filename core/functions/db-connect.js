@@ -11,23 +11,18 @@ module.exports = {
         const useSSL = process.env.DB_USE_SSL === 'true';
         const authMechanism = process.env.DB_AUTH_MECHANISM;
 
-        let dbLink = `mongodb://${host}:${port}`;
+        let dbLink = user && password ? `mongodb://${user}:${password}@${host}:${port}/${dbName}` : `mongodb://${host}:${port}/${dbName}`;
 
-        if (user && password) {
-            dbLink = `mongodb://${user}:${password}@${host}:${port}`;
-        }
+        let queryParams = [];
+        queryParams.push(`authSource=${authSource}`);
+        if (useSSL) queryParams.push('ssl=true');
+        if (authMechanism) queryParams.push(`authMechanism=${authMechanism}`);
 
-        dbLink += `/${dbName}`;
+        // Append query parameters to the URI
+        dbLink += '?' + queryParams.join('&');
 
-        const options = {
-            authSource
-        };
-
-        if (useSSL) options.ssl = true;
-        if (authMechanism) options.authMechanism = authMechanism;
-
-        console.log('Connecting to DB...');
-        mongoose.connect(dbLink, options)
+        console.log('Connecting to DB with URI:', dbLink);
+        mongoose.connect(dbLink)
         .then(() => console.log('DB Connected.'))
         .catch(error => console.error('Connection error:', error));
 
