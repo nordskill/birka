@@ -1,7 +1,7 @@
 const INIT_CONFIG = {
     member: {
         username: 'admin',
-        password: 'aslk1209',
+        password: '',
         email: 'admin@example.com',
         email_notifications: true,
         web_notifications: true
