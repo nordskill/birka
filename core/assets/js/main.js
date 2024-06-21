@@ -9,6 +9,8 @@ import cms_files from './pages/files';
 import cms_menus from './pages/menus';
 import cms_menu from './pages/menu';
 import cms_settings from './pages/settings';
+import cms_new_member from './pages/new-member';
+import cms_member from './pages/member';
 
 import 'bootstrap';
 import bootstrapFormsValidation from './functions/bootstrap-forms-validation';
@@ -24,7 +26,9 @@ const page = {
     cms_page,
     cms_menus,
     cms_menu,
-    cms_settings
+    cms_settings,
+    cms_new_member,
+    cms_member
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,6 +56,7 @@ function determineCurrentPage() {
 function autoUpdates() {
 
     const navItem = document.querySelector('.nav-item.update');
+    if (!navItem) return;
     const btnCheckUpdates = navItem.querySelector('.action');
     const navName = navItem.querySelector('.nav_name');
     const action = navItem.querySelector('.action');

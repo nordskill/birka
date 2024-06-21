@@ -1,75 +1,73 @@
 <%- include('partials/header') %>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <%- include('partials/breadcrumbs') %>
-            <%- include('partials/title') %>
-                <div>
-                    <h3 class=" border-bottom pt-3 pb-2 mb-3">Account Details</h3>
-                    <form action="#" class="needs-validation" novalidate>
-                        <div class="row">
-                            <div class="col-6 col-lg-4">
-                                <div class="pb-3">
-                                    <label for="p1" class="form-label">Public Name:</label>
-                                    <input type="text" class="form-control" id="p1"
-                                        aria-describedby="p1_03Feedback" required=""
-                                        value="<%=team_member.username %>">
-                                    <div id="p1_03Feedback" class="invalid-feedback">
-                                        Please provide a valid Public Name.
-                                    </div>
-                                </div>
-                                <div class="pb-3">
-                                    <label for="pt2" class="form-label">Role</label>
-                                    <select class="form-select" id="pt2" aria-describedby="pt2_04Feedback">
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-id="<%= team_member._id %>">
+    <%- include('partials/breadcrumbs') %>
+    <%- include('partials/title') %>
+    <div>
+        <h3 class="border-bottom pt-3 pb-2 mb-3">Account Details</h3>
+        <form action="#" class="needs-validation" novalidate>
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <div class="pb-3">
+                        <label for="p1" class="form-label">Public Name:</label>
+                        <input type="text" class="form-control" id="p1" aria-describedby="p1_03Feedback" required=""
+                            value="<%= team_member.username %>">
+                        <div id="p1_03Feedback" class="invalid-feedback">
+                            Please provide a valid Public Name.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <div>
+                        <label for="p3" class="form-label">E-mail:</label>
+                        <input type="email" class="form-control" id="p3" aria-describedby="p3_03Feedback" required=""
+                            value="<%= team_member.email %>">
+                        <div id="p3_03Feedback" class="invalid-feedback">
+                            Please provide a valid Public Name.
+                        </div>
+                    </div>
+                    <div class="pb-3 pt-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="email_notifications"
+                                <%= team_member.email_notifications ? 'checked' : '' %>>
+                            <label class="form-check-label user-select-none" for="email_notifications">
+                                Receive e-mail notifications
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                        <% member_roles.forEach(function(roleItem) { %>
-                                            <% if (roleItem===team_member.role) { %>
-                                                <option selected="" value="<%= team_member.role %>">
-                                                    <%= roleItem %>
-                                                </option>
-                                                <% } else { %>
-                                                    <option value="<%= roleItem %>">
-                                                        <%= roleItem %>
-                                                    </option>
-                                                    <% } %>
-                                                        <% }); %>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-4">
-                                <div class="pb-3">
-                                    <label for="p3" class="form-label">E-mail:</label>
-                                    <input type="email" class="form-control" id="p3"
-                                        aria-describedby="p3_03Feedback" required=""
-                                        value="<%= team_member.email %>">
-                                    <div id="p3_03Feedback" class="invalid-feedback">
-                                        Please provide a valid Public Name.
-                                    </div>
-                                </div>
-                                <div class="pb-3 pt-4 mt-1">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="pb-3">
+                        <label class="form-label">Permissions:</label>
+                        <div class="row" id="member_permissions">
+                            <% for (const key in PERMISSIONS) { %>
+                                <div class="col-6 col-lg-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="email_notifications" <%=team_member.email_notifications===true
-                                            ? 'checked' : '' %>>
-
-                                        <label class="form-check-label user-select-none"
-                                            for="email_notifications">
-                                            E-mail notifications
+                                        <input class="form-check-input" type="checkbox" name="permissions" value="<%= PERMISSIONS[key].key %>" id="<%= key %>"
+                                            <%= team_member.permissions && team_member.permissions.includes(PERMISSIONS[key].key) ? 'checked' : '' %>
+                                            <%= key === 'TEAM' ? 'disabled' : '' %>
+                                        >
+                                        <label class="form-check-label user-select-none" for="<%= key %>">
+                                            <%= PERMISSIONS[key].label %>
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            <% } %>
                         </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-4 d-flex justify-content-between">
-                                <button class="btn btn-primary btn-sm" type="submit">Update Account
-                                    Details</button>
-                                <button class="btn btn-danger btn-sm">Delete User</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-                <pre><code>
-    </code></pre>
-    </main>
+            </div>
 
-    <%- include('partials/footer') %>
+            <div class="row">
+                <div class="col-6 col-lg-4 d-flex justify-content-between">
+                    <button class="btn btn-primary btn-sm" type="submit">Update Account Details</button>
+                    <button class="btn btn-danger btn-sm">Delete User</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

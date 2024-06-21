@@ -5,19 +5,21 @@ const MemberSchema = new Schema({
 	username: {
 		type: String,
 		unique: true,
-		trim: true
+		trim: true,
+		required: true
 	},
-	password: String,
+	password: {
+		type: String,
+		trim: true,
+		required: true
+	},
 	email: {
 		type: String,
-		unique: true,
 		trim: true
 	},
-	role: {
-		type: String,
-		required: true,
-		default: 'Editor',
-		trim: true
+	permissions: {
+		type: [String],
+		default: []
 	},
 	email_notifications: Boolean,
 	web_notifications: Boolean

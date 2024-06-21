@@ -5,14 +5,12 @@ module.exports = function loadVars() {
 	const languagesPath = path.join(__dirname, '../../data/languages.json');
 	const countriesPath = path.join(__dirname, '../../data/countries.json');
 	const currenciesPath = path.join(__dirname, '../../data/currencies.json');
-	const memberRoles = path.join(__dirname, '../../data/member-roles.json');
 	const userRoles = path.join(__dirname, '../../data/user-roles.json');
 
 	try {
 		const languages = loadFile(languagesPath);
 		const countries = loadFile(countriesPath);
 		const currencies = loadFile(currenciesPath);
-		const member_roles = loadFile(memberRoles);
 		const user_roles = loadFile(userRoles);
 
 		if (languages) {
@@ -23,9 +21,6 @@ module.exports = function loadVars() {
 		}
 		if (currencies) {
 			global.currencies = deepFreeze(currencies);
-		}
-		if (member_roles) {
-			global.member_roles = deepFreeze(member_roles);
 		}
 		if (user_roles) {
 			global.user_roles = deepFreeze(user_roles);
