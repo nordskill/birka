@@ -104,13 +104,13 @@ class SiteMap {
         }
         sitemapindex += `</sitemapindex>\n`;
 
-        await fs.writeFile(path.join(this.basePath, 'sitemap_index.xml'), sitemapindex, 'utf8');
+        await fs.writeFile(path.join(this.basePath, 'sitemap.xml'), sitemapindex, 'utf8');
         await this.#update_robots();
     }
 
     async #update_robots() {
         const robotsPath = path.join(this.basePath, 'robots.txt');
-        const sitemapLine = `Sitemap: ${this.config.protocol}://${SS.domain}/sitemap_index.xml`;
+        const sitemapLine = `Sitemap: ${this.config.protocol}://${SS.domain}/sitemap.xml`;
 
         try {
             const robotsExists = await fs.stat(robotsPath);
