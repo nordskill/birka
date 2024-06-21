@@ -21,7 +21,7 @@ module.exports = {
         // Append query parameters to the URI
         dbLink += '?' + queryParams.join('&');
 
-        console.log('Connecting to DB...');
+        console.log(`Connecting to "${dbName}" DB...`);
         mongoose.connect(dbLink)
         .then(() => console.log('DB Connected.'))
         .catch(error => console.error('Connection error:', error));
