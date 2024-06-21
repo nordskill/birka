@@ -230,7 +230,7 @@ function setupErrorHandler(app) {
                 ...errorResponse
             });
         } else {
-            res.render('error', {
+            res.render(path.join(__dirname, 'core/views/error.ejs'), {
                 template_name: 'error',
                 ...errorResponse
             });
