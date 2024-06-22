@@ -225,8 +225,97 @@ class Notification {
     }
 }
 
+class ContentUpdateStrategy {
+    constructor(onSuccessCallback, onErrorCallback) {
+        this.onSuccessCallback = onSuccessCallback;
+        this.onErrorCallback = onErrorCallback;
+    }
+
+    update(content) {
+        throw new Error("Method 'update()' must be implemented.");
+    }
+}
+
+class ServerUpdateStrategy extends ContentUpdateStrategy {
+
+    constructor(updateUrl, token, onSuccessCallback, onErrorCallback) {
+        super(onSuccessCallback, onErrorCallback);
+        this.updateUrl = updateUrl;
+        this.token = token;
+        this.updatePending = false;
+    }
+
+    async update(content) {
+        if (this.updatePending) return;
+
+        try {
+            this.updatePending = true;
+
+            const response = await fetch(this.updateUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': this.token
+                },
+                body: JSON.stringify(content),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            await response.json();
+            this.onSuccessCallback();
+        } catch (error) {
+            this.onErrorCallback(error.message);
+        } finally {
+            this.updatePending = false;
+        }
+    }
+}
+
+class LocalStorageStrategy extends ContentUpdateStrategy {
+
+    constructor(onSuccessCallback, onErrorCallback) {
+        super(onSuccessCallback, onErrorCallback);
+    }
+
+    update(content) {
+        localStorage.setItem('BibeEditorContent', JSON.stringify(content));
+        console.log('Content saved to local storage');
+    }
+}
+
+
 // Main Class
 class BibeEditor {
+
+    static #blockTypeStrategies = {
+        paragraph: {
+            check: (element) => element.tagName === 'P',
+            transform: (content) => `<p class="bibe_block">${content}</p>`
+        },
+        title: {
+            check: (element) => element.tagName.startsWith('H'),
+            transform: (content) => `<h2 class="bibe_block">${content}</h2>`
+        },
+        list: {
+            check: (element) => element.tagName === 'UL',
+            transform: (content) => `<ul class="bibe_block"><li>${content}</li></ul>`
+        },
+        ul: {
+            check: (element) => element.tagName === 'UL',
+            transform: (content) => `<ul class="bibe_block"><li>${content}</li></ul>`
+        },
+        ol: {
+            check: (element) => element.tagName === 'OL',
+            transform: (content) => `<ol class="bibe_block"><li>${content}</li></ol>`
+        },
+        quote: {
+            check: (element) => element.tagName === 'BLOCKQUOTE',
+            transform: (content) => `<blockquote class="bibe_block"><p>${content}</p><cite>Author</cite></blockquote>`
+        }
+    };
 
     constructor(options) {
         this.container = document.querySelector(options.container);
@@ -234,7 +323,8 @@ class BibeEditor {
         this.update_url = options.update_url;
         this.token = options.token;
         this.editor = null;
-        this.content = null;
+        this.contentElement = null;
+        this.content = '';
         this.anchor = null;
         this.block_menu = null;
         this.block_menu_visible = false;
@@ -255,6 +345,9 @@ class BibeEditor {
         this.init(this.container);
         this.skip_update = false;
         this.debouncer_delay = 1000;
+        this.updateStrategies = [];
+
+        this.#initializeUpdateStrategy(options);
 
         this.ignored_keys = [
             'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
@@ -347,82 +440,35 @@ class BibeEditor {
 
             this.notification = new Notification(this.editor);
 
-            this.content = container.querySelector('.content');
+            this.contentElement = container.querySelector('.content');
             this.#initBlocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
             this.#initTextMenu(container);
-
-            this.#observeChildChanges(this.content, () => {
-
-                this.#initBlocks();
-
-                if (!this.skip_update) {
-                    this.#send_content_update();
-                }
-
-                this.skip_update = false;
-
-            });
+            this.#initContentObserver();
 
             this.editor.addEventListener('keydown', this.#handleKeys);
 
             window.addEventListener('click', this.#handleWindowClick);
             window.addEventListener('mousedown', this.#handleWindowMouseDown);
 
-        }, 0);
+        }, 4);
 
     }
 
     change_block_type(blockElement, toType) {
 
-        let wrapper = '';
-        let content = '';
+        const strategy = BibeEditor.#blockTypeStrategies[toType];
 
-        // if the current block is ul or ol then convert its li children to array
-        let array = [];
-        if (blockElement.children.length > 1 || blockElement?.children[0]?.tagName === 'LI') {
-            array = [...blockElement.children].map(li => li.innerHTML);
+        if (!strategy) {
+            console.warn(`No strategy found for block type: ${toType}`);
+            return;
         }
 
-        if (array.length) {
-            content = array.join('<br>');
-        } else {
-            content = blockElement.innerHTML;
-        }
+        if (strategy.check(blockElement)) return;
 
-        switch (toType) {
-            case 'paragraph':
-                if (blockElement.tagName === 'P') return;
-                wrapper = `<p class="bibe_block">${content}</p>`;
-                break;
-            case 'title':
-                if (blockElement.tagName.startsWith('H')) return;
-                wrapper = `<h2 class="bibe_block">${content}</h2>`;
-                break;
-            case 'list':
-            case 'ul':
-                if (blockElement.tagName === 'UL') return;
-                wrapper = `<ul class="bibe_block">
-                    <li>${blockElement.innerHTML}</li>
-                </ul>`;
-                break;
-            case 'ol':
-                if (blockElement.tagName === 'OL') return;
-                wrapper = `<ol class="bibe_block">
-                    <li>${blockElement.innerHTML}</li>
-                </ol>`;
-                break;
-            case 'quote':
-                if (blockElement.tagName === 'BLOCKQUOTE') return;
-                wrapper = `<blockquote class="bibe_block">
-                    <p>${content}</p>
-                    <cite>Author</cite>
-                </blockquote>`;
-                break;
-        }
-
-        blockElement.outerHTML = wrapper;
+        const content = this.#getBlockContent(blockElement);
+        blockElement.outerHTML = strategy.transform(content);
         this.#initBlocks();
 
     }
@@ -481,9 +527,72 @@ class BibeEditor {
 
     }
 
+    #initializeUpdateStrategy(options) {
+
+        const server = new ServerUpdateStrategy(
+            options.update_url,
+            options.token,
+            () => this.onUpdateSuccess(),
+            (error) => this.onUpdateError(error)
+        );
+
+        // const localStorage = new LocalStorageStrategy(
+        //     () => this.onUpdateSuccess(),
+        //     (error) => this.onUpdateError(error)
+        // );
+
+        this.#addUpdateStrategy(server);
+        // this.#addUpdateStrategy(localStorage);
+
+    }
+
+    #addUpdateStrategy(strategy) {
+        this.updateStrategies.push(strategy);
+    }
+
+    #removeUpdateStrategy(strategy) {
+        const index = this.updateStrategies.indexOf(strategy);
+        if (index > -1) {
+            this.updateStrategies.splice(index, 1);
+        }
+    }
+
+    #update_content(content) {
+        this.updateStrategies.forEach(strategy => strategy.update(content));
+    }
+
+    onUpdateSuccess() {
+        this.notification.show('', 'success');
+    }
+
+    onUpdateError(errorMessage) {
+        this.notification.show(errorMessage, 'error');
+    }
+
+    #initContentObserver() {
+
+        this.#observeChildChanges(this.contentElement, () => {
+            this.#initBlocks();
+
+            if (!this.skip_update) {
+                this.debounced_content_update();
+            }
+
+            this.skip_update = false;
+        });
+
+    }
+
+    #getBlockContent(blockElement) {
+        if (blockElement.children.length > 1 || blockElement?.children[0]?.tagName === 'LI') {
+            return [...blockElement.children].map(li => li.innerHTML).join('<br>');
+        }
+        return blockElement.innerHTML;
+    }
+
     #initBlocks = () => {
 
-        this.blocks = Array.from(this.content.children).map(element => {
+        this.blocks = Array.from(this.contentElement.children).map(element => {
             switch (element.tagName) {
                 case 'P': return ParagraphBlock.fromElement(element);
                 case 'H1':
@@ -510,7 +619,7 @@ class BibeEditor {
             this.handleBackspaceKey(event);
         } else {
             if (this.ignored_keys.includes(event.key)) return;
-            this.debouncedContentUpdate();
+            this.debounced_content_update();
         }
 
     }
@@ -548,11 +657,11 @@ class BibeEditor {
 
             setTimeout(() => { // let browser do its thing
                 this.#initBlocks();
-                this.#send_content_update();
-            }, 0);
+                this.debounced_content_update();
+            }, 4);
 
         } else {
-            this.debouncedContentUpdate();
+            this.debounced_content_update();
         }
     }
 
@@ -568,10 +677,13 @@ class BibeEditor {
 
     }
 
-    debouncedContentUpdate() {
+    debounced_content_update() {
 
         clearTimeout(this.debounceTimer);
-        this.debounceTimer = setTimeout(this.#send_content_update, this.debouncer_delay);
+        this.debounceTimer = setTimeout(() => {
+            this.content = this.#gather_content();
+            this.#update_content(this.content);
+        }, this.debouncer_delay);
 
     }
 
@@ -654,7 +766,7 @@ class BibeEditor {
         const blockPaddingTop = parseInt(blockStyle.paddingTop);
         const blockLineHeight = parseInt(blockStyle.lineHeight);
 
-        const contentRect = this.content.getBoundingClientRect();
+        const contentRect = this.contentElement.getBoundingClientRect();
         const relativeTop = blockRect.top - contentRect.top + blockPaddingTop + blockLineHeight;
 
         this.anchor.style.left = `0px`;
@@ -681,7 +793,7 @@ class BibeEditor {
             }
         });
 
-        this.content.addEventListener('click', (e) => {
+        this.contentElement.addEventListener('click', (e) => {
 
             if (this.text_menu_visible) return;
 
@@ -815,54 +927,10 @@ class BibeEditor {
         return observer;
     }
 
-    // Send content to the server
-
     #gather_content() {
 
         return this.blocks.map(block => block.serialize());
 
-    }
-
-    #send_content_update = async () => {
-
-        if (this.updatePending) return;
-
-        try {
-            const content = this.#gather_content();
-            console.trace();
-
-            this.updatePending = true;
-
-            const response = await fetch(this.update_url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': this.token
-                },
-                body: JSON.stringify(content),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            await response.json();
-            this.#on_update_ok();
-            this.updatePending = false;
-
-        } catch (error) {
-
-            this.#on_update_error(error.message);
-
-        }
-    }
-
-    #on_update_ok() {
-        this.notification.show('', 'success');
-    }
-
-    #on_update_error(errorMessage) {
-        this.notification.show(errorMessage, 'error');
     }
 
 }
