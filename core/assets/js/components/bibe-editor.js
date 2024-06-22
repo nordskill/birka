@@ -579,12 +579,153 @@ class BibeEditor {
                 return;
         }
 
-        if (newElement) {
-            let selectedText = range.extractContents();
-            newElement.appendChild(selectedText);
-            range.insertNode(newElement);
+        if (newElement) this.applyStyle(element, range, newElement, textType);
+
+    }
+
+    removeEmptyTags(htmlString) {
+        const regex = /<(\w+)><\/\1>/g;
+        return htmlString.replace(regex, '');
+    }
+
+    applyStyle(blockElement, range, newElement, textType) {
+
+        if (range.collapsed) return;
+
+        // Check if the entire range is already styled
+        let parentElement = range.commonAncestorContainer;
+        if (parentElement.nodeType === Node.TEXT_NODE) {
+            parentElement = parentElement.parentNode;
         }
 
+        // Function to check if a node has the style we're applying
+        const hasStyle = (node) => {
+            return (textType === 'bold' && node.nodeName === 'STRONG') ||
+                (textType === 'italic' && node.nodeName === 'EM') ||
+                (textType === 'underlined' && node.nodeName === 'U') ||
+                (textType === 'link' && node.nodeName === 'A');
+        };
+
+        // If the entire selection has the style, remove it
+        if (hasStyle(parentElement)) {
+            if (range.toString() === parentElement.textContent) {
+                let textNode = document.createTextNode(parentElement.textContent);
+                parentElement.parentNode.replaceChild(textNode, parentElement);
+                range.selectNodeContents(textNode);
+                return;
+            }
+        }
+
+        // Handle partial overlaps and complex intersections
+        let fragment = range.extractContents();
+        let newRange = document.createRange();
+
+        // Recursive function to apply or remove style
+        function processNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                let wrapper = newElement.cloneNode();
+                wrapper.appendChild(node.cloneNode());
+                return wrapper;
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (hasStyle(node)) {
+                    // If node already has the style, remove it
+                    return document.createTextNode(node.textContent);
+                } else {
+                    // Apply new style while preserving existing styles
+                    let newNode = newElement.cloneNode();
+                    for (let child of node.childNodes) {
+                        newNode.appendChild(processNode(child));
+                    }
+                    return newNode;
+                }
+            }
+            return node.cloneNode(true);
+        }
+
+        let newFragment = document.createDocumentFragment();
+        for (let child of fragment.childNodes) {
+            newFragment.appendChild(processNode(child));
+        }
+
+        newFragment.normalize();
+
+        // Special handling for links
+        if (textType === 'link') {
+            // Ensure link integrity
+            let linkNode = newFragment.querySelector('a');
+            if (linkNode) {
+                newFragment = linkNode;
+            }
+        }
+
+        range.insertNode(newFragment);
+        newRange.selectNodeContents(newFragment);
+        range.setStart(newRange.startContainer, newRange.startOffset);
+        range.setEnd(newRange.endContainer, newRange.endOffset);
+
+        // Collapse the selection to the end
+        range.collapse(false);
+
+        blockElement.innerHTML = this.removeEmptyTags(blockElement.innerHTML);
+
+        this.debounced_content_update();
+    }
+
+    #showRemoveLinkButton(linkElement) {
+        let buttonWrapper = this.editor.querySelector('.remove-link-wrapper');
+        if (!buttonWrapper) {
+            buttonWrapper = document.createElement('div');
+            buttonWrapper.className = 'remove-link-wrapper';
+            Object.assign(buttonWrapper.style, {
+                position: 'absolute',
+                zIndex: '1000',
+                padding: '10px 50px 10px 0px'
+            });
+
+            const button = document.createElement('button');
+            button.textContent = 'Remove link';
+            Object.assign(button.style, {
+                fontSize: '12px',
+                padding: '2px 5px',
+                cursor: 'pointer',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+            });
+
+            button.addEventListener('click', (e) => this.#handleRemoveLinkClick(e, linkElement));
+
+            buttonWrapper.appendChild(button);
+            this.editor.appendChild(buttonWrapper);
+        }
+
+        const linkRect = linkElement.getBoundingClientRect();
+        const editorRect = this.editor.getBoundingClientRect();
+
+        Object.assign(buttonWrapper.style, {
+            left: `${linkRect.left - editorRect.left}px`,
+            top: `${linkRect.top - editorRect.top - buttonWrapper.offsetHeight}px`,
+            display: 'block'
+        });
+    }
+
+    #hideRemoveLinkButton() {
+        const buttonWrapper = this.editor.querySelector('.remove-link-wrapper');
+        if (buttonWrapper) {
+            buttonWrapper.remove();
+        }
+    }
+
+    #handleRemoveLinkClick(e, linkElement) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const textContent = linkElement.textContent;
+        const textNode = document.createTextNode(textContent);
+        linkElement.parentNode.replaceChild(textNode, linkElement);
+
+        this.#hideRemoveLinkButton();
+
+        // Trigger content update
+        this.debounced_content_update();
     }
 
     #initializeUpdateStrategy(options) {
@@ -957,6 +1098,14 @@ class BibeEditor {
             block.isHovered = true;
             this.hoveredBlock = block;
             this.#showAnchor(elementAtPoint.closest('.bibe_block'));
+
+            const linkElement = e.target.closest('a');
+            if (linkElement) {
+                this.#showRemoveLinkButton(linkElement);
+            } else {
+                this.#hideRemoveLinkButton();
+            }
+
         } else {
             this.hoveredBlock = null;
             this.#hideAnchor();
