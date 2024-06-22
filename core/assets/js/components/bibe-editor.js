@@ -4,9 +4,8 @@ class Block {
         this.tag = element.tagName;
         this.element = element;
         this.isHovered = false;
-        this.attributes = {
-            align: element.style.textAlign || 'left',
-        };
+        this.content = this.get_content();
+        this.attributes = this.get_attributes();
 
         this.update_rect();
         this.element.addEventListener('dragover', e => e.preventDefault());
@@ -19,9 +18,22 @@ class Block {
     serialize() {
         return {
             type: this.type,
-            content: this.element.innerHTML,
-            attributes: this.attributes
+            content: this.get_content(),
+            attributes: this.get_attributes()
         };
+    }
+
+    update() {
+        this.content = this.get_content();
+        this.attributes = this.get_attributes();
+    }
+
+    get_content() {
+        // To be implemented by subclasses
+    }
+
+    get_attributes() {
+        // To be implemented by subclasses
     }
 
     set alignment(newAlignment) {
@@ -31,6 +43,14 @@ class Block {
 
     get alignment() {
         return this.attributes.align;
+    }
+
+    remove_placeholder() {
+        this.element.removeAttribute('data-placeholder');
+    }
+
+    add_placeholder() {
+        // To be implemented by subclasses
     }
 
     // Static method to initialize from an existing DOM element
@@ -45,7 +65,20 @@ class ParagraphBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'paragraph';
-        this.content = element.innerHTML;
+    }
+
+    get_content() {
+        return this.element.innerHTML;
+    }
+
+    get_attributes() {
+        return {
+            align: this.element.style.textAlign || 'left',
+        };
+    }
+
+    add_placeholder() {
+        this.element.dataset.placeholder = 'Paragraph';
     }
 
     static create(content = '') {
@@ -59,8 +92,21 @@ class TitleBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'heading';
-        this.content = element.innerHTML;
-        this.attributes.level = parseInt(element.tagName[1]);
+    }
+
+    get_content() {
+        return this.element.innerHTML;
+    }
+
+    get_attributes() {
+        return {
+            level: parseInt(this.element.tagName[1]),
+            align: this.element.style.textAlign || 'left'
+        };
+    }
+
+    add_placeholder() {
+        this.element.dataset.placeholder = `Heading ${this.attributes.level}`;
     }
 
     static create(content = '', level = 1) {
@@ -74,8 +120,21 @@ class ListBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'list';
-        this.content = [...this.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
-        this.attributes.type = element.tagName === 'UL' ? 'unordered' : 'ordered';
+    }
+
+    get_content() {
+        return [...this.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
+    }
+
+    get_attributes() {
+        return {
+            type: this.element.tagName === 'UL' ? 'unordered' : 'ordered',
+            align: this.element.style.textAlign || 'left'
+        };
+    }
+
+    add_placeholder() {
+        this.element.dataset.placeholder = 'List';
     }
 
     static create(items = [], ordered = false) {
@@ -88,23 +147,26 @@ class ListBlock extends Block {
         });
         return new this(listElement);
     }
-
-    serialize() {
-        const items = [...this.element.querySelectorAll('li')].map(li => ({ item: li.innerHTML }));
-        return {
-            type: this.type,
-            content: items,
-            attributes: this.attributes, // Assuming attributes are updated elsewhere if they can change
-        };
-    }
 }
 class QuoteBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'quote';
-        this.content = element.querySelector('p')?.innerHTML || '';
-        const author = element.querySelector('cite')?.textContent || '';
-        this.attributes.author = author;
+    }
+
+    get_content() {
+        return this.element.querySelector('p')?.innerHTML || '';
+    }
+
+    get_attributes() {
+        return {
+            author: this.element.querySelector('cite')?.textContent || '',
+            align: this.element.style.textAlign || 'left'
+        };
+    }
+
+    add_placeholder() {
+        this.element.dataset.placeholder = 'Quote';
     }
 
     static create(content = '', author = '') {
@@ -113,26 +175,26 @@ class QuoteBlock extends Block {
         blockquote.innerHTML = `<p>${content}</p><cite>${author}</cite>`;
         return new this(blockquote);
     }
-
-    serialize() {
-        const content = this.element.querySelector('p')?.innerHTML || '';
-        const author = this.element.querySelector('cite')?.textContent || '';
-        return {
-            type: this.type,
-            content: content,
-            attributes: { author: author },
-        };
-    }
 }
 class ImageBlock extends Block {
     constructor(element) {
         super(element);
         this.type = 'image';
         this.img = element.querySelector('img');
-        this.content = this.img.src;
-        this.attributes.width = this.img.width;
-        this.attributes.alt = this.img.alt;
-        this.attributes.caption = element.querySelector('figcaption')?.textContent || '';
+    }
+
+    get_content() {
+        if (!this.img) return '';
+        return this.img.src;
+    }
+
+    get_attributes() {
+        if (!this.img) return {};
+        return {
+            width: this.img.style.width,
+            alt: this.img.alt,
+            caption: this.element.querySelector('figcaption')?.textContent || ''
+        };
     }
 
     static create(src = '', alt = '', caption = '') {
@@ -149,19 +211,6 @@ class ImageBlock extends Block {
         }
         return new this(figure);
     }
-
-    serialize() {
-        return {
-            type: this.type,
-            content: this.img.src, // Assuming `this.img` is the img element
-            attributes: {
-                width: this.img.style.width,
-                align: this.element.style.textAlign,
-                alt: this.img.alt,
-                caption: this.element.querySelector('figcaption')?.textContent || '',
-            },
-        };
-    }
 }
 
 // Update Status Notification
@@ -169,18 +218,20 @@ class Notification {
     constructor(editor) {
         this.editor = editor;
         this.notification = document.createElement('div');
-        this.notification.style.display = 'none';
-        this.notification.style.position = 'absolute';
-        this.notification.style.left = '4px';
-        this.notification.style.bottom = '4px';
-        this.notification.style.padding = '2px 4px';
-        this.notification.style.fontSize = '10px';
-        this.notification.style.textTransform = 'uppercase';
-        this.notification.style.letterSpacing = '0.01em';
-        this.notification.style.color = 'white';
-        this.notification.style.fontWeight = 'bold';
-        this.notification.style.borderRadius = '4px';
-        this.notification.style.zIndex = '1000';
+        Object.assign(this.notification.style, {
+            display: 'none',
+            position: 'absolute',
+            left: '4px',
+            bottom: '4px',
+            padding: '2px 4px',
+            fontSize: '10px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.01em',
+            color: 'white',
+            fontWeight: 'bold',
+            borderRadius: '4px',
+            zIndex: '1000',
+        });
         this.editor.appendChild(this.notification);
         this.hideTimeout = null;
     }
@@ -225,6 +276,7 @@ class Notification {
     }
 }
 
+// ways to store content
 class ContentUpdateStrategy {
     constructor(onSuccessCallback, onErrorCallback) {
         this.onSuccessCallback = onSuccessCallback;
@@ -286,7 +338,6 @@ class LocalStorageStrategy extends ContentUpdateStrategy {
     }
 }
 
-
 // Main Class
 class BibeEditor {
 
@@ -319,9 +370,6 @@ class BibeEditor {
 
     constructor(options) {
         this.container = document.querySelector(options.container);
-        this.read_url = options.read_url;
-        this.update_url = options.update_url;
-        this.token = options.token;
         this.editor = null;
         this.contentElement = null;
         this.content = '';
@@ -334,15 +382,18 @@ class BibeEditor {
         this.anchorHandlePressed = false;
         this.editorPaddingTop = null; // Editor's top padding
         this.editorPaddingLeft = null; // Editor's left padding
-        this.hoveredBlock = null;
-        this.draggedBlock = null;
-        this.selectedBlock = null;
-        this.blockWithSeletion = null;
+
+        this.hoveredBlock = null;       // The block currently hovered over
+        this.draggedBlock = null;       // The block currently being dragged
+        this.selectedBlock = null;      // The hovered block or the one with anchor menu active
+        this.blockWithSeletion = null;  // The block containing selected text
+        this.blockWithCursor = null;    // The block containing visible cursor
+
         this.blocks = [];
         this.notification = null;
         this.updatePending = false; // To prevent overlapping updates
         this.debounceTimer = null; // To manage debouncing
-        this.init(this.container);
+        this.init(this.container, options);
         this.skip_update = false;
         this.debouncer_delay = 1000;
         this.updateStrategies = [];
@@ -361,12 +412,21 @@ class BibeEditor {
 
     }
 
-    init(container) {
+    init(container, options) {
 
         if (!container) {
-            console.error('BibeEditor container not found');
+            console.error(`BibeEditor container "${options.container}" not found`);
             return;
         };
+
+        // if trimmed container is empty then generate a h1 tags with "Start With a Title" span
+        // the span will be semitransparent, not selectable, not clickable
+
+        let placeholder = '';
+
+        if (container.innerHTML.trim() === '') {
+            container.innerHTML = `<h2 data-placeholder="Heading 2">&ZeroWidthSpace;</h2>`;
+        }
 
         // wrap content
         container.innerHTML = `
@@ -441,13 +501,13 @@ class BibeEditor {
             this.notification = new Notification(this.editor);
 
             this.contentElement = container.querySelector('.content');
-            this.#initBlocks();
+            this.#init_blocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
             this.#initTextMenu(container);
-            this.#initContentObserver();
+            this.#init_content_observer();
 
-            this.editor.addEventListener('keydown', this.#handleKeys);
+            this.editor.addEventListener('keydown', this.#handle_keys);
 
             window.addEventListener('click', this.#handleWindowClick);
             window.addEventListener('mousedown', this.#handleWindowMouseDown);
@@ -467,9 +527,9 @@ class BibeEditor {
 
         if (strategy.check(blockElement)) return;
 
-        const content = this.#getBlockContent(blockElement);
+        const content = this.#get_block_content(blockElement);
         blockElement.outerHTML = strategy.transform(content);
-        this.#initBlocks();
+        this.#init_blocks();
 
     }
 
@@ -532,25 +592,25 @@ class BibeEditor {
         const server = new ServerUpdateStrategy(
             options.update_url,
             options.token,
-            () => this.onUpdateSuccess(),
-            (error) => this.onUpdateError(error)
+            () => this.on_update_success(),
+            (error) => this.on_update_error(error)
         );
 
         // const localStorage = new LocalStorageStrategy(
-        //     () => this.onUpdateSuccess(),
-        //     (error) => this.onUpdateError(error)
+        //     () => this.on_update_success(),
+        //     (error) => this.on_update_error(error)
         // );
 
-        this.#addUpdateStrategy(server);
-        // this.#addUpdateStrategy(localStorage);
+        this.#add_update_strategy(server);
+        // this.#add_update_strategy(localStorage);
 
     }
 
-    #addUpdateStrategy(strategy) {
+    #add_update_strategy(strategy) {
         this.updateStrategies.push(strategy);
     }
 
-    #removeUpdateStrategy(strategy) {
+    #remove_update_strategy(strategy) {
         const index = this.updateStrategies.indexOf(strategy);
         if (index > -1) {
             this.updateStrategies.splice(index, 1);
@@ -561,18 +621,18 @@ class BibeEditor {
         this.updateStrategies.forEach(strategy => strategy.update(content));
     }
 
-    onUpdateSuccess() {
+    on_update_success() {
         this.notification.show('', 'success');
     }
 
-    onUpdateError(errorMessage) {
+    on_update_error(errorMessage) {
         this.notification.show(errorMessage, 'error');
     }
 
-    #initContentObserver() {
+    #init_content_observer() {
 
         this.#observeChildChanges(this.contentElement, () => {
-            this.#initBlocks();
+            this.#init_blocks();
 
             if (!this.skip_update) {
                 this.debounced_content_update();
@@ -583,14 +643,14 @@ class BibeEditor {
 
     }
 
-    #getBlockContent(blockElement) {
+    #get_block_content(blockElement) {
         if (blockElement.children.length > 1 || blockElement?.children[0]?.tagName === 'LI') {
             return [...blockElement.children].map(li => li.innerHTML).join('<br>');
         }
         return blockElement.innerHTML;
     }
 
-    #initBlocks = () => {
+    #init_blocks = () => {
 
         this.blocks = Array.from(this.contentElement.children).map(element => {
             switch (element.tagName) {
@@ -609,22 +669,35 @@ class BibeEditor {
             }
         });
 
-    };
+    }
 
-    #handleKeys = (event) => {
+    #handle_keys = (event) => {
 
-        if (event.key === 'Enter') {
-            this.handleEnterKey(event);
-        } else if (event.key === 'Backspace') {
-            this.handleBackspaceKey(event);
-        } else {
-            if (this.ignored_keys.includes(event.key)) return;
-            this.debounced_content_update();
+        if (this.blockWithCursor.element.dataset.placeholder) { // if the block has a placeholder
+            this.blockWithCursor.remove_placeholder();
         }
+
+        switch (event.key) {
+            case 'Enter':
+                this.#handleEnterKey(event);
+                break;
+            case 'Backspace':
+                this.#handleBackspaceKey(event);
+                break;
+            case 'Delete':
+                this.#handleDeleteKey(event);
+                break;
+            default:
+                if (this.ignored_keys.includes(event.key)) return;
+                this.debounced_content_update();
+                break;
+        }
+
+        this.blockWithCursor.update();
 
     }
 
-    handleEnterKey(event) {
+    #handleEnterKey(event) {
 
         const selection = window.getSelection();
         const selectedNode = selection.anchorNode;
@@ -639,7 +712,9 @@ class BibeEditor {
                 const newParagraph = ParagraphBlock.create('');
                 const currentBlock = selectedNode.parentNode.closest('.bibe_block');
                 currentBlock.insertAdjacentElement('afterend', newParagraph.element);
-                this.focusOnNewBlock(newParagraph.element);
+                this.#focusOnNewBlock(newParagraph.element);
+                this.blockWithCursor = newParagraph;
+                this.#init_blocks();
 
             }
 
@@ -647,7 +722,7 @@ class BibeEditor {
 
     }
 
-    handleBackspaceKey(event) {
+    #handleBackspaceKey(event) {
         const selection = window.getSelection();
         if (!selection.rangeCount) return;
 
@@ -655,8 +730,10 @@ class BibeEditor {
         if (range.startOffset === 0 && range.endOffset === 0) { // The caret is at the start of a block
             this.skip_update = true;
 
+            if (this.#contentIsEmpty()) event.preventDefault();
+
             setTimeout(() => { // let browser do its thing
-                this.#initBlocks();
+                this.#init_blocks();
                 this.debounced_content_update();
             }, 4);
 
@@ -665,7 +742,21 @@ class BibeEditor {
         }
     }
 
-    focusOnNewBlock(element) {
+    #handleDeleteKey(event) {
+
+        const blockContent = this.blockWithCursor.element.innerHTML.trim();
+
+        if (blockContent === '<br>' || blockContent === '') {
+            if (this.blocks.length > 1) {
+                event.preventDefault();
+                this.blockWithCursor.element.remove();
+                this.#init_blocks();
+            }
+        }
+
+    }
+
+    #focusOnNewBlock(element) {
 
         const range = document.createRange();
         const selection = window.getSelection();
@@ -734,7 +825,7 @@ class BibeEditor {
             }
             if (e.target.closest('.delete')) {
                 this.selectedBlock.element.remove();
-                this.#initBlocks();
+                this.#init_blocks();
             }
             this.selectedBlock = null;
             this.#hideBlockMenu();
@@ -795,10 +886,31 @@ class BibeEditor {
 
         this.contentElement.addEventListener('click', (e) => {
 
-            if (this.text_menu_visible) return;
 
             const selection = document.getSelection();
-            this.blockWithSeletion = this.blocks.find(block => block.element.contains(selection.anchorNode));
+            const clickedBlock = this.blocks.find(block => block.element.contains(selection.anchorNode));
+
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                if (range.startOffset === range.endOffset) {
+                    this.blockWithCursor = clickedBlock;
+                } else {
+                    this.blockWithCursor = clickedBlock;
+                    this.blockWithSeletion = clickedBlock;
+                }
+            }
+
+            if (this.#blockIsEmpty(clickedBlock)) {
+                clickedBlock.add_placeholder();
+            } else {
+                for (const block of this.blocks) {
+                    if (block !== clickedBlock && block.element.dataset.placeholder) {
+                        block.remove_placeholder();
+                    }
+                }
+            }
+
+            if (this.text_menu_visible) return;
 
             if (selection.rangeCount > 0 && !selection.isCollapsed) {
 
@@ -839,7 +951,9 @@ class BibeEditor {
         const blockElem = elementAtPoint?.closest('.bibe_block');
 
         if (blockElem) {
-            const block = this.blocks.find(b => b.element === blockElem);
+            const block = this.blocks.find(b => {
+                return b.element === blockElem;
+            });
             block.isHovered = true;
             this.hoveredBlock = block;
             this.#showAnchor(elementAtPoint.closest('.bibe_block'));
@@ -929,8 +1043,30 @@ class BibeEditor {
 
     #gather_content() {
 
-        return this.blocks.map(block => block.serialize());
+        this.content = this.blocks.map(block => block.serialize());
 
+        if (this.#contentIsEmpty()) return [];
+        return this.content;
+
+    }
+
+    #contentIsEmpty() {
+
+        const content = this.content;
+
+        if (content.length === 0) return true;
+        if (content.length === 1) {
+            if (content[0].content === '') return true;
+            if (content[0].content === '<br>') return true;
+        }
+
+        return false;
+
+    }
+
+    #blockIsEmpty(block) {
+        const content = block.element.innerHTML.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+        return content === '' || content === '<br>';
     }
 
 }

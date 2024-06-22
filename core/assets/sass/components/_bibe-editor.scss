@@ -32,6 +32,21 @@
         ul.bibe_block, ol.bibe_block {
             padding-left: 1.75em;
         }
+
+        [data-placeholder] {
+            position: relative;
+
+            &::before {
+                content: attr(data-placeholder);
+                padding: 8px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                color: rgba(#000, 0.25);
+                user-select: none;
+                pointer-events: none;
+            }
+        }
     }
 
     .anchor {

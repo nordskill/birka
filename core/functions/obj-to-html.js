@@ -1,7 +1,9 @@
 function OBJtoHTML(body) {
 	let html = '';
 
-	body.forEach((element) => {
+	if (!body || body.length === 0) return html;
+
+	for (const element of body) {
 		switch (element.type) {
 			case 'paragraph':
 				const textAlign = element.attributes?.align ? `style="text-align: ${element.attributes.align}"` : '';
@@ -28,7 +30,7 @@ function OBJtoHTML(body) {
 			default:
 				break;
 		}
-	});
+	};
 
 	return html;
 }
