@@ -16,7 +16,7 @@ export default async function () {
       file: post.img_preview,
       file_id: post.img_preview?._id || "",
       size: 300
-   })
+   });
 
    new TagsCRUD('.tags_crud');
 

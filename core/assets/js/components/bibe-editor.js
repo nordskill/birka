@@ -1,3 +1,5 @@
+import FileCRUD from './file-crud';
+
 // Base Block Class
 class Block {
     constructor(element) {
@@ -198,18 +200,57 @@ class ImageBlock extends Block {
     }
 
     static create(src = '', alt = '', caption = '') {
-        const figure = document.createElement('figure');
-        figure.classList.add('bibe_block');
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = alt;
-        figure.appendChild(img);
+
+        console.log(1);
+
+
+        let figcaption = '';
+
         if (caption) {
-            const figcaption = document.createElement('figcaption');
-            figcaption.textContent = caption;
-            figure.appendChild(figcaption);
+            figcaption = `<figcaption>${caption}</figcaption>`;
         }
-        return new this(figure);
+
+        const fileCRUDElem = document.createElement('div');
+        fileCRUDElem.classList.add('file_crud', 'position-relative', 'static', 'bibe_block');
+
+        fileCRUDElem.innerHTML = `
+            <div class="fc_wrapper">
+                <div class="file_preview">
+                    <picture>
+                        <img src="${src}" alt="${alt}" class="card-img-top">
+                        ${figcaption}
+                    </picture>
+                </div>
+                <svg viewBox="0 0 21 18.373">
+                    <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312"></path>
+                    <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968"></path>
+                </svg>
+                <div class="icons">
+                    <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
+                        <li class="px-1">
+                            <button type="button" title="Replace file" class="btn circle_btn bg-white rounded-circle">
+                                <svg class="icon blue" viewBox="0 0 13.712 16">
+                                    <path d="m11.312 2.4 2.4-2.4v6.48h-6.48L9.68 4.032a4.366 4.366 0 0 0-2.816-.992 4.422 4.422 0 0 0-3.1 1.216A4.408 4.408 0 0 0 2.3 7.232H.016A6.575 6.575 0 0 1 2.144 2.64 6.642 6.642 0 0 1 6.864.768 6.7 6.7 0 0 1 11.312 2.4ZM6.864 12.96a4.394 4.394 0 0 0 3.088-1.216 4.421 4.421 0 0 0 1.456-2.976H13.7a6.575 6.575 0 0 1-2.128 4.592 6.623 6.623 0 0 1-4.7 1.872A6.723 6.723 0 0 1 2.4 13.6L0 16V9.52h6.48l-2.448 2.448a4.43 4.43 0 0 0 2.832.992Z"></path>
+                                </svg>
+                            </button>
+                        </li>
+                        <li class="px-1">
+                            <button type="button" title="Delete file" class="btn circle_btn bg-white rounded-circle">
+                                <svg class="icon red" viewBox="0 0 13.714 16">
+                                    <g fill="#ff0014">
+                                        <path d="M4.571 5.714h1.143v6.857H4.571Z"></path>
+                                        <path d="M8 5.714h1.143v6.857H8Z"></path>
+                                        <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path>
+                                        <path d="M4.571 0h4.571v1.143H4.571Z"></path>
+                                    </g>
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>`;
+
+        return new this(fileCRUDElem);
     }
 }
 
@@ -365,6 +406,10 @@ class BibeEditor {
         quote: {
             check: (element) => element.tagName === 'BLOCKQUOTE',
             transform: (content) => `<blockquote class="bibe_block"><p>${content}</p><cite>Author</cite></blockquote>`
+        },
+        image: {
+            check: (element) => element.tagName === 'PICTURE',
+            transform: (content) => `<picture class="bibe_block"><img src="" alt="Image"><figcaption>${content}</figcaption></picture>`
         }
     };
 
@@ -794,6 +839,7 @@ class BibeEditor {
     #init_blocks = () => {
 
         this.blocks = Array.from(this.contentElement.children).map(element => {
+            console.log(element.tagName);
             switch (element.tagName) {
                 case 'P': return ParagraphBlock.fromElement(element);
                 case 'H1':
@@ -805,10 +851,35 @@ class BibeEditor {
                 case 'UL':
                 case 'OL': return ListBlock.fromElement(element);
                 case 'BLOCKQUOTE': return QuoteBlock.fromElement(element);
-                case 'PICTURE': return ImageBlock.fromElement(element);
+                case 'PICTURE':
+                    const img = element.querySelector('img');
+                    if (img) {
+                        const figcaption = element.querySelector('figcaption')?.textContent || '';
+                        const imgBlock = ImageBlock.create(img.src, img.alt, figcaption);
+                        element.replaceWith(imgBlock.element);
+                        return imgBlock;
+                    }
+                case 'DIV':
+                    // new FileCRUD({
+                    //     container: '.option-1',
+                    //     files_api: '/api/files/',
+                    //     endpoint: '/api/blog/' + post._id,
+                    //     field_name: 'img_preview',
+                    //     file: post.img_preview,
+                    //     file_id: post.img_preview?._id || "",
+                    //     size: 300
+                    // });
+                // const img = element.querySelector('img');
+                // if (img) {
+                //     const figcaption = element.querySelector('figcaption')?.textContent || '';
+                //     return ImageBlock.create(img.src, img.alt, figcaption);
+                // }
                 default: return new Block(element);
             }
         });
+
+        console.log(this.blocks);
+
 
     }
 
