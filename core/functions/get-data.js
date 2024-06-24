@@ -55,12 +55,14 @@ async function getData(modelName, query = {}, options = {}) {
         skip,
         where,
         count,
-        findOne,
         and,
         or,
         distinct,
         tagName
     } = options;
+
+    // If query contains _id, set findOne to true by default
+    const findOne = query._id ? true : options.findOne;
 
     try {
         let model;

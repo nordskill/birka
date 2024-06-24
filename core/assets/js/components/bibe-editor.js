@@ -11,6 +11,11 @@ class Block {
 
         this.update_rect();
         this.element.addEventListener('dragover', e => e.preventDefault());
+
+        // this.element.addEventListener('paste', e => {
+        //     e.preventDefault();
+        //     this.replace_content(e.clipboardData.getData('text/plain'));
+        // });
     }
 
     update_rect() {
@@ -55,8 +60,22 @@ class Block {
         // To be implemented by subclasses
     }
 
+    destroy() {
+
+        if (this.element) {
+            this.element.removeEventListener('dragover', this.handleDragOver);
+            this.element.remove();
+        }
+
+    }
+
+    replace_content(content) {
+        this.element.innerHTML = content;
+    }
+
     // Static method to initialize from an existing DOM element
     static fromElement(element) {
+        element.classList.add('bibe_block');
         return new this(element);
     }
 
@@ -83,11 +102,12 @@ class ParagraphBlock extends Block {
         this.element.dataset.placeholder = 'Paragraph';
     }
 
-    static create(content = '') {
-        const p = document.createElement('p');
-        p.innerHTML = content || '&#8203;';
-        p.classList.add('bibe_block');
-        return new this(p);
+    static create(content = '&#8203;') {
+        const elem = document.createElement('p');
+        elem.dataset.placeholder = 'Paragraph';
+        elem.innerHTML = content;
+        elem.classList.add('bibe_block');
+        return new this(elem);
     }
 }
 class TitleBlock extends Block {
@@ -111,11 +131,12 @@ class TitleBlock extends Block {
         this.element.dataset.placeholder = `Heading ${this.attributes.level}`;
     }
 
-    static create(content = '', level = 1) {
-        const h = document.createElement(`h${level}`);
-        h.innerHTML = content;
-        h.classList.add('bibe_block');
-        return new this(h);
+    static create(content = '&#8203;', level = 2) {
+        const elem = document.createElement(`h${level}`);
+        elem.dataset.placeholder = 'Heading 2';
+        elem.innerHTML = content;
+        elem.classList.add('bibe_block');
+        return new this(elem);
     }
 }
 class ListBlock extends Block {
@@ -142,11 +163,19 @@ class ListBlock extends Block {
     static create(items = [], ordered = false) {
         const listElement = document.createElement(ordered ? 'ol' : 'ul');
         listElement.classList.add('bibe_block');
-        items.forEach(itemContent => {
+
+        if (!items.length) {
             const li = document.createElement('li');
-            li.innerHTML = itemContent;
+            li.innerHTML = '&#8203;';
             listElement.appendChild(li);
-        });
+        } else {
+            items.forEach(itemContent => {
+                const li = document.createElement('li');
+                li.innerHTML = itemContent;
+                listElement.appendChild(li);
+            });
+        }
+
         return new this(listElement);
     }
 }
@@ -171,10 +200,10 @@ class QuoteBlock extends Block {
         this.element.dataset.placeholder = 'Quote';
     }
 
-    static create(content = '', author = '') {
+    static create(content = '&#8203;', author = '&#8203;') {
         const blockquote = document.createElement('blockquote');
         blockquote.classList.add('bibe_block');
-        blockquote.innerHTML = `<p>${content}</p><cite>${author}</cite>`;
+        blockquote.innerHTML = `<p>${content}</p><cite data-placeholder="Citation">${author}</cite>`;
         return new this(blockquote);
     }
 }
@@ -186,69 +215,46 @@ class ImageBlock extends Block {
     }
 
     get_content() {
-        if (!this.img) return '';
-        return this.img.src;
+        return this.element.dataset.fileId;
     }
 
     get_attributes() {
-        if (!this.img) return {};
+        const img = this.element.querySelector('.file_preview img');
         return {
-            width: this.img.style.width,
-            alt: this.img.alt,
-            caption: this.element.querySelector('figcaption')?.textContent || ''
+            width: img?.classList[0],
+            alt: img?.alt,
+            caption: this.element.querySelector('.caption')?.value || ''
         };
     }
 
-    static create(src = '', alt = '', caption = '') {
-
-        console.log(1);
-
-
-        let figcaption = '';
-
-        if (caption) {
-            figcaption = `<figcaption>${caption}</figcaption>`;
-        }
+    static create(figureElement = '', imgID = '', options) {
 
         const fileCRUDElem = document.createElement('div');
         fileCRUDElem.classList.add('file_crud', 'position-relative', 'static', 'bibe_block');
+        fileCRUDElem.dataset.fileId = imgID;
+        fileCRUDElem.dataset.filesApi = options.files_api;
+        fileCRUDElem.dataset.endpoint = options.update_url;
+        fileCRUDElem.dataset.size = 1024;
 
         fileCRUDElem.innerHTML = `
             <div class="fc_wrapper">
-                <div class="file_preview">
-                    <picture>
-                        <img src="${src}" alt="${alt}" class="card-img-top">
-                        ${figcaption}
-                    </picture>
-                </div>
+                <div class="file_preview">${figureElement?.outerHTML || ''}</div>
                 <svg viewBox="0 0 21 18.373">
                     <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312"></path>
                     <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968"></path>
                 </svg>
                 <div class="icons">
-                    <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
-                        <li class="px-1">
-                            <button type="button" title="Replace file" class="btn circle_btn bg-white rounded-circle">
-                                <svg class="icon blue" viewBox="0 0 13.712 16">
-                                    <path d="m11.312 2.4 2.4-2.4v6.48h-6.48L9.68 4.032a4.366 4.366 0 0 0-2.816-.992 4.422 4.422 0 0 0-3.1 1.216A4.408 4.408 0 0 0 2.3 7.232H.016A6.575 6.575 0 0 1 2.144 2.64 6.642 6.642 0 0 1 6.864.768 6.7 6.7 0 0 1 11.312 2.4ZM6.864 12.96a4.394 4.394 0 0 0 3.088-1.216 4.421 4.421 0 0 0 1.456-2.976H13.7a6.575 6.575 0 0 1-2.128 4.592 6.623 6.623 0 0 1-4.7 1.872A6.723 6.723 0 0 1 2.4 13.6L0 16V9.52h6.48l-2.448 2.448a4.43 4.43 0 0 0 2.832.992Z"></path>
-                                </svg>
-                            </button>
-                        </li>
-                        <li class="px-1">
-                            <button type="button" title="Delete file" class="btn circle_btn bg-white rounded-circle">
-                                <svg class="icon red" viewBox="0 0 13.714 16">
-                                    <g fill="#ff0014">
-                                        <path d="M4.571 5.714h1.143v6.857H4.571Z"></path>
-                                        <path d="M8 5.714h1.143v6.857H8Z"></path>
-                                        <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path>
-                                        <path d="M4.571 0h4.571v1.143H4.571Z"></path>
-                                    </g>
-                                </svg>
-                            </button>
-                        </li>
-                    </ul>
+                    <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0"></ul>
                 </div>
             </div>`;
+
+        let captionText = '';
+        const figcaption = fileCRUDElem.querySelector('figcaption');
+        if (figcaption) {
+            captionText = figcaption.textContent;
+            figcaption.remove();
+        }
+        fileCRUDElem.insertAdjacentHTML('beforeend', `<input type="text" value="${captionText}" placeholder="Caption" class="caption form-control">`);
 
         return new this(fileCRUDElem);
     }
@@ -387,7 +393,7 @@ class BibeEditor {
             check: (element) => element.tagName === 'P',
             transform: (content) => `<p class="bibe_block">${content}</p>`
         },
-        title: {
+        heading: {
             check: (element) => element.tagName.startsWith('H'),
             transform: (content) => `<h2 class="bibe_block">${content}</h2>`
         },
@@ -408,12 +414,13 @@ class BibeEditor {
             transform: (content) => `<blockquote class="bibe_block"><p>${content}</p><cite>Author</cite></blockquote>`
         },
         image: {
-            check: (element) => element.tagName === 'PICTURE',
-            transform: (content) => `<picture class="bibe_block"><img src="" alt="Image"><figcaption>${content}</figcaption></picture>`
+            // check: (element) => element.tagName === 'PICTURE',
+            // transform: (content) => `<figure><img src="" alt="Image"><figcaption>${content}</figcaption></figure>`
         }
     };
 
     constructor(options) {
+        this.options = options;
         this.container = document.querySelector(options.container);
         this.editor = null;
         this.contentElement = null;
@@ -428,6 +435,7 @@ class BibeEditor {
         this.editorPaddingTop = null; // Editor's top padding
         this.editorPaddingLeft = null; // Editor's left padding
 
+        this.previousHoveredBlock = null;
         this.hoveredBlock = null;       // The block currently hovered over
         this.draggedBlock = null;       // The block currently being dragged
         this.selectedBlock = null;      // The hovered block or the one with anchor menu active
@@ -464,11 +472,6 @@ class BibeEditor {
             return;
         };
 
-        // if trimmed container is empty then generate a h1 tags with "Start With a Title" span
-        // the span will be semitransparent, not selectable, not clickable
-
-        let placeholder = '';
-
         if (container.innerHTML.trim() === '') {
             container.innerHTML = `<h2 data-placeholder="Heading 2">&ZeroWidthSpace;</h2>`;
         }
@@ -480,35 +483,10 @@ class BibeEditor {
                     ${container.innerHTML}
                 </div>
                 <div class="anchor">
-                    <div class="minibtn add_block">
-                        <svg viewBox="0 0 14 14">
-                            <path d="m8.746 7.001 4.888-4.888A1.236 1.236 0 0 0 11.888.364L7.001 5.25 2.112.362a1.237 1.237 0 1 0-1.75 1.75L5.25 7.001.362 11.888a1.237 1.237 0 0 0 1.749 1.749l4.89-4.888 4.888 4.888a1.237 1.237 0 0 0 1.749-1.749Z"></path>
-                        </svg>
-                    </div>
-                    <div class="minibtn handle">
-                        <svg viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="40" stroke="red" stroke-width="10" fill="none"></circle>
-                        </svg>
-                    </div>
+                    <div class="minibtn handle"></div>
                 </div>
                 <div class="menu block">
-                    <div class="controls">
-                        <div class="bibe_btn block_type" data-type="paragraph">P</div>
-                        <div class="bibe_btn block_type" data-type="title">T</div>
-                        <div class="bibe_btn block_type" data-type="list">L</div>
-                        <div class="bibe_btn block_type" data-type="quote">Q</div>
-                        <div class="divider"></div>
-                        <div class="bibe_btn delete" data-cmd="del">
-                            <svg viewBox="0 0 13.714 16">
-                                <g fill="#ff0014">
-                                    <path d="M4.571 5.714h1.143v6.857H4.571Z" />
-                                    <path d="M8 5.714h1.143v6.857H8Z" />
-                                    <path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z" />
-                                    <path d="M4.571 0h4.571v1.143H4.571Z" />
-                                </g>
-                            </svg>
-                        </div>
-                    </div>
+                    <div class="controls"></div>
                 </div>
                 <div class="menu text">
                     <div class="controls">
@@ -529,29 +507,22 @@ class BibeEditor {
 
         setTimeout(() => {
 
-            // Add class "block" to every direct child of the `.content`
-            const contentChildren = container.querySelector('.content').children;
-            for (let child of contentChildren) {
-                child.classList.add('bibe_block');
-            }
-
             // get the top padding of the .bibe_editor
             const editorStyle = window.getComputedStyle(container.querySelector('.bibe_editor'));
             this.editorPaddingTop = parseInt(editorStyle.paddingTop);
             this.editorPaddingLeft = parseInt(editorStyle.paddingLeft);
 
             this.editor = container.querySelector('.bibe_editor');
-            this.editor.addEventListener('mousemove', this.#handleMouseMove);
-
+            this.contentElement = container.querySelector('.content');
             this.notification = new Notification(this.editor);
 
-            this.contentElement = container.querySelector('.content');
             this.#init_blocks();
             this.#initAnchor(container);
             this.#initBlockMenu(container);
             this.#initTextMenu(container);
             this.#init_content_observer();
 
+            this.editor.addEventListener('mousemove', this.#handleMouseMove);
             this.editor.addEventListener('keydown', this.#handle_keys);
 
             window.addEventListener('click', this.#handleWindowClick);
@@ -561,7 +532,62 @@ class BibeEditor {
 
     }
 
-    change_block_type(blockElement, toType) {
+    create_block(type, referenceElement) {
+
+        let block;
+
+        switch (type) {
+            case 'paragraph':
+                block = ParagraphBlock.create();
+                break;
+            case 'heading':
+                block = TitleBlock.create('', 2);
+                break;
+            case 'list':
+                block = ListBlock.create();
+                break;
+            case 'quote':
+                block = QuoteBlock.create();
+                break;
+            case 'image':
+                block = ImageBlock.create(null, null, this.options);
+                new FileCRUD(block.element);
+                break;
+            default:
+                console.warn('Unknown block type:', type);
+                return;
+        }
+
+        referenceElement.insertAdjacentElement('beforebegin', block.element);
+        referenceElement.remove();
+
+        if (type === 'paragraph' || type === 'heading') {
+            this.place_cursor_into(block.element);
+        } else if (type === 'list') {
+            this.place_cursor_into(block.element.querySelector('li'));
+        } else if (type === 'quote') {
+            console.log(block.element.querySelector('p'));
+            
+            this.place_cursor_into(block.element.querySelector('p'));
+        }
+
+        this.blockWithCursor = block;
+    }
+
+    place_cursor_into(element) {
+
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        range.selectNodeContents(element);
+        range.collapse(false);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+    }
+
+    change_block_action(blockElement, toType) {
 
         const strategy = BibeEditor.#blockTypeStrategies[toType];
 
@@ -616,7 +642,7 @@ class BibeEditor {
                 return;
             case 'list':
                 // Custom method for changing block type; no selection manipulation needed
-                this.change_block_type(element, 'list');
+                this.change_block_action(element, 'list');
                 return;
             default:
                 console.warn('Unknown transformation type:', textType);
@@ -839,7 +865,7 @@ class BibeEditor {
     #init_blocks = () => {
 
         this.blocks = Array.from(this.contentElement.children).map(element => {
-            console.log(element.tagName);
+
             switch (element.tagName) {
                 case 'P': return ParagraphBlock.fromElement(element);
                 case 'H1':
@@ -851,29 +877,16 @@ class BibeEditor {
                 case 'UL':
                 case 'OL': return ListBlock.fromElement(element);
                 case 'BLOCKQUOTE': return QuoteBlock.fromElement(element);
-                case 'PICTURE':
+                case 'FIGURE': // first init for images
                     const img = element.querySelector('img');
-                    if (img) {
-                        const figcaption = element.querySelector('figcaption')?.textContent || '';
-                        const imgBlock = ImageBlock.create(img.src, img.alt, figcaption);
-                        element.replaceWith(imgBlock.element);
-                        return imgBlock;
+                    const imgBlock = ImageBlock.create(element, img.dataset.id, this.options);
+                    element.replaceWith(imgBlock.element);
+                    // new FileCRUD(imgBlock.element);
+                    return imgBlock;
+                case 'DIV': // not a first init for images
+                    if (element.classList.contains('file_crud')) {
+                        return new ImageBlock(element);
                     }
-                case 'DIV':
-                    // new FileCRUD({
-                    //     container: '.option-1',
-                    //     files_api: '/api/files/',
-                    //     endpoint: '/api/blog/' + post._id,
-                    //     field_name: 'img_preview',
-                    //     file: post.img_preview,
-                    //     file_id: post.img_preview?._id || "",
-                    //     size: 300
-                    // });
-                // const img = element.querySelector('img');
-                // if (img) {
-                //     const figcaption = element.querySelector('figcaption')?.textContent || '';
-                //     return ImageBlock.create(img.src, img.alt, figcaption);
-                // }
                 default: return new Block(element);
             }
         });
@@ -1002,12 +1015,13 @@ class BibeEditor {
         this.anchor = container.querySelector('.anchor');
 
         this.anchor.addEventListener('click', e => {
-            if (e.target.closest('.add_block')) {
-                this.#newBlockMenu();
-            }
             if (e.target.closest('.handle')) {
                 this.selectedBlock = this.hoveredBlock;
-                this.#showBlockMenu();
+
+                let action = 'change';
+                if (this.#blockIsEmpty(this.selectedBlock)) action = 'create';
+
+                this.#showBlockMenu(action);
             }
         });
 
@@ -1030,21 +1044,32 @@ class BibeEditor {
         this.block_menu = container.querySelector('.menu.block');
 
         this.block_menu.addEventListener('click', e => {
-            if (e.target.closest('.block_type')) {
-                const blockType = e.target.closest('.block_type').dataset.type;
-                if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
-                this.change_block_type(this.selectedBlock.element, blockType);
-            }
-            if (e.target.closest('.delete')) {
-                this.selectedBlock.element.remove();
-                this.#init_blocks();
+            if (e.target.closest('.block_action')) {
+
+                const action = e.target.closest('.block_action').dataset.action;
+
+                if (action === 'delete') {
+                    this.selectedBlock.destroy();
+                    this.selectedBlock = null;
+                    this.#init_blocks();
+                } else if (action === 'change') {
+                    const blockType = e.target.closest('.block_action').dataset.type;
+                    if (!this.selectedBlock) console.log('this.selectedBlock', this.selectedBlock);
+                    this.change_block_action(this.selectedBlock.element, blockType);
+                } else if (action === 'create') {
+                    const blockType = e.target.closest('.block_action').dataset.type;
+                    this.create_block(blockType, this.selectedBlock.element);
+                }
+
             }
             this.selectedBlock = null;
             this.#hideBlockMenu();
         });
     }
 
-    #showBlockMenu() {
+    #showBlockMenu(action = 'create') {
+
+        this.block_menu.dataset.action = action;
 
         this.block_menu.style.top = this.anchor.style.top;
         this.block_menu.style.left = this.anchor.style.left;
@@ -1052,6 +1077,86 @@ class BibeEditor {
         this.block_menu_visible = true;
 
         this.block_menu.addEventListener('mouseleave', this.#hideBlockMenu, { once: true });
+
+        let buttons = [];
+
+        if (action === 'create') {
+            buttons = [
+                {
+                    type: 'paragraph',
+                    icon: 'P',
+                    title: 'Paragraph',
+                    action
+                },
+                {
+                    type: 'heading',
+                    icon: 'H',
+                    title: 'Heading',
+                    action
+                },
+                {
+                    type: 'list',
+                    icon: 'L',
+                    title: 'List',
+                    action
+                },
+                {
+                    type: 'quote',
+                    icon: 'Q',
+                    title: 'Quote',
+                    action
+                },
+                {
+                    type: 'image',
+                    icon: 'I',
+                    title: 'Image',
+                    action
+                }
+            ];
+        } else if (action === 'change') {
+            buttons = [
+                {
+                    type: 'paragraph',
+                    icon: 'P',
+                    title: 'Paragraph',
+                    action
+                },
+                {
+                    type: 'heading',
+                    icon: 'H',
+                    title: 'Heading',
+                    action
+                },
+                {
+                    type: 'list',
+                    icon: 'L',
+                    title: 'List',
+                    action
+                },
+                {
+                    type: 'quote',
+                    icon: 'Q',
+                    title: 'Quote',
+                    action
+                },
+                {
+                    type: 'divider'
+                },
+                {
+                    type: 'delete',
+                    icon: '<svg viewBox="0 0 13.714 16"><g fill="#ff0014"><path d="M4.571 5.714h1.143v6.857H4.571Z"></path><path d="M8 5.714h1.143v6.857H8Z"></path><path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path><path d="M4.571 0h4.571v1.143H4.571Z"></path></g></svg>',
+                    title: 'Delete',
+                    action: 'delete'
+                }
+            ];
+        }
+
+        this.block_menu.firstElementChild.innerHTML = buttons.map(button => {
+            if (button.type === 'divider') {
+                return '<div class="divider"></div>';
+            }
+            return `<div class="bibe_btn block_action" data-type="${button.type}" data-action="${button.action}">${button.icon}</div>`;
+        }).join('');
 
     }
 
@@ -1071,6 +1176,14 @@ class BibeEditor {
 
         const contentRect = this.contentElement.getBoundingClientRect();
         const relativeTop = blockRect.top - contentRect.top + blockPaddingTop + blockLineHeight;
+
+        const miniBtn = this.anchor.firstElementChild;
+
+        if (this.#blockIsEmpty(this.hoveredBlock)) {
+            miniBtn.innerHTML = `<svg viewBox="0 0 12 12"><path d="M11.044 5H7V.956a1 1 0 0 0-2 0V5H.956a1 1 0 0 0 0 2H5v4.044a1 1 0 0 0 2 0V7h4.044a1 1 0 0 0 0-2Z"/></svg>`;
+        } else {
+            miniBtn.innerHTML = `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="red" stroke-width="10" fill="none"></circle></svg>`;
+        }
 
         this.anchor.style.left = `0px`;
         this.anchor.style.top = `${relativeTop}px`;
@@ -1098,9 +1211,10 @@ class BibeEditor {
 
         this.contentElement.addEventListener('click', (e) => {
 
-
             const selection = document.getSelection();
-            const clickedBlock = this.blocks.find(block => block.element.contains(selection.anchorNode));
+            const clickedBlock = this.blocks.find(block => block.element === e.target.closest('.bibe_block'));
+
+            if (!clickedBlock) return;
 
             if (selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
@@ -1166,15 +1280,20 @@ class BibeEditor {
             const block = this.blocks.find(b => {
                 return b.element === blockElem;
             });
-            block.isHovered = true;
-            this.hoveredBlock = block;
-            this.#showAnchor(elementAtPoint.closest('.bibe_block'));
 
             const linkElement = e.target.closest('a');
             if (linkElement) {
                 this.#showRemoveLinkButton(linkElement);
             } else {
                 this.#hideRemoveLinkButton();
+            }
+
+            block.isHovered = true;
+            this.hoveredBlock = block;
+
+            if (this.hoveredBlock !== this.previousHoveredBlock) {
+                this.#showAnchor(elementAtPoint.closest('.bibe_block'));
+                this.previousHoveredBlock = this.hoveredBlock;
             }
 
         } else {
@@ -1238,10 +1357,6 @@ class BibeEditor {
         if (e.target.closest('.menu.text')) e.preventDefault();
     }
 
-    #newBlockMenu() {
-        console.log('add block');
-    }
-
     #observeChildChanges(targetElement, callback) {
 
         const observer = new MutationObserver((mutations) => {
@@ -1254,7 +1369,9 @@ class BibeEditor {
         });
 
         const config = {
-            childList: true
+            childList: true,
+            subtree: true,
+            attributes: true
         };
 
         observer.observe(targetElement, config);

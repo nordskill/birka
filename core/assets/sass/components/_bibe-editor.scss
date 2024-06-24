@@ -29,22 +29,46 @@
             border-left: 4px solid #ddd;
         }
 
-        ul.bibe_block, ol.bibe_block {
+        ul.bibe_block,
+        ol.bibe_block {
             padding-left: 1.75em;
         }
 
-        // .file_crud {
+        .file_crud {
 
-        //     .file_preview {
-        //         &:empty {
-        //             background: rgb(220, 220, 220);
-    
-        //             &~svg {
-        //                 display: block;
-        //             }
-        //         }
-        //     }
-        // }
+            min-height: 200px;
+            border-radius: 5px;
+            margin-bottom: 50px;
+
+            .fc_wrapper {
+                position: relative;
+                min-height: 200px;
+
+                .file_preview {
+                    display: block;
+                    min-height: 200px;
+
+                    figure {
+                        margin: 0;
+
+                        img {
+                            width: 100%;
+                            height: auto;
+                            position: relative;
+                        }
+                    }
+                }
+            }
+
+            .caption {
+                position: absolute;
+                bottom: -45px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                max-width: 500px;
+            }
+        }
 
         [data-placeholder] {
             position: relative;
@@ -82,20 +106,9 @@
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                width: 9px;
-                height: 9px;
+                width: 11px;
+                height: 11px;
                 transform: translate(-50%, -50%);
-            }
-        }
-
-        .add_block {
-            left: 0;
-            cursor: pointer;
-
-            svg {
-                width: 7px;
-                height: 7px;
-                transform: translate(-50%, -50%) rotate(45deg);
             }
         }
 
@@ -113,8 +126,9 @@
         z-index: 1;
 
         &.block {
-            padding: 10px 10px 30px 10px;
+            padding: 10px 50px 30px 10px;
             transform: translateY(-63px);
+            box-sizing: border-box;
         }
 
         &.text {

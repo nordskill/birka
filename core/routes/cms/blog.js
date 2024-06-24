@@ -89,7 +89,7 @@ router.get('/:id', async (req, res, next) => {
             active: SLUG,
             blog_post: blogPost,
             img_preview: `${folder_path}${blogPost.img_preview?.file_name}.${blogPost.img_preview?.extension}`,
-            rendered_body: OBJtoHTML(bodyContent),
+            rendered_body: await OBJtoHTML(bodyContent, { imgIDs: true }),
             breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'

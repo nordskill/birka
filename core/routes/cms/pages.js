@@ -80,7 +80,7 @@ router.get(`/:id`, async (req, res, next) => {
         }
     }
 
-    if (content) content_rendered = OBJtoHTML(content);
+    if (content) content_rendered = await OBJtoHTML(content);
 
     try {
         const files = await fs.readdir(viewsPath);

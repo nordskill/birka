@@ -39,6 +39,8 @@
  */
 function getImgTag(imageData, options = {}) {
     const {
+        figureTag = false,
+        caption,
         sizes = '100vw',
         maxWidth = 1024,
         size,
@@ -51,7 +53,15 @@ function getImgTag(imageData, options = {}) {
     }
 
     const baseUrl = `/files/${imageData.hash.slice(0, 2)}`;
-    const { file_name, optimized_format, sizes: imageSizes, alt, width, height } = imageData;
+    const {
+        file_name,
+        optimized_format,
+        sizes: imageSizes,
+        alt,
+        width,
+        height,
+        description
+    } = imageData;
 
     let srcset = '';
     let largestSrc = '';
@@ -79,16 +89,20 @@ function getImgTag(imageData, options = {}) {
         .map(([key, value]) => value === true ? key : `${key}="${value}"`)
         .join(' ');
 
-    return `<img 
-    src="${largestSrc}" 
-    srcset="${srcset}" 
-    sizes="${sizes}" 
-    alt="${alt || ''}" 
-    width="${selectedSize}" 
-    height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}"
-    ${additionalAttributes}
-/>`;
+    const imgTag = `<img src="${largestSrc}" srcset="${srcset}" sizes="${sizes}" alt="${alt || ''}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
+
+    if (figureTag || caption != null) { 
+        let figureContent = '<figure>' + imgTag;
+        if (caption != null) { // can't be null or undefined, but can be an empty string or zero
+            figureContent += `<figcaption>${caption}</figcaption>`;
+        }
+        figureContent += '</figure>';
+        return figureContent;
+    }
+
+    return imgTag;
 }
+
 
 /**
  * Finds the closest size in the array to the target size.

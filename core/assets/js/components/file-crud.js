@@ -7,7 +7,14 @@ class FileCRUD {
         this.buttons = this._init_buttons();
         this.is_empty = true;
 
-        if (options instanceof HTMLElement) {
+        if (typeof options === 'string') {
+            const element = document.querySelector(options);
+            if (element) {
+                this._init_from_element(element);
+            } else {
+                throw new Error(`Cannot find element with selector: ${options}`);
+            }
+        } else if (options instanceof HTMLElement) {
             this._init_from_element(options);
         } else if (typeof options === 'object') {
             this._init_from_object(options);
@@ -76,32 +83,42 @@ class FileCRUD {
     }
 
     _insert_template() {
-        this.container.innerHTML = `
-            <div class="file_crud position-relative static">
-                <div class="fc_wrapper">
-                    <div class="file_preview"></div>
-                    <svg viewBox="0 0 21 18.373">
-                        <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
-                        <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968" />
-                    </svg>
-                    <div class="icons">
-                        <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
-                        </ul>
-                    </div>
+
+        this.element = document.createElement('div');
+        this.element.className.add(['file_crud', 'position-relative', 'static']);
+
+        this.element.innerHTML = `
+            <div class="fc_wrapper">
+                <div class="file_preview"></div>
+                <svg viewBox="0 0 21 18.373">
+                    <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
+                    <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968" />
+                </svg>
+                <div class="icons">
+                    <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
+                    </ul>
                 </div>
             </div>`;
+
+        this.container.appendChild(this.element);
+
     }
 
-    _init_component() {
-        this.preview_container = this.container.querySelector('.fc_wrapper > .file_preview');
-        this.buttons_container = this.container.querySelector('.fc_wrapper > .icons > ul');
+    async _init_component() {
 
-        if (this.file) {
-            this._generate_img_from_file_data(this.file);
-        } else if (this.file_id) {
-            this._generate_img_from_id(this.file_id);
+        this.preview_container = this.element.querySelector('.fc_wrapper > .file_preview');
+        this.buttons_container = this.element.querySelector('.fc_wrapper > .icons > ul');
+
+        if (this.preview_container.children.length) {
+            this.is_empty = false;
         } else {
-            this.is_empty = true;
+            if (this.file) {
+                this._generate_img_from_file_data(this.file);
+                this.is_empty = false;
+            } else if (this.file_id) {
+                await this._generate_img_from_id(this.file_id);
+                this.is_empty = false;
+            }
         }
 
         this._insert_buttons();
@@ -130,7 +147,16 @@ class FileCRUD {
     }
 
     _generate_img_from_file_data(file_data) {
-        const { file_name, hash, optimized_format, sizes, alt, extension, mime_type } = file_data;
+        const {
+            file_name,
+            hash,
+            optimized_format,
+            sizes,
+            alt,
+            extension,
+            mime_type,
+            description
+        } = file_data;
         let file_size, path;
 
         if (mime_type === 'image/svg+xml') {
@@ -143,9 +169,9 @@ class FileCRUD {
         }
 
         this.preview_container.innerHTML = `
-            <picture>
+            <figure>
                 <img class='card-img-top' src='${path}' alt='${alt}'>
-            </picture>`;
+            </figure>`;
         this.is_empty = false;
     }
 
@@ -167,12 +193,14 @@ class FileCRUD {
     _clear_preview() {
         this.preview_container.innerHTML = '';
         this.is_empty = true;
+        this.element.dataset.fileId = '';
         this._update_buttons();
     }
 
     async _handle_picker() {
         const [id] = await this.picker.open({ type: 'image', single: true });
         if (id) {
+            this.element.dataset.fileId = id;
             const file_data = await this._fetch_file_data(id);
             if (file_data) {
                 await this._update_file(id, file_data);
