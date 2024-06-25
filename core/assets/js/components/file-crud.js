@@ -165,8 +165,6 @@ class FileCRUD {
         if (mime_type === 'image/svg+xml') {
             path = `/files/${hash.slice(0, 2)}/${file_name}.${extension}`;
         } else {
-            console.log(this);
-
             file_size = this.size ? findClosestNumber(this.size, sizes) : sizes[0];
             const folder = `/files/${hash.slice(0, 2)}`;
             const file_name_with_ext = `${file_name}.${optimized_format}`;
