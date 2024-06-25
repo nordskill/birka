@@ -896,9 +896,6 @@ class BibeEditor {
             }
         });
 
-        console.log(this.blocks);
-
-
     }
 
     #handle_keys = (event) => {
