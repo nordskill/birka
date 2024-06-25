@@ -1,4 +1,3 @@
-import { log10 } from 'chart.js/helpers';
 import findClosestNumber from '../functions/find-closest-number';
 import FilePicker from './file-picker';
 
@@ -89,7 +88,7 @@ class FileCRUD {
     _insert_template() {
 
         this.element = document.createElement('div');
-        this.element.className.add(['file_crud', 'position-relative', 'static']);
+        this.element.classList.add('file_crud', 'position-relative', 'static');
 
         this.element.innerHTML = `
             <div class="fc_wrapper">
