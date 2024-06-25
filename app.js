@@ -51,17 +51,22 @@ async function getSiteSettings() {
             .findOne()
             .populate('logo')
             .lean();
-        loadCustomModels();
+        registerModels();
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
 }
 
-function loadCustomModels() {
+function registerModels() {
+    const customModelPath = path.join(__dirname, `./custom/${SS.skin}/models`);
+    const { coreModels, customModels } = loadModels(customModelPath);
 
-    const modelDirectory = path.join(__dirname, `./custom/${SS.skin}/models`);
-    loadModels(modelDirectory);
+    global.coreModels = coreModels;
+    global.customModels = customModels;
 
+    // You can log the loaded models for verification
+    console.log('Core Models:', Object.keys(coreModels));
+    console.log('Custom Models:', Object.keys(customModels));
 }
 
 function setupApp() {

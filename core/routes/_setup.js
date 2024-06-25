@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const checkPermissions = require('../middleware/permissions');
+const { checkPermissions, checkDynamicPermissions } = require('../middleware/permissions');
 
 // Navigation
 const index = require('./index');
@@ -24,6 +24,7 @@ const cmsMenus = require('./cms/menus');
 const cmsTeam = require('./cms/team');
 const cmsSettings = require('./cms/settings');
 const cmsUpdate = require('./cms/update');
+const customModelRouter = require('./custom-model-router');
 
 // JSON API
 const apiAuth = require('./api/auth');
@@ -67,6 +68,9 @@ module.exports = (app) => {
     cmsRoutes.use('/team', checkPermissions(['team']), cmsTeam);
     cmsRoutes.use('/settings', checkPermissions(['settings']), cmsSettings);
     cmsRoutes.use('/update', checkPermissions(['updates']), cmsUpdate);
+
+    // Custom Model Routes
+    cmsRoutes.use('/custom', checkDynamicPermissions(['custom_models']), customModelRouter);
 
     app.use('/cms', cmsRoutes);
 

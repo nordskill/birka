@@ -12,7 +12,8 @@ const PERMISSIONS = {
     MENUS: { key: 'menus', label: 'Menus' },
     TEAM: { key: 'team', label: 'Team' },
     SETTINGS: { key: 'settings', label: 'Settings' },
-    UPDATES: { key: 'updates', label: 'Updates' }
+    UPDATES: { key: 'updates', label: 'Updates' },
+    CUSTOM_MODELS: { key: 'custom_models', label: 'Custom Models' }
 };
 
 module.exports = PERMISSIONS;
