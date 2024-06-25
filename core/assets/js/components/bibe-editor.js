@@ -442,13 +442,20 @@ class BibeEditor {
 
     static icons = {
         plus: '<svg viewBox="0 0 12 12"><path d="M11.044 5H7V.956a1 1 0 0 0-2 0V5H.956a1 1 0 0 0 0 2H5v4.044a1 1 0 0 0 2 0V7h4.044a1 1 0 0 0 0-2Z"/></svg>',
-        menu: '<svg width="11" height="7.333" viewBox="0 0 11 7.333"><path data-name="Path 636" d="M0 7.333h11V6.111H0Zm0-3.056h11V3.056H0ZM0-.001v1.223h11V0Z"/></svg>',
-        paragraph: '<svg width="11.04" height="10.32" viewBox="0 0 11.04 10.32"><path d="M11.04 2.4V0H0v2.4h1.92V.96h2.64v8.4H2.88v.96h5.28v-.96H6.48V.96h2.64V2.4Z"/></svg>',
-        heading: '<svg width="8.04" height="10.72" viewBox="0 0 8.04 10.72"><path d="M8.04 10.72V0H6.03v4.02H2.01V0H0v10.72h2.01V6.03h4.02v4.69Z"/></svg>',
-        list: '<svg width="12.06" height="12.06" viewBox="0 0 12.06 12.06"><path d="M4.69.67h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34ZM1.34 2.68a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Z" fill-rule="evenodd"/></svg>',
-        quote: '<svg width="11.96" height="8.56" viewBox="0 0 11.96 8.56"><path d="m.84 8.56 1.72-3.44H0V0h5.12v5.12L3.4 8.56Zm6.84 0L9.4 5.12H6.84V0h5.12v5.12l-1.72 3.44Z"/></svg>',
-        image: '<svg width="16" height="14" viewBox="0 0 16 14"><g><path d="M5.998 4.5a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5Z"/><path d="M1.998 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2h-12Zm12 1a1 1 0 0 1 1 1v6.5l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L.998 11V2a1 1 0 0 1 1-1Z"/></g></svg>',
-        trash: '<svg viewBox="0 0 13.714 16"><g fill="#ff0014"><path d="M4.571 5.714h1.143v6.857H4.571Z"></path><path d="M8 5.714h1.143v6.857H8Z"></path><path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path><path d="M4.571 0h4.571v1.143H4.571Z"></path></g></svg>'
+        menu: '<svg viewBox="0 0 11 7.333"><path d="M0 7.333h11V6.111H0Zm0-3.056h11V3.056H0ZM0-.001v1.223h11V0Z"/></svg>',
+        paragraph: '<svg viewBox="0 0 11.04 10.32"><path d="M11.04 2.4V0H0v2.4h1.92V.96h2.64v8.4H2.88v.96h5.28v-.96H6.48V.96h2.64V2.4Z"/></svg>',
+        heading: '<svg viewBox="0 0 8.04 10.72"><path d="M8.04 10.72V0H6.03v4.02H2.01V0H0v10.72h2.01V6.03h4.02v4.69Z"/></svg>',
+        list: '<svg viewBox="0 0 12.06 12.06"><path d="M4.69.67h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34ZM1.34 2.68a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Z" fill-rule="evenodd"/></svg>',
+        quote: '<svg viewBox="0 0 11.96 8.56"><path d="m.84 8.56 1.72-3.44H0V0h5.12v5.12L3.4 8.56Zm6.84 0L9.4 5.12H6.84V0h5.12v5.12l-1.72 3.44Z"/></svg>',
+        image: '<svg viewBox="0 0 16 14"><g><path d="M5.998 4.5a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5Z"/><path d="M1.998 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2h-12Zm12 1a1 1 0 0 1 1 1v6.5l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L.998 11V2a1 1 0 0 1 1-1Z"/></g></svg>',
+        trash: '<svg viewBox="0 0 13.714 16"><g fill="#ff0014"><path d="M4.571 5.714h1.143v6.857H4.571Z"></path><path d="M8 5.714h1.143v6.857H8Z"></path><path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path><path d="M4.571 0h4.571v1.143H4.571Z"></path></g></svg>',
+        bold: '<svg viewBox="0 0 12 12"><path d="M0 0v.973h1.506v10.055H0V12h6.544a7.852 7.852 0 0 0 4.131-.844A2.894 2.894 0 0 0 12 8.528a2.624 2.624 0 0 0-.946-2.114 4.864 4.864 0 0 0-2.72-.965 4.06 4.06 0 0 0 2.208-.788 2.1 2.1 0 0 0 .749-1.7A2.517 2.517 0 0 0 10.21.74 5.751 5.751 0 0 0 6.978 0Zm4.542.973h1.033a3.408 3.408 0 0 1 2.025.474 1.767 1.767 0 0 1 .64 1.519 1.829 1.829 0 0 1-.654 1.543 3.312 3.312 0 0 1-2.011.5H4.542Zm0 5h1.127a3.325 3.325 0 0 1 2.223.635 2.4 2.4 0 0 1 .733 1.921 2.333 2.333 0 0 1-.725 1.888 3.412 3.412 0 0 1-2.231.611H4.542V5.972Z"/></svg>',
+        italic: '<svg viewBox="0 0 9.38 10.72"><path d="M9.38 2.01V0h-6.7v2.01h1.922l-1.914 6.7H0v2.01h6.7V8.71H4.778l1.914-6.7Z"/></svg>',
+        underlined: '<svg viewBox="0 0 15.36 15.36"><path d="M.48.95A3.572 3.572 0 0 1 .03.91L0 .03Q.13.02.4.02q.6 0 1.12.04 1.32.07 1.66.07.86 0 1.68-.03L6.32.05q.56 0 .86-.02l-.01.14.02.64V.9a8.351 8.351 0 0 1-1.24.09.962.962 0 0 0-.79.25 3.277 3.277 0 0 0-.13 1.32q0 .13.005.325t.005.255l.01 2.29.14 2.8a4.453 4.453 0 0 0 .51 2.02 2.451 2.451 0 0 0 .96.92 3.725 3.725 0 0 0 1.77.47 6.207 6.207 0 0 0 1.91-.28 3.238 3.238 0 0 0 .99-.51 2.554 2.554 0 0 0 .65-.64 4.393 4.393 0 0 0 .53-1.14 9.032 9.032 0 0 0 .21-2.29q0-.79-.035-1.28t-.11-1.225q-.075-.735-.135-1.6l-.04-.59a1.579 1.579 0 0 0-.24-.88 1.013 1.013 0 0 0-.77-.34l-1 .02-.14-.025.02-.86h.84l2.05.1a13.854 13.854 0 0 0 1.96-.1l.18.02a4.076 4.076 0 0 1 .06.51 2.519 2.519 0 0 1-.04.31 3.635 3.635 0 0 1-.84.13 2.961 2.961 0 0 0-.79.17.554.554 0 0 0-.15.41q0 .07.015.27t.015.31q.08.19.22 3.96a14.6 14.6 0 0 1-.15 3.04 4.131 4.131 0 0 1-.41 1.22 4.441 4.441 0 0 1-1.12 1.23 5.655 5.655 0 0 1-1.82.89 8.833 8.833 0 0 1-2.55.33 7.776 7.776 0 0 1-2.84-.46 4.21 4.21 0 0 1-1.79-1.22 4.312 4.312 0 0 1-.83-1.95 13.028 13.028 0 0 1-.16-2.37V3.47a6.6 6.6 0 0 0-.17-2.13Q1.7.98.48.95Zm14.88 14.09v-.64a.308.308 0 0 0-.32-.32H.32a.308.308 0 0 0-.32.32v.64a.308.308 0 0 0 .32.32h14.72a.308.308 0 0 0 .32-.32Z"/></svg>',
+        align_left: '<svg viewBox="0 0 13.4 9.38"><path d="M10.05 3.35H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73.67H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73 6.03H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M10.05 8.71H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/></svg>',
+        align_center: '<svg viewBox="0 0 13.4 9.38"><path d="M10.72 3.35H2.68" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73.67H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73 6.03H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M10.72 8.71H2.68" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/></svg>',
+        align_right: '<svg viewBox="0 0 13.4 9.38"><path d="M12.73 3.35H3.35" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73.67H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73 6.03H.67" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/><path d="M12.73 8.71H3.35" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.34"/></svg>',
+        link: '<svg viewBox="0 0 13.44 6.72"><path d="M1.278 3.36A2.083 2.083 0 0 1 3.36 1.28H6V0H3.36a3.36 3.36 0 0 0 0 6.72H6V5.442H3.36A2.083 2.083 0 0 1 1.278 3.36Zm2.562.66H9.6V2.7H3.84ZM10.08 0H7.44v1.28h2.64a2.082 2.082 0 1 1 0 4.164H7.44V6.72h2.64a3.36 3.36 0 0 0 0-6.72Z"/></svg>'
     }
 
     constructor(options) {
@@ -521,19 +528,7 @@ class BibeEditor {
                     <div class="controls"></div>
                 </div>
                 <div class="menu text">
-                    <div class="controls">
-                        <div class="bibe_btn text_type" data-type="bold">B</div>
-                        <div class="bibe_btn text_type" data-type="italic">I</div>
-                        <div class="bibe_btn text_type" data-type="underlined">U</div>
-                        <div class="divider"></div>
-                        <div class="bibe_btn text_type" data-type="align_left"><</div>
-                        <div class="bibe_btn text_type" data-type="align_center">|</div>
-                        <div class="bibe_btn text_type" data-type="align_right">></div>
-                        <div class="divider"></div>
-                        <div class="bibe_btn text_type" data-type="link">8</div>
-                        <div class="divider"></div>
-                        <div class="bibe_btn text_type" data-type="list">L</div>
-                    </div>
+                    <div class="controls"></div>
                 </div>
             </div>`;
 
@@ -1006,7 +1001,7 @@ class BibeEditor {
                     if (isLastLi) {
                         event.preventDefault();
                         node.remove(); // Remove the last LI
-    
+
                         const newParagraph = ParagraphBlock.create();
                         this.blockWithCursor.element.insertAdjacentElement('afterend', newParagraph.element);
                         this.#focusOnNewBlock(newParagraph.element);
@@ -1276,6 +1271,65 @@ class BibeEditor {
 
     #initTextMenu() {
         this.text_menu = this.container.querySelector('.menu.text');
+
+        const buttons = [
+            {
+                type: 'bold',
+                icon: BibeEditor.icons.bold,
+                title: 'Bold'
+            },
+            {
+                type: 'italic',
+                icon: BibeEditor.icons.italic,
+                title: 'Italic'
+            },
+            {
+                type: 'underlined',
+                icon: BibeEditor.icons.underlined,
+                title: 'Underlined'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'align_left',
+                icon: BibeEditor.icons.align_left,
+                title: 'Align left'
+            },
+            {
+                type: 'align_center',
+                icon: BibeEditor.icons.align_center,
+                title: 'Align center'
+            },
+            {
+                type: 'align_right',
+                icon: BibeEditor.icons.align_right,
+                title: 'Align right'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'link',
+                icon: BibeEditor.icons.link,
+                title: 'Link'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'list',
+                icon: BibeEditor.icons.list,
+                title: 'List'
+            }
+        ];
+
+        this.text_menu.firstElementChild.innerHTML = buttons.map(button => {
+            if (button.type === 'divider') {
+                return '<div class="divider"></div>';
+            }
+            return `<div title="${button.title}" class="bibe_btn text_type" data-type="${button.type}">${button.icon}</div>`;
+        }).join('');
 
         this.text_menu.addEventListener('click', e => {
             if (e.target.closest('.text_type')) {
