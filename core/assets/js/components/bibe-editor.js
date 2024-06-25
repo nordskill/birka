@@ -1,4 +1,7 @@
 import FileCRUD from './file-crud';
+import EventBus from '../../../utils/events';
+
+const blockEvents = new EventBus();
 
 // Base Block Class
 class Block {
@@ -10,7 +13,18 @@ class Block {
         this.attributes = this.get_attributes();
 
         this.update_rect();
+
         this.element.addEventListener('dragover', e => e.preventDefault());
+
+        this.element.addEventListener('mouseenter', e => {
+            this.isHovered = true;
+            blockEvents.emit('block:mouse:in', this);
+        });
+
+        this.element.addEventListener('mouseleave', e => {
+            this.isHovered = false;
+            // blockEvents.emit('block:mouse:out', this);
+        });
 
         // this.element.addEventListener('paste', e => {
         //     e.preventDefault();
@@ -531,9 +545,19 @@ class BibeEditor {
 
             this.editor.addEventListener('mousemove', this.#handleMouseMove);
             this.editor.addEventListener('keydown', this.#handle_keys);
+            this.editor.addEventListener('mouseleave', this.#hideAnchor);
 
             window.addEventListener('click', this.#handleWindowClick);
             window.addEventListener('mousedown', this.#handleWindowMouseDown);
+
+            blockEvents.on('block:mouse:in', block => {
+                this.hoveredBlock = block;
+                this.#showAnchor(block.element);
+            });
+            blockEvents.on('block:mouse:out', block => {
+                this.hoveredBlock = null;
+                this.#hideAnchor();
+            });
 
         }, 4);
 
@@ -767,7 +791,7 @@ class BibeEditor {
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
             });
 
-            button.addEventListener('click', (e) => this.#handleRemoveLinkClick(e, linkElement));
+            button.onclick = (e) => this.#handleRemoveLinkClick(e, linkElement);
 
             buttonWrapper.appendChild(button);
             this.editor.appendChild(buttonWrapper);
@@ -927,23 +951,23 @@ class BibeEditor {
     #handle_enter_key(event) {
 
         const selection = window.getSelection();
-        const selectedNode = selection.anchorNode;
-        const parentTag = selectedNode.parentNode;
+        const selectedNode = selection?.anchorNode;
+        const currentBlock = this.blockWithCursor.element;
 
-        if (selection.anchorOffset === selectedNode.length || selectedNode?.innerText?.trim().length === 0) {
+        if (selection.anchorOffset === selectedNode?.length || selectedNode?.innerText?.trim().length === 0) {
             this.skip_update = true;
 
-            if (parentTag.tagName.match(/^H[1-6]$/)) {
+            if (this.blockWithCursor.type === 'heading' || this.blockWithCursor.type === 'paragraph') {
 
                 event.preventDefault();
                 const newParagraph = ParagraphBlock.create();
-                const currentBlock = selectedNode.parentNode.closest('.bibe_block');
                 currentBlock.insertAdjacentElement('afterend', newParagraph.element);
                 this.#focusOnNewBlock(newParagraph.element);
                 this.blockWithCursor = newParagraph;
                 this.#init_blocks();
 
             } else if (this.blockWithCursor.type === 'quote') {
+
                 if (selectedNode.parentElement.tagName === 'CITE') {
                     event.preventDefault();
                     const newParagraph = ParagraphBlock.create();
@@ -955,10 +979,38 @@ class BibeEditor {
                     event.preventDefault();
                     this.place_cursor_into(this.blockWithCursor.element.querySelector('cite'));
                 }
+
+            } else if (this.blockWithCursor.type === 'list') {
+
+                // Check if the cursor is in the last LI
+                let node = selection.anchorNode;
+                while (node && node.nodeName !== 'LI') {
+                    node = node.parentNode;
+                }
+
+                const isLastLi = node === this.blockWithCursor.element.lastElementChild;
+                const isEmptyLi = selectedNode.textContent.trim() === '';
+
+                if (isEmptyLi) {
+                    if (isLastLi) {
+                        event.preventDefault();
+                        node.remove(); // Remove the last LI
+    
+                        const newParagraph = ParagraphBlock.create();
+                        this.blockWithCursor.element.insertAdjacentElement('afterend', newParagraph.element);
+                        this.#focusOnNewBlock(newParagraph.element);
+                        this.blockWithCursor = newParagraph;
+                        this.#init_blocks();
+                    } else {
+                        event.preventDefault();
+                        const newLi = document.createElement('li');
+                        newLi.innerHTML = '&#8203;';
+                        node.insertAdjacentElement('afterend', newLi);
+                        this.place_cursor_into(newLi);
+                    }
+                }
             }
-
         }
-
     }
 
     #handle_backspace_key(event) {
@@ -1020,7 +1072,7 @@ class BibeEditor {
     #updateBlocks() {
         this.blocks.forEach(block => {
             block.update_rect();
-            block.isHovered = block.element === this.hoveredBlock?.element;
+            // block.isHovered = block.element === this.hoveredBlock?.element;
         });
     }
 
@@ -1181,7 +1233,7 @@ class BibeEditor {
 
     #showAnchor(block) {
 
-        block.isHovered = true;
+        // block.isHovered = true;
         // Calculate and adjust the anchor's position to the block's top left corner
         const blockRect = block.getBoundingClientRect();
         const blockStyle = window.getComputedStyle(block);
@@ -1204,11 +1256,11 @@ class BibeEditor {
         this.anchor.style.display = 'block'; // Show the anchor
     }
 
-    #hideAnchor() {
+    #hideAnchor = () => {
         this.anchor.style.display = 'none'; // Hide the anchor
-        this.blocks.forEach(block => {
-            block.isHovered = false;
-        });
+        // this.blocks.forEach(block => {
+        //     block.isHovered = false;
+        // });
     }
 
     #initTextMenu() {
@@ -1291,9 +1343,6 @@ class BibeEditor {
         const blockElem = elementAtPoint?.closest('.bibe_block');
 
         if (blockElem) {
-            const block = this.blocks.find(b => {
-                return b.element === blockElem;
-            });
 
             const linkElement = e.target.closest('a');
             if (linkElement) {
@@ -1302,17 +1351,6 @@ class BibeEditor {
                 this.#hideRemoveLinkButton();
             }
 
-            block.isHovered = true;
-            this.hoveredBlock = block;
-
-            if (this.hoveredBlock !== this.previousHoveredBlock) {
-                this.#showAnchor(elementAtPoint.closest('.bibe_block'));
-                this.previousHoveredBlock = this.hoveredBlock;
-            }
-
-        } else {
-            this.hoveredBlock = null;
-            this.#hideAnchor();
         }
 
         if (this.anchorHandlePressed === true) {
@@ -1420,6 +1458,27 @@ class BibeEditor {
     #blockIsEmpty(block) {
         const content = block.element.innerHTML.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
         return content === '' || content === '<br>';
+    }
+
+    #is_cursor_at_end(element) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return false;
+
+        // Create a range that selects the element's contents
+        const elementRange = document.createRange();
+        elementRange.selectNodeContents(element);
+        elementRange.collapse(false); // Collapse the range to the end of the content
+
+        // Get the user's current selection range
+        const userRange = selection.getRangeAt(0);
+        const beyondUserRange = document.createRange(); // Create a new range to check the end condition
+
+        // Set the start of this range to the end of the user's range
+        beyondUserRange.setStart(userRange.endContainer, userRange.endOffset);
+        beyondUserRange.setEnd(elementRange.endContainer, elementRange.endOffset);
+
+        // Check if there's any non-whitespace text or non-empty editable elements left
+        return !beyondUserRange.toString().trim() && beyondUserRange.endOffset === elementRange.endOffset;
     }
 
 }
