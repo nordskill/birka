@@ -935,7 +935,7 @@ class BibeEditor {
 
     #handle_keys = (event) => {
 
-        if (this.blockWithCursor.element.dataset.placeholder) { // if the block has a placeholder
+        if (this.blockWithCursor?.element?.dataset?.placeholder) { // if the block has a placeholder
             this.blockWithCursor.remove_placeholder();
         }
 
