@@ -1,3 +1,4 @@
+import { log10 } from 'chart.js/helpers';
 import findClosestNumber from '../functions/find-closest-number';
 import FilePicker from './file-picker';
 
@@ -74,12 +75,15 @@ class FileCRUD {
     }
 
     _get_options_from_dataset() {
+
+        const idFalsyValues = ['null', 'undefined', 'false', ''];
         const dataset = this.element.dataset;
+        
         this.files_api = dataset.filesApi;
         this.endpoint = dataset.endpoint;
         this.field_name = dataset.fieldName;
-        this.file_id = dataset.fileId;
-        this.size = parseInt(dataset.size) || "";
+        this.file_id = idFalsyValues.includes(dataset.fileId) || !dataset.fileId ? null : dataset.fileId;
+        this.size = parseInt(dataset.size) || '';
     }
 
     _insert_template() {
@@ -154,14 +158,15 @@ class FileCRUD {
             sizes,
             alt,
             extension,
-            mime_type,
-            description
+            mime_type
         } = file_data;
         let file_size, path;
 
         if (mime_type === 'image/svg+xml') {
             path = `/files/${hash.slice(0, 2)}/${file_name}.${extension}`;
         } else {
+            console.log(this);
+
             file_size = this.size ? findClosestNumber(this.size, sizes) : sizes[0];
             const folder = `/files/${hash.slice(0, 2)}`;
             const file_name_with_ext = `${file_name}.${optimized_format}`;

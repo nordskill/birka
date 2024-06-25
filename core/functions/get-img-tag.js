@@ -59,8 +59,7 @@ function getImgTag(imageData, options = {}) {
         sizes: imageSizes,
         alt,
         width,
-        height,
-        description
+        height
     } = imageData;
 
     let srcset = '';

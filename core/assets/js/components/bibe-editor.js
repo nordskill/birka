@@ -23,11 +23,18 @@ class Block {
     }
 
     serialize() {
+
+        const content = this.get_content();
+        const contentFalsyValues = ['null', 'undefined'];
+
+        if (!content || contentFalsyValues.includes(content)) return null;
+
         return {
             type: this.type,
-            content: this.get_content(),
+            content,
             attributes: this.get_attributes()
         };
+
     }
 
     update() {
@@ -879,7 +886,7 @@ class BibeEditor {
                     const img = element.querySelector('img');
                     const imgBlock = ImageBlock.create(element, img.dataset.id, this.options);
                     element.replaceWith(imgBlock.element);
-                    // new FileCRUD(imgBlock.element);
+                    new FileCRUD(imgBlock.element);
                     return imgBlock;
                 case 'DIV': // not a first init for images
                     if (element.classList.contains('file_crud')) {
@@ -1390,7 +1397,9 @@ class BibeEditor {
 
     #gather_content() {
 
-        this.content = this.blocks.map(block => block.serialize());
+        this.content = this.blocks
+            .map(block => block.serialize())
+            .filter(blockData => blockData);
 
         if (this.#contentIsEmpty()) return [];
         return this.content;

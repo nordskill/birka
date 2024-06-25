@@ -13,6 +13,13 @@ async function OBJtoHTML(body, options = {}) {
 	if (!body || body.length === 0) return html;
 
 	for (const element of body) {
+
+		const contentFalsyValues = ['null', 'undefined'];
+		
+		if (!element.content || contentFalsyValues.includes(element.content)) {
+			continue;
+		}
+
 		switch (element.type) {
 			case 'paragraph':
 				const textAlign = element.attributes?.align ? `style="text-align: ${element.attributes.align}"` : '';
