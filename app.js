@@ -27,7 +27,7 @@ const SiteSettings = require('./core/models/settings');
 const setupRoutes = require('./core/routes/_setup');
 const OperationalError = require('./core/functions/operational-error');
 
-const { loadModels, getAllSubmodels, getSubmodels } = require('./core/functions/model-loader');
+const { loadModels, getAllSubmodels, getSubmodels, getCustomModel, getModelNameBySlug } = require('./core/functions/model-loader');
 
 // Object to track exceeded request counts and initial exceedance flag per IP
 let exceededRequests = {};
@@ -59,14 +59,19 @@ async function getSiteSettings() {
 
 function registerModels() {
     const customModelPath = path.join(__dirname, `./custom/${SS.skin}/models`);
-    const { coreModels, customModels } = loadModels(customModelPath);
+    const { coreModels, customModels, subModels } = loadModels(customModelPath);
 
     global.coreModels = coreModels;
     global.customModels = customModels;
+    global.subModels = subModels;
 
-    // You can log the loaded models for verification
+    console.log(global.customModels);
+    
+
+    // Log the loaded models for verification
     console.log('Core Models:', Object.keys(coreModels));
     console.log('Custom Models:', Object.keys(customModels));
+    console.log('Sub Models:', Object.keys(subModels));
 }
 
 function setupApp() {

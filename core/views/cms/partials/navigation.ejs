@@ -45,22 +45,24 @@
         </a>
     </li>
     <% } %>
-    <pre>
-        <%= JSON.stringify(Object.keys(customModels), null, 2); %>
-    </pre>
+
+    
+
     <% if (auth_user.permissions.includes('custom_models')) { %>
-        <% Object.keys(customModels).forEach(model => { %>
-            <pre>
-                <%= JSON.stringify(model, null, 2); %>
-            </pre>
+        <% Object.keys(global.customModels).forEach(modelName => { %>
+            <% const modelMeta = global.customModels[modelName]; %>
             <li class="nav-item">
-                <a href="/cms/custom/<%= model.slug %>" class="nav-link <%= active === model.slug ? 'active' : '' %>">
-                    <%- icon({ name: 'page' }) %>
-                    <%= model.slug %>
+                <a href="/cms/custom/<%= modelMeta.slug %>" class="nav-link <%= active === modelMeta.slug ? 'active' : '' %>">
+                    <%- modelMeta.icon %>
+                    <%= modelMeta.menuName %>
                 </a>
             </li>
-        <% }) %>
+        <% }); %>
     <% } %>
+
+
+
+
     <% if (auth_user.permissions.includes('files')) { %>
     <li class="nav-item">
         <a href="/cms/files" class="nav-link <%= active === 'files' ? 'active' : '' %>">
