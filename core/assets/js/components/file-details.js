@@ -1,4 +1,3 @@
-import { set } from 'mongoose';
 import Debouncer from '../functions/debouncer';
 import TagsCRUD from './tags-crud';
 
@@ -184,6 +183,7 @@ class FileDetails {
     }
 
     _initFieldUpdates(id) {
+
         const fields = this.win.querySelectorAll('input, textarea');
         const endpoint = `/api/files/${id}`;
         const token = document.querySelector('meta[name="csrf"]').content;
@@ -215,8 +215,6 @@ class FileDetails {
             });
         });
     }
-
-
 
 }
 

@@ -97,7 +97,8 @@ class Debouncer {
     }
 
     async _send_request() {
-        const value = this.field_element.value;
+        const isCheckbox = this.field_element.type === 'checkbox';
+        const value = isCheckbox ? this.field_element.checked : this.field_element.value;
         const name = this.field_element.name;
         let response;
 
