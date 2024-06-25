@@ -27,6 +27,10 @@
         blockquote {
             padding-left: 2ch;
             border-left: 4px solid #ddd;
+
+            cite {
+                padding: 0;
+            }
         }
 
         ul.bibe_block,

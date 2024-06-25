@@ -566,8 +566,6 @@ class BibeEditor {
         } else if (type === 'list') {
             this.place_cursor_into(block.element.querySelector('li'));
         } else if (type === 'quote') {
-            console.log(block.element.querySelector('p'));
-            
             this.place_cursor_into(block.element.querySelector('p'));
         }
 
@@ -904,13 +902,13 @@ class BibeEditor {
 
         switch (event.key) {
             case 'Enter':
-                this.#handleEnterKey(event);
+                this.#handle_enter_key(event);
                 break;
             case 'Backspace':
-                this.#handleBackspaceKey(event);
+                this.#handle_backspace_key(event);
                 break;
             case 'Delete':
-                this.#handleDeleteKey(event);
+                this.#handle_delete_key(event);
                 break;
             default:
                 if (this.ignored_keys.includes(event.key)) return;
@@ -922,7 +920,7 @@ class BibeEditor {
 
     }
 
-    #handleEnterKey(event) {
+    #handle_enter_key(event) {
 
         const selection = window.getSelection();
         const selectedNode = selection.anchorNode;
@@ -934,20 +932,32 @@ class BibeEditor {
             if (parentTag.tagName.match(/^H[1-6]$/)) {
 
                 event.preventDefault();
-                const newParagraph = ParagraphBlock.create('');
+                const newParagraph = ParagraphBlock.create();
                 const currentBlock = selectedNode.parentNode.closest('.bibe_block');
                 currentBlock.insertAdjacentElement('afterend', newParagraph.element);
                 this.#focusOnNewBlock(newParagraph.element);
                 this.blockWithCursor = newParagraph;
                 this.#init_blocks();
 
+            } else if (this.blockWithCursor.type === 'quote') {
+                if (selectedNode.parentElement.tagName === 'CITE') {
+                    event.preventDefault();
+                    const newParagraph = ParagraphBlock.create();
+                    this.blockWithCursor.element.insertAdjacentElement('afterend', newParagraph.element);
+                    this.#focusOnNewBlock(newParagraph.element);
+                    this.blockWithCursor = newParagraph;
+                    this.#init_blocks();
+                } else {
+                    event.preventDefault();
+                    this.place_cursor_into(this.blockWithCursor.element.querySelector('cite'));
+                }
             }
 
         }
 
     }
 
-    #handleBackspaceKey(event) {
+    #handle_backspace_key(event) {
         const selection = window.getSelection();
         if (!selection.rangeCount) return;
 
@@ -967,7 +977,7 @@ class BibeEditor {
         }
     }
 
-    #handleDeleteKey(event) {
+    #handle_delete_key(event) {
 
         const blockContent = this.blockWithCursor.element.innerHTML.trim();
 
