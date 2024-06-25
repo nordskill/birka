@@ -440,6 +440,17 @@ class BibeEditor {
         }
     };
 
+    static icons = {
+        plus: '<svg viewBox="0 0 12 12"><path d="M11.044 5H7V.956a1 1 0 0 0-2 0V5H.956a1 1 0 0 0 0 2H5v4.044a1 1 0 0 0 2 0V7h4.044a1 1 0 0 0 0-2Z"/></svg>',
+        menu: '<svg width="11" height="7.333" viewBox="0 0 11 7.333"><path data-name="Path 636" d="M0 7.333h11V6.111H0Zm0-3.056h11V3.056H0ZM0-.001v1.223h11V0Z"/></svg>',
+        paragraph: '<svg width="11.04" height="10.32" viewBox="0 0 11.04 10.32"><path d="M11.04 2.4V0H0v2.4h1.92V.96h2.64v8.4H2.88v.96h5.28v-.96H6.48V.96h2.64V2.4Z"/></svg>',
+        heading: '<svg width="8.04" height="10.72" viewBox="0 0 8.04 10.72"><path d="M8.04 10.72V0H6.03v4.02H2.01V0H0v10.72h2.01V6.03h4.02v4.69Z"/></svg>',
+        list: '<svg width="12.06" height="12.06" viewBox="0 0 12.06 12.06"><path d="M4.69.67h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34Zm0 4.69h6.7a.67.67 0 1 1 0 1.34h-6.7a.67.67 0 1 1 0-1.34ZM1.34 2.68a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Zm0 4.69a1.34 1.34 0 1 1 1.34-1.34 1.34 1.34 0 0 1-1.34 1.34Z" fill-rule="evenodd"/></svg>',
+        quote: '<svg width="11.96" height="8.56" viewBox="0 0 11.96 8.56"><path d="m.84 8.56 1.72-3.44H0V0h5.12v5.12L3.4 8.56Zm6.84 0L9.4 5.12H6.84V0h5.12v5.12l-1.72 3.44Z"/></svg>',
+        image: '<svg width="16" height="14" viewBox="0 0 16 14"><g><path d="M5.998 4.5a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5Z"/><path d="M1.998 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2h-12Zm12 1a1 1 0 0 1 1 1v6.5l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L.998 11V2a1 1 0 0 1 1-1Z"/></g></svg>',
+        trash: '<svg viewBox="0 0 13.714 16"><g fill="#ff0014"><path d="M4.571 5.714h1.143v6.857H4.571Z"></path><path d="M8 5.714h1.143v6.857H8Z"></path><path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path><path d="M4.571 0h4.571v1.143H4.571Z"></path></g></svg>'
+    }
+
     constructor(options) {
         this.options = options;
         this.container = document.querySelector(options.container);
@@ -1150,32 +1161,32 @@ class BibeEditor {
             buttons = [
                 {
                     type: 'paragraph',
-                    icon: 'P',
-                    title: 'Paragraph',
+                    icon: BibeEditor.icons.paragraph,
+                    title: 'Add paragraph',
                     action
                 },
                 {
                     type: 'heading',
-                    icon: 'H',
-                    title: 'Heading',
+                    icon: BibeEditor.icons.heading,
+                    title: 'Add heading',
                     action
                 },
                 {
                     type: 'list',
-                    icon: 'L',
-                    title: 'List',
+                    icon: BibeEditor.icons.list,
+                    title: 'Add list block',
                     action
                 },
                 {
                     type: 'quote',
-                    icon: 'Q',
-                    title: 'Quote',
+                    icon: BibeEditor.icons.quote,
+                    title: 'Add quote block',
                     action
                 },
                 {
                     type: 'image',
-                    icon: 'I',
-                    title: 'Image',
+                    icon: BibeEditor.icons.image,
+                    title: 'Add image block',
                     action
                 }
             ];
@@ -1183,26 +1194,26 @@ class BibeEditor {
             buttons = [
                 {
                     type: 'paragraph',
-                    icon: 'P',
-                    title: 'Paragraph',
+                    icon: BibeEditor.icons.paragraph,
+                    title: 'Change to paragraph',
                     action
                 },
                 {
                     type: 'heading',
-                    icon: 'H',
-                    title: 'Heading',
+                    icon: BibeEditor.icons.heading,
+                    title: 'Change to heading',
                     action
                 },
                 {
                     type: 'list',
-                    icon: 'L',
-                    title: 'List',
+                    icon: BibeEditor.icons.list,
+                    title: 'Change to list',
                     action
                 },
                 {
                     type: 'quote',
-                    icon: 'Q',
-                    title: 'Quote',
+                    icon: BibeEditor.icons.quote,
+                    title: 'Change to quote',
                     action
                 },
                 {
@@ -1210,8 +1221,8 @@ class BibeEditor {
                 },
                 {
                     type: 'delete',
-                    icon: '<svg viewBox="0 0 13.714 16"><g fill="#ff0014"><path d="M4.571 5.714h1.143v6.857H4.571Z"></path><path d="M8 5.714h1.143v6.857H8Z"></path><path d="M0 2.286v1.143h1.143v11.428A1.143 1.143 0 0 0 2.286 16h9.143a1.143 1.143 0 0 0 1.143-1.143V3.429h1.143V2.286Zm2.286 12.571V3.429h9.143v11.428Z"></path><path d="M4.571 0h4.571v1.143H4.571Z"></path></g></svg>',
-                    title: 'Delete',
+                    icon: BibeEditor.icons.trash,
+                    title: 'Delete block',
                     action: 'delete'
                 }
             ];
@@ -1221,7 +1232,7 @@ class BibeEditor {
             if (button.type === 'divider') {
                 return '<div class="divider"></div>';
             }
-            return `<div class="bibe_btn block_action" data-type="${button.type}" data-action="${button.action}">${button.icon}</div>`;
+            return `<div title="${button.title}" class="bibe_btn block_action" data-type="${button.type}" data-action="${button.action}">${button.icon}</div>`;
         }).join('');
 
     }
@@ -1246,9 +1257,9 @@ class BibeEditor {
         const miniBtn = this.anchor.firstElementChild;
 
         if (this.#blockIsEmpty(this.hoveredBlock)) {
-            miniBtn.innerHTML = `<svg viewBox="0 0 12 12"><path d="M11.044 5H7V.956a1 1 0 0 0-2 0V5H.956a1 1 0 0 0 0 2H5v4.044a1 1 0 0 0 2 0V7h4.044a1 1 0 0 0 0-2Z"/></svg>`;
+            miniBtn.innerHTML = BibeEditor.icons.plus;
         } else {
-            miniBtn.innerHTML = `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="red" stroke-width="10" fill="none"></circle></svg>`;
+            miniBtn.innerHTML = BibeEditor.icons.menu;
         }
 
         this.anchor.style.left = `0px`;
