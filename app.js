@@ -65,13 +65,8 @@ function registerModels() {
     global.customModels = customModels;
     global.subModels = subModels;
 
-    console.log(global.customModels);
-    
-
-    // Log the loaded models for verification
-    console.log('Core Models:', Object.keys(coreModels));
     console.log('Custom Models:', Object.keys(customModels));
-    console.log('Sub Models:', Object.keys(subModels));
+    console.log('Custom Sub Models:', Object.keys(subModels));
 }
 
 function setupApp() {
@@ -262,7 +257,7 @@ function csrfToken(req, res, next) {
 }
 
 function csrfProtection(req, res, next) {
-    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
         const clientCsrfToken = req.body._csrf || req.query._csrf || req.headers['x-csrf-token'];
         if (!clientCsrfToken || req.session.csrfToken !== clientCsrfToken) {
             console.error(`CSRF token mismatch for request on ${req.path} from IP: ${req.ip}`);

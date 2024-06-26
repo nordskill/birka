@@ -67,11 +67,13 @@ function loadCustomModels(directory, coreModels) {
                         const model = customModelInstance.register();
                         customModels[customModelInstance.modelName] = {
                             model,
+                            modelName: customModelInstance.modelName,
                             title: customModelInstance.title,
                             menuName: customModelInstance.menuName,
                             icon: customModelInstance.icon,
                             position: customModelInstance.position,
-                            slug: customModelInstance.slug
+                            slug: customModelInstance.slug,
+                            table: customModelInstance.table
                         };
                         modelSlugs[customModelInstance.slug] = customModelInstance.modelName; // Store slug
                     } else {

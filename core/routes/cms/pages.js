@@ -14,7 +14,14 @@ const TITLE = 'Page';
 // CMS Pages
 router.get('/', async (req, res, next) => {
 
-    const pageSubmodels = getSubmodels('Page');
+    const submodelTypes = [];
+
+    for (const key in global.subModels) {
+        if (Object.hasOwnProperty.call(global.subModels, key)) {
+            const element = global.subModels[key];
+            submodelTypes.push(element.type);
+        }
+    }
 
     try {
         const pages = await Page.find()
@@ -31,7 +38,7 @@ router.get('/', async (req, res, next) => {
             template_name: `cms_${SLUG}s`,
             active: `${SLUG}s`,
             pages,
-            submodels: pageSubmodels,
+            submodels: submodelTypes,
             breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'

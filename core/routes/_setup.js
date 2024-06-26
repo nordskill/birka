@@ -24,7 +24,7 @@ const cmsMenus = require('./cms/menus');
 const cmsTeam = require('./cms/team');
 const cmsSettings = require('./cms/settings');
 const cmsUpdate = require('./cms/update');
-const customModelRouter = require('./custom-model-router');
+const customModelRouter = require('./cms/custom-model-router');
 
 // JSON API
 const apiAuth = require('./api/auth');
@@ -37,6 +37,7 @@ const apiProducts = require('./api/products');
 const apiSend = require('./api/send');
 const apiMembers = require('./api/members');
 const apiSitemap = require('./api/sitemap');
+const apiCustom = require('./api/custom');
 
 module.exports = (app) => {
 
@@ -96,6 +97,7 @@ module.exports = (app) => {
     apiRoutes.use('/send', checkPermissions(['send']), apiSend);
     apiRoutes.use('/members', checkPermissions(['team']), apiMembers);
     apiRoutes.use('/sitemap', checkPermissions(['sitemap']), apiSitemap);
+    apiRoutes.use('/custom', checkPermissions(['custom_models']), apiCustom);
 
     app.use('/api', apiRoutes);
 

@@ -6,6 +6,7 @@ class FileCRUD {
         this.picker = new FilePicker();
         this.buttons = this._init_buttons();
         this.is_empty = true;
+        this.token = options.token;
 
         if (typeof options === 'string') {
             const element = document.querySelector(options);
@@ -244,7 +245,10 @@ class FileCRUD {
         try {
             const response = await fetch(this.endpoint, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': this.token
+                },
                 body: JSON.stringify(data)
             });
             const result = await response.json();
