@@ -33,7 +33,8 @@ export default async function () {
         endpoint: '/api/pages/' + page.dataset.id,
         field_name: 'img_preview',
         file: preview,
-        size: 300
+        size: 300,
+        token: csrfToken
     });
 
     new TagsCRUD('.tags_crud');

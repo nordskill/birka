@@ -26,11 +26,12 @@ class AJAXTable {
             cell.dataset.field = field;
 
             if (field === 'image') {
-                const fileCrud = new FileCRUD({
+                new FileCRUD({
                     container: cell,
                     files_api: this.fc.files_api,
                     endpoint: this.fc.endpoint,
-                    field_name: this.fc.field_name
+                    field_name: this.fc.field_name,
+                    token: this.token
                 });
             }
 

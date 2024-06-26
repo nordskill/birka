@@ -6,7 +6,6 @@ class FileCRUD {
         this.picker = new FilePicker();
         this.buttons = this._init_buttons();
         this.is_empty = true;
-        this.token = options.token;
 
         if (typeof options === 'string') {
             const element = document.querySelector(options);
@@ -61,6 +60,7 @@ class FileCRUD {
         this.file = options.file;
         this.file_id = options.file_id || this.file?._id || "";
         this.size = options.size || "";
+        this.token = options.token;
         this._insert_template();
     }
 
@@ -84,6 +84,7 @@ class FileCRUD {
         this.field_name = dataset.fieldName;
         this.file_id = idFalsyValues.includes(dataset.fileId) || !dataset.fileId ? null : dataset.fileId;
         this.size = parseInt(dataset.size) || '';
+        this.token = dataset.token;
     }
 
     _insert_template() {

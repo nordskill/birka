@@ -360,7 +360,8 @@
                                         endpoint: '/api/products/' + product._id,
                                         field_name: 'thumbnail',
                                         file_id: product.thumbnail?._id,
-                                        size: '300'
+                                        size: '300',
+                                        token: csrf_token
                                     }) %>
                                     <div class="card-body">
                                         <label class="form-check-label d-flex user-select-none mb-3">
