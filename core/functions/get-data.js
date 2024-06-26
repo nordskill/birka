@@ -21,7 +21,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch a single Image document by ID
- * const image = await load_model_data('Image',
+ * const image = await getData('Image',
  * { 
  *      _id: '60c72b2f9b1e8c2a6d8e4d3b'
  * },
@@ -31,7 +31,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch multiple BlogPost documents, sorted by date, limited to 10, excluding one with a specific ID
- * const blogPosts = await load_model_data('BlogPost',
+ * const blogPosts = await getData('BlogPost',
  * {
  *      _id: { $ne: '60c72b2f9b1e8c2a6d8e4d3b' }
  * },
@@ -42,7 +42,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch multiple Page documents, sorted by a field, limited to 5
- * const pages = await load_model_data('Page', {},
+ * const pages = await getData('Page', {},
  * {
  *      sort: { someField: 1 },
  *      limit: 5
@@ -86,7 +86,11 @@ async function getData(modelName, query = {}, options = {}) {
             case 'Member':
             case 'Notification':
             default:
-                return null;
+                if (global.customModels && global.customModels[modelName]) {
+                    model = global.customModels[modelName].model;
+                } else {
+                    return null;
+                }
         }
 
         let queryBuilder = model.find(query);

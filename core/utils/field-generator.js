@@ -1,3 +1,134 @@
+const componentsLibrary = {
+    input_text: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="text" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_url: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="url" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_email: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="email" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_password: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="password" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_tel: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="tel" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_number: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="number" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_date: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="date" value="${value}" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_file: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <input class="form-control" id="${idCounter}_${name}" name="${name}" type="file" ${getAdditionalAttributes(field.options.ui)}>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    input_checkbox: {
+        generateHTML(name, field, value, idCounter) {
+            const checked = value ? 'checked' : '';
+            return `
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="${idCounter}_${name}" name="${name}" ${checked}>
+                    <label class="form-check-label" for="${idCounter}_${name}">${getLabel(field)}</label>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    textarea: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <label for="${idCounter}_${name}" class="form-label">${getLabel(field)}</label>
+                    <textarea class="form-control" id="${idCounter}_${name}" name="${name}" ${getAdditionalAttributes(field.options.ui)}>${value}</textarea>
+                    <div class="invalid-feedback"></div>
+                </div>`;
+        }
+    },
+    file_crud: {
+        generateHTML(name, field, value, idCounter) {
+            return `
+                <div class="mb-3">
+                    <div>${getLabel(field)}</div>
+                    <div class="file_crud position-relative static"
+                        data-files-api="/api/files"
+                        data-endpoint=""
+                        data-field-name="${name}"
+                        data-file-id="${value}"
+                        data-size="300"
+                        data-token="">
+                        <div class="fc_wrapper">
+                            <div class="file_preview"></div>
+                            <svg viewBox="0 0 21 18.373">
+                                <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
+                                <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968" />
+                            </svg>
+                            <div class="icons">
+                                <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+    
+    }
+};
+
 class FieldGenerator {
     constructor(model, values = {}) {
         this.model = model;
@@ -20,103 +151,41 @@ class FieldGenerator {
 
     shouldSkipField(key, field) {
         const skipFields = ['__v', '_id', 'createdAt', 'updatedAt'];
-        return skipFields.includes(key) || field.instance === 'Mixed' || field.instance === 'Array' || field.instance === 'ObjectId' || field.instance === 'Map';
+        const isSkippedField = skipFields.includes(key);
+        const isUnsupportedInstance = ['Mixed', 'Array', 'Map'].includes(field.instance);
+        const notFileReference = field.instance === 'ObjectId' && field.options.ref !== 'File';
+    
+        return isSkippedField || isUnsupportedInstance || notFileReference;
     }
 
     getStrategy(field) {
+        if (field.options && field.options.ui && field.options.ui.element) {
+            const element = field.options.ui.element;
+            const type = field.options.ui.type || '';
+            const suffix = type ? `_${type}` : '';
+            const componentKey = `${element}${suffix}`;
+            if (componentsLibrary[componentKey]) {
+                return componentsLibrary[componentKey];
+            }
+            throw new Error(`Unsupported component: ${componentKey}`);
+        }
+
         switch (field.instance) {
             case 'String':
-                return new StringFieldStrategy();
+            case 'UUID':
+                return componentsLibrary.input_text;
             case 'Number':
             case 'Decimal128':
-                return new NumberFieldStrategy();
+                return componentsLibrary.input_number;
             case 'Date':
-                return new DateFieldStrategy();
+                return componentsLibrary.input_date;
             case 'Buffer':
-                return new BufferFieldStrategy();
+                return componentsLibrary.input_file;
             case 'Boolean':
-                return new BooleanFieldStrategy();
-            case 'UUID':
-                return new StringFieldStrategy();
+                return componentsLibrary.input_checkbox;
             default:
                 throw new Error(`Unsupported field type: ${field.instance}`);
         }
-    }
-}
-
-class StringFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const element = field.options.ui?.element || 'input';
-        const type = field.options.ui?.type || 'text';
-        const additionalAttributes = getAdditionalAttributes(field.options.ui);
-        return `
-            <div class="mb-3">
-                <label for="${name}-${idCounter}" class="form-label">${getLabel(field)}</label>
-                <${element} id="${name}-${idCounter}" name="${name}" type="${type}" value="${value}" ${additionalAttributes}></${element}>
-            </div>`;
-    }
-}
-
-class NumberFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const element = field.options.ui?.element || 'input';
-        const type = field.options.ui?.type || 'number';
-        const additionalAttributes = getAdditionalAttributes(field.options.ui);
-        return `
-            <div class="mb-3">
-                <label for="${name}-${idCounter}" class="form-label">${getLabel(field)}</label>
-                <${element} id="${name}-${idCounter}" name="${name}" type="${type}" value="${value}" ${additionalAttributes}></${element}>
-            </div>`;
-    }
-}
-
-class DateFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const element = field.options.ui?.element || 'input';
-        const type = field.options.ui?.type || 'date';
-        const additionalAttributes = getAdditionalAttributes(field.options.ui);
-        return `
-            <div class="mb-3">
-                <label for="${name}-${idCounter}" class="form-label">${getLabel(field)}</label>
-                <${element} id="${name}-${idCounter}" name="${name}" type="${type}" value="${value}" ${additionalAttributes}></${element}>
-            </div>`;
-    }
-}
-
-class BufferFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const element = field.options.ui?.element || 'input';
-        const type = field.options.ui?.type || 'file';
-        const additionalAttributes = getAdditionalAttributes(field.options.ui);
-        return `
-            <div class="mb-3">
-                <label for="${name}-${idCounter}" class="form-label">${getLabel(field)}</label>
-                <${element} id="${name}-${idCounter}" name="${name}" type="${type}" ${additionalAttributes}></${element}>
-            </div>`;
-    }
-}
-
-class BooleanFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const checked = value ? 'checked' : '';
-        return `
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="${name}-${idCounter}" name="${name}" ${checked}>
-                <label class="form-check-label" for="${name}-${idCounter}">${getLabel(field)}</label>
-            </div>`;
-    }
-}
-
-class UUIDFieldStrategy {
-    generateHTML(name, field, value, idCounter) {
-        const element = field.options.ui?.element || 'input';
-        const type = field.options.ui?.type || 'text';
-        const additionalAttributes = getAdditionalAttributes(field.options.ui);
-        return `
-            <div class="mb-3">
-                <label for="${name}-${idCounter}" class="form-label">${getLabel(field)}</label>
-                <${element} id="${name}-${idCounter}" name="${name}" type="${type}" value="${value}" ${additionalAttributes}></${element}>
-            </div>`;
     }
 }
 
@@ -135,5 +204,3 @@ function getAdditionalAttributes(uiOptions = {}) {
 }
 
 module.exports = FieldGenerator;
-
-

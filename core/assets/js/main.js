@@ -12,6 +12,7 @@ import cms_settings from './pages/settings';
 import cms_new_member from './pages/new-member';
 import cms_member from './pages/member';
 import cms_custom_model_items from './pages/custom-model-items';
+import cms_custom_model_item from './pages/custom-model-item';
 
 import 'bootstrap';
 import bootstrapFormsValidation from './functions/bootstrap-forms-validation';
@@ -30,7 +31,8 @@ const page = {
     cms_settings,
     cms_new_member,
     cms_member,
-    cms_custom_model_items
+    cms_custom_model_items,
+    cms_custom_model_item
 }
 
 document.addEventListener('DOMContentLoaded', () => {

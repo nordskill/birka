@@ -6,6 +6,7 @@
         "core/routes/",
         "core/controllers/",
         "core/functions/",
+        "core/utils/",
         "data/"
     ],
     "ignore": [

@@ -6,7 +6,6 @@ const { getCustomModel, getModelNameBySlug, getCustomModelMeta } = require('../.
 const FieldGenerator = require('../../utils/field-generator');
 
 
-
 router.get('/:slug', async (req, res, next) => {
 
     const { slug } = req.params;
@@ -59,7 +58,7 @@ router.get('/:slug/:id', async (req, res, next) => {
 
     try {
 
-        const templateFile = path.join(res.app.get('views')[0], 'cms', slug);
+        const templateFile = path.join(__dirname, '../../views/cms/custom-model');
         const item = await model.findById(id).lean();
 
         if (!item) {
@@ -68,17 +67,15 @@ router.get('/:slug/:id', async (req, res, next) => {
 
         const generator = new FieldGenerator(model.schema.paths, item);
         const fieldsHTML = generator.generate();
-        console.log(fieldsHTML);
-        
 
         res.render(templateFile, {
             title: item.title,
-            template_name: `cms_${slug}`,
+            template_name: 'cms_custom_model_item',
             active: slug,
             model,
             model_meta,
             item,
-            fields_html: 'fieldsHTML',
+            fields_html: fieldsHTML,
             breadcrumbs: [
                 {
                     name: 'CMS',

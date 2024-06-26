@@ -1,16 +1,20 @@
-@import '~bootstrap/scss/bootstrap',
+@import
+'~bootstrap/scss/bootstrap',
 '_tables',
 '_svg',
 '_meta_block',
 '_forms',
 '_files',
 '_spinner',
+
 'components/_tags-crud',
 'components/_file-manager',
 'components/_file-details',
 'components/_file-picker',
 'components/_bibe-editor',
-'components/_file-crud';
+'components/_file-crud',
+
+'pages/_custom_model_fields';
 
 
 body {
