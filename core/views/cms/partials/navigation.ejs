@@ -53,7 +53,7 @@
             <% const modelMeta = global.customModels[modelName]; %>
             <li class="nav-item">
                 <a href="/cms/custom/<%= modelMeta.slug %>" class="nav-link <%= active === modelMeta.slug ? 'active' : '' %>">
-                    <%- modelMeta.icon %>
+                    <%- icon({ name:  modelMeta.icon }) %>
                     <%= modelMeta.menuName %>
                 </a>
             </li>
