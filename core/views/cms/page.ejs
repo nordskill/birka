@@ -112,7 +112,7 @@
                 <div class="row" id="custom_fields_setup" data-endpoint="/api/pages/<%= page._id %>">
                     <div class="pb-3">
                         <label for="custom_fields_setup" class="form-label">Custom fields:</label>
-                        <textarea class="form-control code" rows="20"><%= JSON.stringify(page.custom, null, 2) %></textarea>
+                        <textarea class="form-control code" rows="50"><%= JSON.stringify(page.custom, null, 2) %></textarea>
                     </div>
                     <div class="d-flex flex-wrap">
                         <button class="btn btn-primary me-2 mb-2" id="save_custom_fields">Save Custom Fields</button>
