@@ -47,7 +47,7 @@ function getImgTag(imageData, options = {}) {
         attributes = {}
     } = options;
 
-    if (!imageData || !imageData.hash || !imageData.file_name || !imageData.optimized_format) {
+    if (!imageData || !imageData.hash || !imageData.file_name) {
         console.error('Missing required image data');
         return '';
     }
@@ -55,12 +55,21 @@ function getImgTag(imageData, options = {}) {
     const baseUrl = `/files/${imageData.hash.slice(0, 2)}`;
     const {
         file_name,
+        extension,
         optimized_format,
         sizes: imageSizes,
         alt,
         width,
         height
     } = imageData;
+
+    // Check if the image is an SVG
+    if (extension === 'svg') {
+        const src = `${baseUrl}/${file_name}.${extension}`;
+        const additionalAttributes = getAdditionalAttributes(attributes);
+
+        return `<img src="${src}" alt="${alt || ''}" ${additionalAttributes}/>`;
+    }
 
     let srcset = '';
     let largestSrc = '';
@@ -83,16 +92,13 @@ function getImgTag(imageData, options = {}) {
         largestSrc = `${baseUrl}/${selectedSize}/${file_name}.${optimized_format}`;
     }
 
-    const additionalAttributes = Object.entries(attributes)
-        .filter(([key, value]) => value !== false)
-        .map(([key, value]) => value === true ? key : `${key}="${value}"`)
-        .join(' ');
+    const additionalAttributes = getAdditionalAttributes(attributes);
 
     const imgTag = `<img src="${largestSrc}" srcset="${srcset}" sizes="${sizes}" alt="${alt || ''}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
 
-    if (figureTag || caption != null) { 
+    if (figureTag || caption != null) {
         let figureContent = '<figure>' + imgTag;
-        if (caption != null) { // can't be null or undefined, but can be an empty string or zero
+        if (caption != null) {
             figureContent += `<figcaption>${caption}</figcaption>`;
         }
         figureContent += '</figure>';
@@ -115,5 +121,20 @@ function getClosestSize(targetSize, sizesArray) {
         Math.abs(curr - targetSize) < Math.abs(prev - targetSize) ? curr : prev
     );
 }
+
+/**
+ * Generates a string of additional HTML attributes from an object.
+ * 
+ * @param {Object} attributes - An object of attribute key-value pairs.
+ * @returns {string} - A string of HTML attributes.
+ */
+function getAdditionalAttributes(attributes) {
+    return Object.entries(attributes)
+        .filter(([key, value]) => value !== false)
+        .map(([key, value]) => value === true ? key : `${key}="${value}"`)
+        .join(' ');
+}
+
+
 
 module.exports = getImgTag;
