@@ -2,6 +2,7 @@ import BibeEditor from '../components/bibe-editor';
 import FileCRUD from '../components/file-crud';
 import TagsCRUD from "../components/tags-crud";
 import CustomFields from '../components/custom-fields';
+import Debouncer from '../functions/debouncer';
 const slugify = require('../../../functions/slugify');
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
@@ -71,6 +72,8 @@ function updatePage() {
 
     updateBtn.onclick = updateFields;
 
+    initCustomFieldUpdates(customFields, pageID);
+
     async function updateFields() {
 
         const data = {
@@ -88,32 +91,6 @@ function updatePage() {
         fieldsExtension.querySelectorAll('[name]').forEach(field => {
             data[field.name] = field.value;
         });
-
-        // add custom fields
-        const customFieldsData = JSON.parse(customFields.dataset.fields);
-
-        customFields.querySelectorAll('[name]').forEach(field => {
-            const customField = customFieldsData.find(item => {
-                if (item.element === 'fieldset') {
-                    return item.content.some(child => matchesField(child, field.name, field.value, field.type));
-                }
-                return matchesField(item, field.name, field.value, field.type);
-            });
-        
-            if (customField) {
-                if (customField.element === 'fieldset') {
-                    // Update the specific child within the fieldset
-                    const childField = customField.content.find(child => matchesField(child, field.name, field.value, field.type));
-                    updateField(childField, field);
-                } else {
-                    // Update the field directly
-                    updateField(customField, field);
-                }
-            }
-        });
-
-        data.custom = customFieldsData;
-        console.log(data);
 
         try {
             const response = await fetch(`/api/pages/${pageID}`, {
@@ -141,31 +118,47 @@ function updatePage() {
 
 }
 
-// Function to match field by name and value for checkboxes and radios or by name for other inputs
-function matchesField(item, fieldName, fieldValue, fieldType) {
-    if (['checkbox', 'radio'].includes(fieldType)) {
-        return item.name === fieldName && item.value === fieldValue;
-    }
-    return item.name === fieldName;
+function initCustomFieldUpdates(customFields, pageID) {
+
+    const customFieldInputs = [...customFields.querySelectorAll('[name]')];
+    customFieldInputs.forEach(field => {
+
+        new Debouncer({
+            field_element: field,
+            endpoint: `/api/pages/${pageID}`,
+            method: 'PATCH',
+            token: csrfToken,
+            success_callback: onSuccess,
+            error_callback: onError,
+            input_callback: onInput
+        });
+
+        function onSuccess(fieldElem) {
+            fieldElem.classList.add('is-valid');
+        };
+
+        function onError(fieldElem, message) {
+            fieldElem.classList.add('is-invalid');
+            let invalidFeedback = fieldElem.parentElement.querySelector('.invalid-feedback');
+
+            //  if no then create one
+            if (!invalidFeedback) {
+                invalidFeedback = document.createElement('div');
+                invalidFeedback.classList.add('invalid-feedback');
+                fieldElem.parentElement.appendChild(invalidFeedback);
+            }
+
+            invalidFeedback.style.display = 'block';
+            invalidFeedback.textContent = message;
+        };
+
+        function onInput(fieldElem) {
+            fieldElem.classList.remove('is-valid', 'is-invalid');
+            const invalidFeedback = fieldElem.parentElement.querySelector('.invalid-feedback');
+            if (!invalidFeedback) return;
+            invalidFeedback.style.display = 'none';
+        };
+
+    });
+
 }
-
-// Function to update the field properties in the data model
-function updateField(item, htmlField) {
-    switch (htmlField.type) {
-        case 'checkbox':
-        case 'radio':
-            item.checked = htmlField.checked;
-            break;
-        case 'number':
-            item.value = Number(htmlField.value);
-            break;
-        case 'textarea':
-            item.content = htmlField.value;
-            break;
-        default:
-            item.value = htmlField.value;
-            break;
-    }
-}
-
-

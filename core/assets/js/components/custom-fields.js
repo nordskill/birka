@@ -62,8 +62,7 @@ class CustomFields {
             });
 
             if (response.ok) {
-                console.log(await response.json());
-                alert('Custom fields updated successfully');
+                location.reload();
             } else {
                 alert('Failed to update custom fields');
             }
