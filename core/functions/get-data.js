@@ -58,7 +58,8 @@ async function getData(modelName, query = {}, options = {}) {
         and,
         or,
         distinct,
-        tagName
+        tagName,
+        populate
     } = options;
 
     // If query contains _id, set findOne to true by default
@@ -113,6 +114,10 @@ async function getData(modelName, query = {}, options = {}) {
             if (tag) {
                 queryBuilder = queryBuilder.where('tags', tag._id);
             }
+        }
+
+        if (populate) {
+            queryBuilder = queryBuilder.populate(populate);
         }
 
         if (count) return await queryBuilder.countDocuments();
