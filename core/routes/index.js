@@ -7,8 +7,9 @@ const OperationalError = require('../functions/operational-error');
 
 // Utility function to render EJS templates
 async function renderTemplate(res, page, next) {
-    const templateFile = path.join(res.app.get('views')[0], page.template + '.ejs');
+
     try {
+        const templateFile = path.join(res.app.get('views')[0], page.template + '.ejs');
         const html = await ejs.renderFile(templateFile, {
             env: res.locals.env,
             menus: res.locals.menus,
@@ -48,7 +49,7 @@ router.get('/:slug', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         const page = await Page.findOne({ is_home: true })
-            .populate('img_preview tags')    
+            .populate('img_preview tags')
             .lean();
         if (page) {
             await renderTemplate(res, page, next);
