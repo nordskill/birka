@@ -13,7 +13,8 @@ const PERMISSIONS = {
     TEAM: { key: 'team', label: 'Team' },
     SETTINGS: { key: 'settings', label: 'Settings' },
     UPDATES: { key: 'updates', label: 'Updates' },
-    CUSTOM_MODELS: { key: 'custom_models', label: 'Custom Models' }
+    CUSTOM_MODELS: { key: 'custom_models', label: 'Custom Models' },
+    CUSTOM_FIELDS_SETUP: { key: 'custom_fields_setup', label: 'Custom Fields Setup' }
 };
 
 module.exports = PERMISSIONS;
