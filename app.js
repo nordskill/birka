@@ -32,17 +32,15 @@ const { loadModels, getAllSubmodels, getSubmodels, getCustomModel, getModelNameB
 // Object to track exceeded request counts and initial exceedance flag per IP
 let exceededRequests = {};
 
-init();
-
-function init() {
+async function init() {
     loadVars();
     loadData();
-    db.connect();
-    getSiteSettings();
+    await db.connect();
+    const siteSettings = await getSiteSettings();
     global.ico = loadIcons();
     global.svg_sprites = generateSvgSprites();
     global.formatDate = formatDate;
-    setupApp();
+    return setupApp(siteSettings);
 }
 
 async function getSiteSettings() {
@@ -52,6 +50,7 @@ async function getSiteSettings() {
             .populate('logo')
             .lean();
         registerModels();
+        return SS;
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
@@ -69,7 +68,8 @@ function registerModels() {
     console.log('Custom Sub Models:', Object.keys(subModels));
 }
 
-function setupApp() {
+function setupApp(siteSettings) {
+
     const app = express();
 
     app.disable('x-powered-by');
@@ -78,10 +78,11 @@ function setupApp() {
     app.locals.icon = icon;
 
     setupMiddleware(app);
-    setupRoutes(app);
+    setupRoutes(app, siteSettings);
     setupErrorHandler(app);
 
-    module.exports = app;
+    return app;
+
 }
 
 async function setupMiddleware(app) {
@@ -208,6 +209,16 @@ async function setupMiddleware(app) {
     }
 
 }
+
+module.exports = (async () => {
+    try {
+        const app = await init();
+        return app;
+    } catch (error) {
+        console.error("Failed to initialize app:", error);
+        process.exit(1);
+    }
+})();
 
 function setupErrorHandler(app) {
 

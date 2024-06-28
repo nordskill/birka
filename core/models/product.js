@@ -72,6 +72,8 @@ const ProductSchema = new Schema({
     custom:             [Schema.Types.Mixed]
 }, { timestamps: true });
 
+ProductSchema.index({ slug: 1 });
+
 const Product = mongoose.model('Product', ProductSchema);
 
 module.exports = Product;

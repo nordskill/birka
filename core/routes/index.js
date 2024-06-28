@@ -9,7 +9,9 @@ const OperationalError = require('../functions/operational-error');
 async function renderTemplate(res, page, next) {
 
     try {
+        
         const templateFile = path.join(res.app.get('views')[0], page.template + '.ejs');
+        
         const html = await ejs.renderFile(templateFile, {
             env: res.locals.env,
             menus: res.locals.menus,
@@ -20,12 +22,14 @@ async function renderTemplate(res, page, next) {
             getImgTag: res.locals.getImgTag,
             title: page.name,
             template_name: page.template,
-            page
+            data: page
         }, {
             async: true,
             rmWhitespace: true
         });
+        
         res.send(html);
+        
     } catch (error) {
         next(error);
     }

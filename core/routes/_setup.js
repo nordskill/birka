@@ -4,6 +4,7 @@ const { checkPermissions, checkDynamicPermissions } = require('../middleware/per
 
 // Navigation
 const index = require('./index');
+const blog = require('./blog');
 const cookies = require('./cookies');
 
 // CMS
@@ -39,7 +40,7 @@ const apiMembers = require('./api/members');
 const apiSitemap = require('./api/sitemap');
 const apiCustom = require('./api/custom');
 
-module.exports = (app) => {
+module.exports = (app, SS) => {
 
     // protect static folder pubblic/css-assets/ with cmsAuthentication
     app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../../public/cms-assets')));
@@ -102,8 +103,9 @@ module.exports = (app) => {
     app.use('/api', apiRoutes);
 
     // Navigation
-    app.use('/', index);
+    app.use('/' + SS.blog_slug, blog);
     app.use('/cookies', cookies);
+    app.use('/', index);
 
 };
 

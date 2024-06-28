@@ -38,6 +38,8 @@ const BlogPostSchema = new Schema({
     custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
+BlogPostSchema.index({ slug: 1 });
+
 const BlogPost = mongoose.model('BlogPost', BlogPostSchema);
 
 module.exports = BlogPost;

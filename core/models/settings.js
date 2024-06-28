@@ -43,7 +43,35 @@ const SettingsSchema = new Schema({
     // home_page: { type: Schema.Types.Mixed, required: true, default: {} },
     custom_html: String,
     custom_html_cookies: String,
-    custom: [Schema.Types.Mixed]
+    custom: [Schema.Types.Mixed],
+    blog_slug: {
+        type: String,
+        trim: true,
+        default: 'blog'
+    },
+    blog_title: {
+        type: String,
+        trim: true,
+        default: 'Blog'
+    },
+    blog_posts_per_page: {
+        type: Number,
+        default: 10
+    },
+    shop_slug: {
+        type: String,
+        trim: true,
+        default: 'shop'
+    },
+    shop_title: {
+        type: String,
+        trim: true,
+        default: 'Shop'
+    },
+    shop_products_per_page: {
+        type: Number,
+        default: 25
+    },
 }, { timestamps: true });
 
 const Settings = mongoose.model('Settings', SettingsSchema);
