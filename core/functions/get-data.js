@@ -1,5 +1,4 @@
 const models = require('../models');
-const { distinct } = require('../models/tag');
 
 /**
  * Loads data from a specified model with optional query parameters and options.
