@@ -5,6 +5,7 @@ import cms_product from './pages/product';
 import cms_blogpost from './pages/blogpost';
 import cms_pages from './pages/pages';
 import cms_page from './pages/page';
+import cms_blog from './pages/blog';
 import cms_files from './pages/files';
 import cms_menus from './pages/menus';
 import cms_menu from './pages/menu';
@@ -26,6 +27,7 @@ const page = {
     cms_files,
     cms_pages,
     cms_page,
+    cms_blog,
     cms_menus,
     cms_menu,
     cms_settings,

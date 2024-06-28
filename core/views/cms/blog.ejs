@@ -6,8 +6,16 @@
             <div class="card bg-light">
                 <div class="card-body d-flex flex-wrap justify-content-between">
                     <div class="col-auto">
-                        <button class="btn btn-primary me-2">Create New</button>
-                        <button class="btn btn-danger">Delete <span>2</span> Selected</button>
+                        <% if (locals.submodels?.length) { %>
+                        <select class="form-select me-2" name="author" id="submodels"n style="width: 130px">
+                            <option value="">Common</option>
+                            <% submodels.forEach(model => { %>
+                                <option value="<%= model %>"><%= model %></option>
+                            <% }) %>
+                        </select>
+                        <% } %>
+                        <button class="btn btn-primary me-2" id="add_item">Create New</button>
+                        <button class="btn btn-danger" id="delete_item" style="display:none">Delete Selected</button>
                     </div>
                     <div class="col-auto">
                         <form action="#" class="needs-validation" novalidate="">
@@ -30,7 +38,7 @@
                 </div>
             </div>
             <div class="table-responsive mt-4">
-                <table class="table table-striped  align-middle table-hover">
+                <table name="model_items" class="table table-striped  align-middle table-hover">
                     <thead>
                         <tr>
                             <th scope="col">
@@ -45,7 +53,7 @@
                     <tbody>
 
                         <% blogs.forEach(function(post){ %>
-                            <tr>
+                            <tr data-id="<%= post._id %>">
                                 <td><input class="form-check-input" type="checkbox" value="" aria-label="...">
                                 </td>
                                 <td>

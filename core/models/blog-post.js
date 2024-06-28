@@ -10,7 +10,8 @@ const BlogPostSchema = new Schema({
     },
     slug: {
         type: String,
-        trim: true
+        trim: true,
+        unique: true
     },
     excerpt: {
         type: String,
