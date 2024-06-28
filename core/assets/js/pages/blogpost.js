@@ -17,7 +17,11 @@ export default async function () {
       container: '.post_editor',
       update_url: updateURL,
       files_api: '/api/files/',
-      token
+      token,
+      on_update: () => {
+         const main = document.querySelector('main[data-id]');
+         main.classList.add('changed');
+      }
    });
 
    new CustomFields();
@@ -34,8 +38,9 @@ function updatePage() {
    const updateBtn = document.querySelector('#update_btn');
    const deleteBtn = document.querySelector('#delete_btn');
 
-   const docID = document.querySelector('[data-id]').dataset.id;
-   const modelType = document.querySelector('[data-type]').dataset.type;
+   const main = document.querySelector('main[data-id]');
+   const docID = main.dataset.id;
+   const modelType = main.dataset.type;
 
    // update slug on name change
    const titleField = fields.querySelector('[name="title"]');
@@ -79,7 +84,10 @@ function updatePage() {
 
          if (response.ok) {
             console.log(await response.json());
-
+            
+            const main = document.querySelector('main[data-id]');
+            main.classList.remove('changed');
+            
             alert('Page updated successfully');
          } else {
             alert('Failed to update post');

@@ -83,10 +83,8 @@ router.get('/:id', async (req, res, next) => {
             }
         }
 
-        const unsaved_changes = blogPost.draft ? '(unsaved changes)' : '';
-
         res.render(`cms/${SLUG}post`, {
-            title: 'Blog Post ' + unsaved_changes,
+            title: 'Blog Post ',
             template_name: 'cms_blogpost',
             active: SLUG,
             blog_post: blogPost,

@@ -121,7 +121,7 @@ router.patch('/:id/update', async (req, res, next) => {
             throw new OperationalError(`No blog post found with the id ${id}`, 404);
         }
 
-        if (JSON.stringify(post.draft) !== JSON.stringify(post.body)) {
+        if (post.draft?.length && (JSON.stringify(post.draft) !== JSON.stringify(post.body))) {
             
             const updates = {
                 body: post.draft,
@@ -134,9 +134,9 @@ router.patch('/:id/update', async (req, res, next) => {
                 updates.date_published = new Date();
             }
 
-            Object.assign(updates, body);
+            Object.assign(body, updates);
 
-            post = await updateBlogPost(id, updates);
+            post = await updateBlogPost(id, body);
 
             res.json({
                 success: true,
@@ -145,6 +145,8 @@ router.patch('/:id/update', async (req, res, next) => {
             });
 
         } else {
+
+            post = await updateBlogPost(id, body);
 
             res.json({
                 success: false,

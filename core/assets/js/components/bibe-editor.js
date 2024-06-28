@@ -485,7 +485,7 @@ class BibeEditor {
         this.notification = null;
         this.updatePending = false; // To prevent overlapping updates
         this.debounceTimer = null; // To manage debouncing
-        this.init(this.container, options);
+        this.init(this.container,  options);
         this.skip_update = false;
         this.debouncer_delay = 1000;
         this.updateStrategies = [];
@@ -870,6 +870,9 @@ class BibeEditor {
 
     on_update_success() {
         this.notification.show('', 'success');
+        console.log(this.options);
+        
+        this.options.on_update();
     }
 
     on_update_error(errorMessage) {

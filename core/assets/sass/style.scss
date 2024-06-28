@@ -173,3 +173,25 @@ svg {
         vertical-align: text-bottom;
     }
 }
+
+main[data-id].changed {
+    .page_title {
+        display: inline-block;
+        position: relative;
+
+        &::after {
+            content: 'unsaved changes';
+            color: #ca6b22;
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            transform: translate(100%, -45%);
+            background-color: #f9e2cc;
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+    }
+}
