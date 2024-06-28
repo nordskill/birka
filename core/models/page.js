@@ -38,7 +38,7 @@ const PageSchema = new Schema({
     custom: [Schema.Types.Mixed]
 }, options);
 
-PageSchema.index({ slug: 1 });
+PageSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Page = mongoose.model('Page', PageSchema);
 

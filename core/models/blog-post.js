@@ -1,4 +1,6 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
+
 const {
     Schema
 } = mongoose;
@@ -11,7 +13,8 @@ const BlogPostSchema = new Schema({
     slug: {
         type: String,
         trim: true,
-        unique: true
+        unique: true,
+        default: crypto.randomUUID
     },
     excerpt: {
         type: String,
@@ -22,7 +25,6 @@ const BlogPostSchema = new Schema({
         ref: 'File',
         type: Schema.Types.ObjectId
     },
-    // img_cover:      { ref: 'File', type: Schema.Types.ObjectId },
     date_published: Date,
     author: {
         ref: 'Member',
@@ -39,7 +41,7 @@ const BlogPostSchema = new Schema({
     custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
-BlogPostSchema.index({ slug: 1 });
+BlogPostSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const BlogPost = mongoose.model('BlogPost', BlogPostSchema);
 

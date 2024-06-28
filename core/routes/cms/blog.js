@@ -76,15 +76,17 @@ router.get('/:id', async (req, res, next) => {
 
         let bodyContent = blogPost.body;
 
-        if (Array.isArray(blogPost.draft) && blogPost.draft.length > 0) {
+        if (blogPost.draft?.length > 0) {
             const firstBlock = blogPost.draft[0];
             if (Object.keys(firstBlock).length > 0) {
                 bodyContent = blogPost.draft;
             }
         }
 
+        const unsaved_changes = blogPost.draft ? '(unsaved changes)' : '';
+
         res.render(`cms/${SLUG}post`, {
-            title: 'Blog Post',
+            title: 'Blog Post ' + unsaved_changes,
             template_name: 'cms_blogpost',
             active: SLUG,
             blog_post: blogPost,

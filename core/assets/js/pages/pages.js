@@ -31,7 +31,7 @@ export default async function () {
 
     async function addNewPage() {
 
-        const type = document.querySelector('#page_submodels').value;
+        const type = document.querySelector('#page_submodels')?.value || '';
         const pageName = prompt('Enter the page name:');
     
         if (!pageName) {

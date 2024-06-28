@@ -29,8 +29,7 @@ export default async function () {
 
       const data = {
          type: '',
-         title: 'New Blog Post',
-         slug: 'new-blog-post'
+         title: 'New Post Draft'
       };
 
       const resp = await fetch('/api/blog/', {
@@ -44,7 +43,7 @@ export default async function () {
 
       const responseData = await resp.json();
 
-      if (data.success) {
+      if (responseData.success) {
          window.location.href = `blog/${responseData.data._id}`;
       }
 

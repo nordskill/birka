@@ -4,7 +4,7 @@ const router = express.Router();
 const BlogPost = require('../../models/blog-post');
 const OperationalError = require('../../functions/operational-error');
 const { addTags, removeTags } = require('../../controllers/tag-controller');
-const { OBJtoHTML } = require('../../functions/obj-to-html');
+const OBJtoHTML = require('../../functions/obj-to-html');
 
 router.get('/search', async (req, res, next) => {
     try {
@@ -22,6 +22,7 @@ router.get('/search', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
+
     const { type, ...postData } = req.body;
 
     postData.author = req.user._id;
@@ -41,6 +42,7 @@ router.post('/', async (req, res, next) => {
             message: 'Blog post created successfully',
             data: post
         });
+
     } catch (error) {
         next(error);
     }
@@ -108,7 +110,9 @@ router.put('/:id/draft', async (req, res, next) => {
 });
 
 router.patch('/:id/update', async (req, res, next) => {
-    const { id } = req.params;
+
+    const id = req.params.id;
+    const body = req.body;
 
     try {
         let post = await BlogPost.findById(id);
@@ -118,11 +122,19 @@ router.patch('/:id/update', async (req, res, next) => {
         }
 
         if (JSON.stringify(post.draft) !== JSON.stringify(post.body)) {
+            
             const updates = {
                 body: post.draft,
                 body_rendered: await OBJtoHTML(post.draft),
                 $unset: { draft: "", draft_rendered: "" }
             };
+
+            // Check if date_published is not set or doesn't have a value
+            if (!post.date_published) {
+                updates.date_published = new Date();
+            }
+
+            Object.assign(updates, body);
 
             post = await updateBlogPost(id, updates);
 
@@ -131,12 +143,15 @@ router.patch('/:id/update', async (req, res, next) => {
                 message: 'Blog post updated from draft successfully',
                 data: post
             });
+
         } else {
+
             res.json({
                 success: false,
                 message: 'No changes detected in draft',
                 data: post
             });
+
         }
     } catch (error) {
         next(error);
@@ -173,20 +188,23 @@ async function updateBlogPost(id, updates, options = {}) {
         throw new OperationalError("Invalid ID format", 400);
     }
 
-    const { unset, ...updateData } = updates;
+    const { $unset, ...updateData } = updates;
     const type = updateData.type;
 
-    const updateOperation = { $set: {}, $unset: {} };
+    const updateOperation = { $set: {} };
 
-    if (unset) {
-        unset.forEach(field => {
-            updateOperation.$unset[field] = "";
-        });
-    }
-
+    // Handle $set operations, supporting dot notation
     for (const [key, value] of Object.entries(updateData)) {
         if (key !== 'type') {
             updateOperation.$set[key] = value;
+        }
+    }
+
+    // Handle $unset operations
+    if ($unset) {
+        updateOperation.$unset = {};
+        for (const [key, value] of Object.entries($unset)) {
+            updateOperation.$unset[key] = '';
         }
     }
 

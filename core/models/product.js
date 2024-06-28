@@ -72,7 +72,7 @@ const ProductSchema = new Schema({
     custom:             [Schema.Types.Mixed]
 }, { timestamps: true });
 
-ProductSchema.index({ slug: 1 });
+ProductSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Product = mongoose.model('Product', ProductSchema);
 

@@ -19,7 +19,7 @@ const TagSchema = new Schema({
     custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
-TagSchema.index({ slug: 1 });
+TagSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Tag = mongoose.model('Tag', TagSchema);
 
