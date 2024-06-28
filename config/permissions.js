@@ -12,6 +12,7 @@ const PERMISSIONS = {
     MENUS: { key: 'menus', label: 'Menus' },
     TEAM: { key: 'team', label: 'Team' },
     SETTINGS: { key: 'settings', label: 'Settings' },
+    SITEMAP: { key: 'sitemap', label: 'Sitemap' },
     UPDATES: { key: 'updates', label: 'Updates' },
     CUSTOM_MODELS: { key: 'custom_models', label: 'Custom Models' },
     CUSTOM_FIELDS_SETUP: { key: 'custom_fields_setup', label: 'Custom Fields Setup' }

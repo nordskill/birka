@@ -1,0 +1,55 @@
+<div class="row g-4">
+    <div class="col-12 col-lg-4 col-xl-3">
+        <div class="card">
+            <div class="card-header fs-6">
+                Responsive Image Sizes
+            </div>
+            <div class="card-body">
+                <div class="row gx-2">
+                    <div class="col">
+                        <input type="number" class="form-control" id="attValue" required=""
+                            placeholder="Width">
+                        <div class="invalid-feedback">
+                            Please provide a valid Width.
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+                <ul class="list-group mt-3">
+                    <li
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="pe-2">256</span>
+                        <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                    </li>
+                    <li
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="pe-2">1024</span>
+                        <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                    </li>
+                    <li
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="pe-2">2560</span>
+                        <span class="badge bg-primary rounded-pill ms-auto">remove</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<form name="custom_html" action="/cms/settings" method="patch" novalidate class="needs-validation">
+    <div class="row mt-3">
+        <div class="col-12 col-lg-4 col-xl-6" data-details="">
+            <label for="custom_html" class="form-label">Custom code inside header:</label>
+            <textarea class="form-control code" rows="15" id="custom_html" name="custom_html"><%= SS.custom_html %></textarea>
+        </div>
+        <div class="col-12 col-lg-4 col-xl-6" data-details="">
+            <label for="custom_html_cookies" class="form-label">Custom code requiring cookies consent:</label>
+            <textarea class="form-control code" rows="15" id="custom_html_cookies" name="custom_html_cookies"><%= SS.custom_html_cookies %></textarea>
+        </div>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>
