@@ -45,34 +45,39 @@
                                 <input class="form-check-input" type="checkbox" value="" aria-label="...">
                             </th>
                             <th scope="col">Title</th>
-                            <th scope="col">Date</th>
+                            <th scope="col">Date Created</th>
+                            <th scope="col">Published</th>
                             <th scope="col">Author</th>
-                            <th scope="col">Tags</th>
+                            <!-- <th scope="col">Tags</th> -->
                         </tr>
                     </thead>
                     <tbody>
 
-                        <% blogs.forEach(function(post){ %>
+                        <% posts.forEach(post => { %>
                             <tr data-id="<%= post._id %>">
-                                <td><input class="form-check-input" type="checkbox" value="" aria-label="...">
+                                <td><input class="form-check-input" type="checkbox">
                                 </td>
                                 <td>
-                                    <a href="<%=active + '/' +post._id%>">
-                                        <%=post.title%>
-                                    </a>
+                                    <a href="<%= active + '/' +post._id %>"><%=post.title%></a>
+                                    <% if (post.draft?.length) { %>
+                                        &nbsp;&nbsp;<span class="badge rounded-pill bg-warning text-dark">UNSAVED CHANGES</span>
+                                    <% } %>
                                 </td>
                                 <td>
-                                    <%=formatDate(post.createdAt,'dd mon yyyy')%>
+                                    <%= formatDate(post.createdAt,'dd mon yyyy') %>
                                 </td>
                                 <td>
-                                    <a href="<%=post.author._id%>">
+                                    <input class="form-check-input" type="checkbox" <%= post.published ? 'checked' : '' %> disabled>
+                                </td>
+                                <td>
+                                    <a href="/cms/team/<%= post.author._id %>">
                                         <%=post.author.username%>
                                     </a>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <%- post.tags.map(function(tag){ return `<a
                                         href="${tag._id}">${tag.name}</a>`}).join(', '); %>
-                                </td>
+                                </td> -->
                                 <% }); %>
                             </tr>
 

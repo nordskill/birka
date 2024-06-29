@@ -12,18 +12,18 @@ const TITLE = 'Blog';
 
 router.get('/', async (req, res, next) => {
 
-    let blogs = [];
+    let posts = [];
     try {
-        blogs = await BlogPost.find()
+        posts = await BlogPost.find()
             .sort({
                 createdAt: 'desc'
             })
             .select('-__v -body')
-            .populate('author', '-_id -password')
+            .populate('author', '-password')
             .populate('tags')
             .lean();
 
-        if (!blogs) {
+        if (!posts) {
             throw new OperationalError("Blogs not found", 404);
         }
 
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
             title: TITLE,
             template_name: `cms_${SLUG}`,
             active: SLUG,
-            blogs,
+            posts,
             breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'
