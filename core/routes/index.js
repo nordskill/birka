@@ -40,6 +40,7 @@ router.get('/:slug', async (req, res, next) => {
     try {
         const slug = req.params.slug;
         const page = await Page.findOne({ slug: slug })
+            .select('-__v')
             .populate('img_preview tags')
             .lean();
         if (!page) throw new OperationalError('Page not found', 404);
@@ -53,6 +54,7 @@ router.get('/:slug', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         const page = await Page.findOne({ is_home: true })
+            .select('-__v')
             .populate('img_preview tags')
             .lean();
         if (page) {
