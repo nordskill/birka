@@ -954,7 +954,7 @@ class BibeEditor {
                 break;
         }
 
-        this.blockWithCursor.update();
+        this.blockWithCursor?.update();
 
     }
 
@@ -962,7 +962,9 @@ class BibeEditor {
 
         const selection = window.getSelection();
         const selectedNode = selection?.anchorNode;
-        const currentBlock = this.blockWithCursor.element;
+        const currentBlock = this.blockWithCursor?.element;
+
+        if (!currentBlock) return;
 
         if (selection.anchorOffset === selectedNode?.length || selectedNode?.innerText?.trim().length === 0) {
             this.skip_update = true;
@@ -1019,6 +1021,15 @@ class BibeEditor {
                         this.place_cursor_into(newLi);
                     }
                 }
+            } else if (this.blockWithCursor.type === 'image') {
+
+                event.preventDefault();
+                const newParagraph = ParagraphBlock.create();
+                currentBlock.insertAdjacentElement('afterend', newParagraph.element);
+                this.#focusOnNewBlock(newParagraph.element);
+                this.blockWithCursor = newParagraph;
+                this.#init_blocks();
+
             }
         }
     }
