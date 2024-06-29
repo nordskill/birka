@@ -45,7 +45,7 @@ class Block {
 
         return {
             type: this.type,
-            content,
+            content: content.replace(/\u200B/g, ''), // remove zero-width spaces
             attributes: this.get_attributes()
         };
 
