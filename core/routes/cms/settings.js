@@ -6,6 +6,7 @@ const SiteSettings = require('../../models/settings');
 const OperationalError = require('../../functions/operational-error');
 const multer = require('multer');
 const upload = multer();
+const copyFiles = require('../../functions/copy-files');
 
 const SLUG = 'settings';
 const TITLE = 'Settings';
@@ -81,6 +82,28 @@ router.patch('/', upload.none(), async (req, res, next) => {
     }
 
     await settings.save();
+
+    // Copy logo if the skin has been updated
+    if (req.body.skin) {
+        const source = path.join(skinsFolder, req.body.skin);
+        const destination = path.join(__dirname, '../../../public');
+
+        try {
+            await copyFiles(source, destination, 'favicon.ico');
+            console.log('Logo copied successfully');
+        } catch (error) {
+            console.error('Error copying logo:', error.message);
+            // We don't throw here to allow the settings update to complete
+        }
+
+        try {
+            await copyFiles(source, destination, 'site.webmanifest');
+            console.log('webmanifest copied successfully');
+        } catch (error) {
+            console.error('Error copying webmanifest:', error.message);
+            // We don't throw here to allow the settings update to complete
+        }
+    }
 
     res.json({
         success: true,
