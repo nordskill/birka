@@ -71,6 +71,7 @@ function updatePage() {
     }
 
     updateBtn.onclick = updateFields;
+    deleteBtn.onclick = deletePage;
 
     initCustomFieldUpdates(customFields, pageID);
 
@@ -93,7 +94,7 @@ function updatePage() {
         });
 
         try {
-            const response = await fetch(`/api/pages/${pageID}`, {
+            const response = await fetch(`/api/pages/${pageID}/update`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,6 +116,30 @@ function updatePage() {
         }
 
     }
+
+    async function deletePage() {
+
+        if (!confirm('Are you sure you want to delete this page?')) return;
+  
+        try {
+           const response = await fetch(`/api/pages/${pageID}`, {
+              method: 'DELETE',
+              headers: {
+                 'Content-Type': 'application/json',
+                 'X-CSRF-Token': csrfToken
+              }
+           });
+  
+           if (response.ok) {
+              window.location.href = '/cms/pages';
+           } else {
+              alert('Failed to delete page');
+           }
+  
+        } catch (error) {
+           console.error(error);
+        }
+     }
 
 }
 

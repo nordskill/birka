@@ -34,7 +34,7 @@ const PageSchema = new Schema({
     content: [Schema.Types.Mixed],
     draft: [Schema.Types.Mixed],
     content_rendered: String,
-    content_draft: String,
+    draft_rendered: String,
     custom: [Schema.Types.Mixed]
 }, options);
 
