@@ -54,6 +54,7 @@ function updatePage() {
    }
 
    updateBtn.onclick = updateFields;
+   deleteBtn.onclick = deletePost;
 
    initCustomFieldUpdates(customFields, docID);
 
@@ -84,10 +85,10 @@ function updatePage() {
 
          if (response.ok) {
             console.log(await response.json());
-            
+
             const main = document.querySelector('main[data-id]');
             main.classList.remove('changed');
-            
+
             alert('Page updated successfully');
          } else {
             alert('Failed to update post');
@@ -97,6 +98,30 @@ function updatePage() {
          console.error(error);
       }
 
+   }
+
+   async function deletePost() {
+
+      if (!confirm('Are you sure you want to delete this post?')) return;
+
+      try {
+         const response = await fetch(`/api/blog/${docID}`, {
+            method: 'DELETE',
+            headers: {
+               'Content-Type': 'application/json',
+               'X-CSRF-Token': token
+            }
+         });
+
+         if (response.ok) {
+            window.location.href = '/cms/blog';
+         } else {
+            alert('Failed to delete post');
+         }
+
+      } catch (error) {
+         console.error(error);
+      }
    }
 
 }
