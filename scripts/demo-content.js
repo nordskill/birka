@@ -6,7 +6,7 @@ const loadVars = require('../core/functions/vars');
 const passwordUtils = require('../core/functions/password-utils');
 const generateHash = require('../core/functions/generate-hash');
 const resizeImage = require('../core/functions/image-resizer');
-const { copyFiles } = require('../core/functions/copy-files');
+const copyFiles = require('../core/functions/copy-files');
 
 const pathToModels = path.join(__dirname, '../core/models');
 const pathToData = path.join(__dirname, '../data/demo');

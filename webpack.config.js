@@ -3,7 +3,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
-const { copyFiles } = require('./core/functions/copy-files');
+const copyFiles = require('./core/functions/copy-files');
 
 module.exports = async (env, argv) => {
     const isProduction = argv.mode === 'production';
