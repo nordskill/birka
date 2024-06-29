@@ -41,7 +41,7 @@ function getImgTag(imageData, options = {}) {
     const {
         figureTag = false,
         caption,
-        sizes = '100vw',
+        sizes,
         maxWidth = 1024,
         size,
         attributes = {}
@@ -93,8 +93,9 @@ function getImgTag(imageData, options = {}) {
     }
 
     const additionalAttributes = getAdditionalAttributes(attributes);
+    const sizesAttribute = sizes ? `sizes="${sizes}"` : '';
 
-    const imgTag = `<img src="${largestSrc}" srcset="${srcset}" sizes="${sizes}" alt="${alt || ''}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
+    const imgTag = `<img src="${largestSrc}" srcset="${srcset}" ${sizesAttribute} alt="${alt || ''}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
 
     if (figureTag || caption != null) {
         let figureContent = '<figure>' + imgTag;
