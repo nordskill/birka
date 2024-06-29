@@ -19,7 +19,8 @@ router.get('/', async (req, res, next) => {
                 createdAt: 'desc'
             })
             .select('-__v -body')
-            .populate('author tags')
+            .populate('author', '-_id -password')
+            .populate('tags')
             .lean();
 
         if (!blogs) {
@@ -49,8 +50,6 @@ router.get('/', async (req, res, next) => {
 
     }
 
-
-
 });
 
 router.get('/:id', async (req, res, next) => {
@@ -65,7 +64,8 @@ router.get('/:id', async (req, res, next) => {
         const blogPost = await BlogPost.findById(id)
             .select('-__v')
             .populate('tags', 'slug name -_id')
-            .populate('author img_preview')
+            .populate('author', '-password')
+            .populate('img_preview')
             .lean();
 
         if (!blogPost) {

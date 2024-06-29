@@ -18,7 +18,6 @@ async function renderTemplate(res, data, template, next) {
             getField: res.locals.getField,
             getImgTag: res.locals.getImgTag,
             title: data.title,
-            template_name: data.template_name,
             data
         }, {
             async: true,
@@ -49,9 +48,7 @@ router.get('/', async (req, res, next) => {
         await renderTemplate(res, {
             slug: SS.blog_slug,
             title: SS.blog_title,
-            template: 'blog',
-            blogPosts,
-            ...res.locals
+            blogPosts
         }, templateFile, next);
 
     } catch (error) {
@@ -77,9 +74,7 @@ router.get('/:slug', async (req, res, next) => {
         await renderTemplate(res, {
             slug: SS.blog_slug,
             title: blogPost.title,
-            template: 'blog_post',
-            blogPost,
-            ...res.locals
+            blogPost
         }, templateFile, next);
 
     } catch (error) {
