@@ -63,12 +63,22 @@ function getImgTag(imageData, options = {}) {
         height
     } = imageData;
 
+    // Escape function for attribute values
+    const escape_attr_value = (str) => {
+        return str.replace(/&/g, '&amp;')
+                  .replace(/'/g, '&#39;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/\s+/g, ' '); // Replace multiple spaces with a single space
+    };
+
     // Check if the image is an SVG
     if (extension === 'svg') {
         const src = `${baseUrl}/${file_name}.${extension}`;
-        const additionalAttributes = getAdditionalAttributes(attributes);
+        const additionalAttributes = getAdditionalAttributes(attributes, escape_attr_value);
 
-        return `<img src="${src}" alt="${alt || ''}" ${additionalAttributes}/>`;
+        return `<img src="${src}" alt="${escape_attr_value(alt || '')}" ${additionalAttributes}/>`;
     }
 
     let srcset = '';
@@ -92,15 +102,15 @@ function getImgTag(imageData, options = {}) {
         largestSrc = `${baseUrl}/${selectedSize}/${file_name}.${optimized_format}`;
     }
 
-    const additionalAttributes = getAdditionalAttributes(attributes);
-    const sizesAttribute = sizes ? `sizes="${sizes}"` : '';
+    const additionalAttributes = getAdditionalAttributes(attributes, escape_attr_value);
+    const sizesAttribute = sizes ? `sizes="${escape_attr_value(sizes)}"` : '';
 
-    const imgTag = `<img src="${largestSrc}" srcset="${srcset}" ${sizesAttribute} alt="${alt || ''}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
+    const imgTag = `<img src="${largestSrc}" srcset="${escape_attr_value(srcset)}" ${sizesAttribute} alt="${escape_attr_value(alt || '')}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
 
     if (figureTag || caption != null) {
         let figureContent = '<figure>' + imgTag;
         if (caption != null) {
-            figureContent += `<figcaption>${caption}</figcaption>`;
+            figureContent += `<figcaption>${escape_attr_value(caption)}</figcaption>`;
         }
         figureContent += '</figure>';
         return figureContent;
