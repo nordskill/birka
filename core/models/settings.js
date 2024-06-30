@@ -54,6 +54,10 @@ const SettingsSchema = new Schema({
         trim: true,
         default: 'Blog'
     },
+    blog_description: {
+        type: String,
+        trim: true
+    },
     blog_posts_per_page: {
         type: Number,
         default: 10
