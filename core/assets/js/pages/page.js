@@ -3,11 +3,14 @@ import FileCRUD from '../components/file-crud';
 import TagsCRUD from "../components/tags-crud";
 import CustomFields from '../components/custom-fields';
 import Debouncer from '../functions/debouncer';
+import initSchemaOrgMapper from '../../../utils/schema-org-mapper';
 const slugify = require('../../../functions/slugify');
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 
 export default async function () {
+
+    const main = document.querySelector('main[data-page-id]');
 
     new BibeEditor({
         container: '.editor',
@@ -18,6 +21,16 @@ export default async function () {
     new CustomFields();
     updatePage();
 
+    const pageModel = JSON.parse(main.dataset.model);
+    const pageData = JSON.parse(main.dataset.data);
+
+    initSchemaOrgMapper('#json_ld', pageModel, pageData, {
+        field: 'seo.jsonld_template',
+        endpoint: `/api/pages/${main.dataset.pageId}`,
+        method: 'PATCH',
+        token: csrfToken
+    });
+
     const page = document.querySelector('#meta_preview');
     let preview;
 
@@ -26,7 +39,6 @@ export default async function () {
     } catch (error) {
         preview = '';
     }
-
 
     new FileCRUD({
         container: '#meta_preview',
@@ -120,26 +132,26 @@ function updatePage() {
     async function deletePage() {
 
         if (!confirm('Are you sure you want to delete this page?')) return;
-  
+
         try {
-           const response = await fetch(`/api/pages/${pageID}`, {
-              method: 'DELETE',
-              headers: {
-                 'Content-Type': 'application/json',
-                 'X-CSRF-Token': csrfToken
-              }
-           });
-  
-           if (response.ok) {
-              window.location.href = '/cms/pages';
-           } else {
-              alert('Failed to delete page');
-           }
-  
+            const response = await fetch(`/api/pages/${pageID}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = '/cms/pages';
+            } else {
+                alert('Failed to delete page');
+            }
+
         } catch (error) {
-           console.error(error);
+            console.error(error);
         }
-     }
+    }
 
 }
 

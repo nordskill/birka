@@ -11,7 +11,13 @@ async function renderTemplate(res, page, next) {
     try {
         
         const templateFile = path.join(res.app.get('views')[0], page.template + '.ejs');
-        
+
+        let json_ld = '';
+
+        if (page.seo?.jsonld_template) {
+            json_ld = await ejs.render(page.seo.jsonld_template, { data: page });
+        }
+
         const html = await ejs.renderFile(templateFile, {
             env: res.locals.env,
             menus: res.locals.menus,
@@ -22,7 +28,8 @@ async function renderTemplate(res, page, next) {
             getImgTag: res.locals.getImgTag,
             title: page.name,
             template_name: page.template,
-            data: page
+            data: page,
+            json_ld
         }, {
             async: true,
             rmWhitespace: true

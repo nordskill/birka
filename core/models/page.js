@@ -35,7 +35,12 @@ const PageSchema = new Schema({
     draft: [Schema.Types.Mixed],
     content_rendered: String,
     draft_rendered: String,
-    custom: [Schema.Types.Mixed]
+    custom: [Schema.Types.Mixed],
+    seo: {
+        title: String,
+        description: String,
+        jsonld_template: String
+    }
 }, options);
 
 PageSchema.index({ slug: 1 }, { unique: true, background: true });

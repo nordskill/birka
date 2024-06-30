@@ -6,7 +6,6 @@ const Page = require('../../models/page');
 const Member = require('../../models/member');
 const OBJtoHTML = require('../../functions/obj-to-html');
 const OperationalError = require('../../functions/operational-error');
-const { getSubmodels } = require('../../functions/model-loader');
 
 const SLUG = 'page';
 const TITLE = 'Page';
@@ -107,6 +106,7 @@ router.get(`/:id`, async (req, res, next) => {
             title: page.name,
             template_name: `cms_${SLUG}`,
             active: `${SLUG}s`,
+            model: Page.schema.paths,
             page,
             templates,
             team,

@@ -1,5 +1,5 @@
 <%- include('partials/header') %>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-page-id="<%= page._id %>" data-page-type="<%= page.type %>">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-page-id="<%= page._id %>" data-page-type="<%= page.type %>" data-data="<%= JSON.stringify(page) %>" data-model="<%= JSON.stringify(model) %>">
     <%- include('partials/breadcrumbs') %>
     <%- include('partials/title') %>
         <div class="pb-4">
@@ -18,6 +18,11 @@
                         <div id="fields_extension"></div>
                     <% } %>
                     <div id="custom_fields" data-fields="<%= JSON.stringify(page.custom) %>"></div>
+
+                    <div class="row mt-5 mb-5">
+                        <div id="json_ld"></div>
+                    </div>
+        
                 </div>
                 <div class="col-12 col-lg-3 mt-5 mt-lg-0">
                     <div class="card meta_block mb-4" id="page_fields">
@@ -107,7 +112,7 @@
                     }) %>
                 </div>
             </div>
-
+            
             <% if (auth_user.permissions.includes('custom_fields_setup')) { %>
                 <div class="row" id="custom_fields_setup" data-endpoint="/api/pages/<%= page._id %>">
                     <div class="pb-3">
