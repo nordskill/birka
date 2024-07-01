@@ -60,7 +60,11 @@
                                         </td>
                                         <td><%= page.type %></td>
                                         <td><%= formatDate(page.createdAt, 'dd mon yyyy') %></td>
-                                        <td><a href="/cms/team/<%= page.author._id %>"><%= page.author.username %></a></td>
+                                        <% if (page.author) { %>
+                                            <td><a href="/cms/team/<%= page.author._id %>"><%= page.author.username %></a></td>
+                                        <% } else { %>
+                                            <td>unknown</td>
+                                        <% } %>
                                         <td><%- page.tags.map(tag => tag.name).join(', ') %></td>
                                     </tr>
                                 <% } %>

@@ -48,7 +48,11 @@
                                 <div class="d-table-row">
                                     <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
                                     <dd class="d-table-cell">
-                                        <a href="/cms/team/<%= page.author._id %>" class="link-underline link-underline-opacity-0"><%= page.author.username %></a>
+                                        <% if (page.author) { %>
+                                            <a href="/cms/team/<%= page.author._id %>" class="link-underline link-underline-opacity-0"><%= page.author.username %></a>
+                                        <% } else { %>
+                                            unknown
+                                        <% } %>
                                     </dd>
                                 </div>
                             </dl>
@@ -95,7 +99,7 @@
                                 <label for="author" class="form-label">Author:</label>
                                 <select class="form-select" name="author" id="author">
                                     <% team.forEach(member => { %>
-                                        <option value="<%= member._id %>" <%= page.author._id.toString() === member._id.toString() ? 'selected' : '' %>><%= member.username %></option>
+                                        <option value="<%= member._id %>" <%= page.author?._id.toString() === member._id.toString() ? 'selected' : '' %>><%= member.username %></option>
                                     <% }); %>
                                 </select>   
                             </div>
