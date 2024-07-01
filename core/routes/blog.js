@@ -7,7 +7,7 @@ const OperationalError = require('../functions/operational-error');
 const { blogSchema, blogPostSchema } = require('../../config/jsonld-blog');
 
 
-async function renderTemplate(res, data, template, next) {
+async function renderTemplate(req, res, data, template, next) {
 
     try {
 
@@ -21,6 +21,7 @@ async function renderTemplate(res, data, template, next) {
             getImgTag: res.locals.getImgTag,
             title: data.title,
             json_ld: data.jsonLD,
+            baseUrl: `${req.protocol}://${req.get('host')}`,
             data
         }, {
             async: true,
@@ -71,7 +72,7 @@ router.get('/', async (req, res, next) => {
         const jsonLD = blogSchema(jsonLDdata);
         const templateFile = path.join(res.app.get('views')[0], 'blog.ejs');
 
-        await renderTemplate(res, {
+        await renderTemplate(req, res, {
             slug: SS.blog_slug,
             title: SS.blog_title,
             blogPosts,
@@ -122,7 +123,7 @@ router.get('/:slug', async (req, res, next) => {
         const jsonLD = blogPostSchema(jsonLDdata);
         const templateFile = path.join(res.app.get('views')[0], 'blog-post.ejs');
 
-        await renderTemplate(res, {
+        await renderTemplate(req, res, {
             slug: SS.blog_slug,
             title: blogPost.title,
             blogPost,

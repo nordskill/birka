@@ -6,10 +6,10 @@ const Page = require('../models/page');
 const OperationalError = require('../functions/operational-error');
 
 // Utility function to render EJS templates
-async function renderTemplate(res, page, next) {
+async function renderTemplate(req, res, page, next) {
 
     try {
-        
+
         const templateFile = path.join(res.app.get('views')[0], page.template + '.ejs');
 
         let json_ld = '';
@@ -29,14 +29,15 @@ async function renderTemplate(res, page, next) {
             title: page.name,
             template_name: page.template,
             data: page,
+            baseUrl: `${req.protocol}://${req.get('host')}`,
             json_ld
         }, {
             async: true,
             rmWhitespace: true
         });
-        
+
         res.send(html);
-        
+
     } catch (error) {
         next(error);
     }
@@ -51,7 +52,7 @@ router.get('/:slug', async (req, res, next) => {
             .populate('img_preview tags')
             .lean();
         if (!page) throw new OperationalError('Page not found', 404);
-        await renderTemplate(res, page, next);
+        await renderTemplate(req, res, page, next);
     } catch (error) {
         next(error);
     }
@@ -65,7 +66,7 @@ router.get('/', async (req, res, next) => {
             .populate('img_preview tags')
             .lean();
         if (page) {
-            await renderTemplate(res, page, next);
+            await renderTemplate(req, res, page, next);
         } else {
             // Handle no home page set by rendering a default template
             res.locals.title = 'Home';
