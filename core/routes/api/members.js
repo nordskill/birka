@@ -3,12 +3,12 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Member = require('../../models/member');
 const OperationalError = require('../../functions/operational-error');
+const { hashPassword } = require('../../functions/password-utils');
 
 // Create a new member
 router.post('/', async (req, res, next) => {
-    
+
     const memberData = req.body;
-    console.log(memberData);
 
     try {
 
@@ -18,6 +18,12 @@ router.post('/', async (req, res, next) => {
             if (existingMember) {
                 return next(new OperationalError('Email already exists', 400));
             }
+        }
+
+        if (memberData.password) {
+            memberData.password = await hashPassword(memberData.password);
+        } else {
+            return next(new OperationalError('Password is not set', 400));
         }
 
         const newMember = new Member(memberData);
