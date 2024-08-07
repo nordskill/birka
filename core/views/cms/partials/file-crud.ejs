@@ -1,20 +1,34 @@
 <div class="file_crud position-relative static"
-    data-files-api="<%= files_api %>"
-    data-endpoint="<%= endpoint %>"
-    data-field-name="<%= field_name %>"
+    data-files-api="<%= locals.files_api %>"
+    data-endpoint="<%= locals.endpoint %>"
+    data-field-name="<%= locals.field_name %>"
     data-file-id="<%= locals.file_id || '' %>"
-    data-size="<%= locals.size || '' %>">
-    <div class="container">
-        <div class="file_preview"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 18.373">
-            <path
-                d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
+    data-size="<%= locals.size || '' %>"
+    data-token="<%= locals.token || '' %>">
+    <%
+
+    let picture = '';
+    let options = {};
+
+    if (locals.size) {
+        options.sizes = locals.size + 'px';
+        options.size = locals.size;
+    }
+
+    if (locals.file) {
+        const img = getImgTag(locals.file, options);
+        picture = '<figure>' + img + '</figure>';
+    }
+
+    %>
+    <div class="fc_wrapper">
+        <div class="file_preview"><%- picture %></div>
+        <svg viewBox="0 0 21 18.373">
+            <path d="M18.375 0H2.626A2.624 2.624 0 0 0 0 2.622v13.127a2.624 2.624 0 0 0 2.624 2.624h15.751A2.625 2.625 0 0 0 21 15.749V2.624A2.625 2.625 0 0 0 18.375 0M2.626 1.312h15.749a1.313 1.313 0 0 1 1.313 1.312v8.208l-4.743-2.445a.686.686 0 0 0-.8.129l-5.114 5.117-3.667-2.445a.687.687 0 0 0-.869.085L1.314 14.1V2.624a1.313 1.313 0 0 1 1.312-1.312" />
             <path d="M5.908 7.874a1.969 1.969 0 1 0-1.97-1.968 1.969 1.969 0 0 0 1.97 1.968" />
         </svg>
         <div class="icons">
-            <ul
-                class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0">
-            </ul>
+            <ul class="list_meta_icons d-flex justify-content-center position-absolute list-unstyled d-flex bottom-0 start-0 end-0"></ul>
         </div>
     </div>
 </div>

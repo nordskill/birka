@@ -70,7 +70,8 @@ const OrderSchema = new Schema({
     note: {
         type: String,
         trim: true
-    }
+    },
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', OrderSchema);

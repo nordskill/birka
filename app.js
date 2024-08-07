@@ -17,6 +17,7 @@ const loadData = require('./core/functions/data');
 const loadIcons = require('./core/functions/load-icons');
 const icon = require('./core/functions/icon');
 const getData = require('./core/functions/get-data');
+const getField = require('./core/functions/get-field');
 const getImgTag = require('./core/functions/get-img-tag');
 const generateSvgSprites = require('./core/functions/generate-svg-sprites');
 const formatDate = require('./core/functions/format-date');
@@ -26,22 +27,20 @@ const SiteSettings = require('./core/models/settings');
 const setupRoutes = require('./core/routes/_setup');
 const OperationalError = require('./core/functions/operational-error');
 
-const { loadModels, getAllSubmodels, getSubmodels } = require('./core/functions/model-loader');
+const { loadModels, getAllSubmodels, getSubmodels, getCustomModel, getModelNameBySlug } = require('./core/functions/model-loader');
 
 // Object to track exceeded request counts and initial exceedance flag per IP
 let exceededRequests = {};
 
-init();
-
-function init() {
+async function init() {
     loadVars();
     loadData();
-    db.connect();
-    getSiteSettings();
+    await db.connect();
+    const siteSettings = await getSiteSettings();
     global.ico = loadIcons();
     global.svg_sprites = generateSvgSprites();
     global.formatDate = formatDate;
-    setupApp();
+    return setupApp(siteSettings);
 }
 
 async function getSiteSettings() {
@@ -50,20 +49,27 @@ async function getSiteSettings() {
             .findOne()
             .populate('logo')
             .lean();
-        loadCustomModels();
+        registerModels();
+        return SS;
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
 }
 
-function loadCustomModels() {
+function registerModels() {
+    const customModelPath = path.join(__dirname, `./custom/${SS.skin}/models`);
+    const { coreModels, customModels, subModels } = loadModels(customModelPath);
 
-    const modelDirectory = path.join(__dirname, `./custom/${SS.skin}/models`);
-    loadModels(modelDirectory);
+    global.coreModels = coreModels;
+    global.customModels = customModels;
+    global.subModels = subModels;
 
+    console.log('Custom Models:', Object.keys(customModels));
+    console.log('Custom Sub Models:', Object.keys(subModels));
 }
 
-function setupApp() {
+function setupApp(siteSettings) {
+
     const app = express();
 
     app.disable('x-powered-by');
@@ -72,10 +78,11 @@ function setupApp() {
     app.locals.icon = icon;
 
     setupMiddleware(app);
-    setupRoutes(app);
+    setupRoutes(app, siteSettings);
     setupErrorHandler(app);
 
-    module.exports = app;
+    return app;
+
 }
 
 async function setupMiddleware(app) {
@@ -95,6 +102,7 @@ async function setupMiddleware(app) {
         res.locals.env = process.env.NODE_ENV;
         res.locals.getImgTag = getImgTag;
         res.locals.getData = getData;
+        res.locals.getField = getField;
         next();
     });
 
@@ -202,6 +210,16 @@ async function setupMiddleware(app) {
 
 }
 
+module.exports = (async () => {
+    try {
+        const app = await init();
+        return app;
+    } catch (error) {
+        console.error("Failed to initialize app:", error);
+        process.exit(1);
+    }
+})();
+
 function setupErrorHandler(app) {
 
     // 404 Not Found Handler
@@ -228,7 +246,7 @@ function setupErrorHandler(app) {
                 ...errorResponse
             });
         } else {
-            res.render('error', {
+            res.render(path.join(__dirname, 'core/views/error.ejs'), {
                 template_name: 'error',
                 ...errorResponse
             });
@@ -250,7 +268,7 @@ function csrfToken(req, res, next) {
 }
 
 function csrfProtection(req, res, next) {
-    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
         const clientCsrfToken = req.body._csrf || req.query._csrf || req.headers['x-csrf-token'];
         if (!clientCsrfToken || req.session.csrfToken !== clientCsrfToken) {
             console.error(`CSRF token mismatch for request on ${req.path} from IP: ${req.ip}`);

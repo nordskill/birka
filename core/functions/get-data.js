@@ -1,5 +1,4 @@
 const models = require('../models');
-const { distinct } = require('../models/tag');
 
 /**
  * Loads data from a specified model with optional query parameters and options.
@@ -21,7 +20,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch a single Image document by ID
- * const image = await load_model_data('Image',
+ * const image = await getData('Image',
  * { 
  *      _id: '60c72b2f9b1e8c2a6d8e4d3b'
  * },
@@ -31,7 +30,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch multiple BlogPost documents, sorted by date, limited to 10, excluding one with a specific ID
- * const blogPosts = await load_model_data('BlogPost',
+ * const blogPosts = await getData('BlogPost',
  * {
  *      _id: { $ne: '60c72b2f9b1e8c2a6d8e4d3b' }
  * },
@@ -42,7 +41,7 @@ const { distinct } = require('../models/tag');
  * 
  * @example
  * // Fetch multiple Page documents, sorted by a field, limited to 5
- * const pages = await load_model_data('Page', {},
+ * const pages = await getData('Page', {},
  * {
  *      sort: { someField: 1 },
  *      limit: 5
@@ -55,59 +54,38 @@ async function getData(modelName, query = {}, options = {}) {
         skip,
         where,
         count,
-        findOne,
         and,
         or,
         distinct,
-        tagName
+        tagName,
+        populate
     } = options;
 
+    const findOne = query._id ? true : options.findOne;
+
     try {
-        let model;
-        switch (modelName) {
-            case 'BlogPost':
-            case 'Category':
-            case 'Menu':
-            case 'Order':
-            case 'Page':
-            case 'Product':
-            case 'Settings':
-            case 'Tag':
-            case 'Status':
-            case 'User':
-            case 'File':
-            case 'Image':
-            case 'Video':
-                model = models[modelName];
-                break;
-            case 'EmailTemplate':
-            case 'Member':
-            case 'Notification':
-            default:
-                return null;
-        }
+        let model = get_model(modelName);
+        if (!model) return null;
 
         let queryBuilder = model.find(query);
 
-        if (where) queryBuilder = queryBuilder.where(where);
-        if (and) queryBuilder = queryBuilder.and(and);
-        if (or) queryBuilder = queryBuilder.or(or);
-        if (distinct) queryBuilder = queryBuilder.distinct(distinct);
-        if (sort) queryBuilder = queryBuilder.sort(sort);
-        if (skip) queryBuilder = queryBuilder.skip(skip);
-        if (limit) queryBuilder = queryBuilder.limit(limit);
+        apply_query_options(queryBuilder, {
+            where,
+            and,
+            or,
+            distinct,
+            sort,
+            skip,
+            limit
+        });
 
         if (modelName === 'User') {
             queryBuilder = queryBuilder.select('-account_details.password');
         }
 
-        // Handling tag filtering
-        if (tagName && model.schema.paths.tags) {
-            const tag = await models['Tag'].findOne({ name: tagName }, '_id');
-            if (tag) {
-                queryBuilder = queryBuilder.where('tags', tag._id);
-            }
-        }
+        handle_tag_filtering(queryBuilder, model, tagName);
+
+        apply_populate(queryBuilder, populate);
 
         if (count) return await queryBuilder.countDocuments();
         if (findOne) return await queryBuilder.findOne().lean();
@@ -116,6 +94,54 @@ async function getData(modelName, query = {}, options = {}) {
     } catch (error) {
         console.error(`Error loading data for model ${modelName}:`, error);
         return [];
+    }
+}
+
+function get_model(modelName) {
+    if (models[modelName]) {
+        return models[modelName];
+    } else if (global.customModels && global.customModels[modelName]) {
+        return global.customModels[modelName].model;
+    }
+    return null;
+}
+
+function apply_query_options(queryBuilder, options) {
+    const { where, and, or, distinct, sort, skip, limit } = options;
+
+    if (where) queryBuilder.where(where);
+    if (and) queryBuilder.and(and);
+    if (or) queryBuilder.or(or);
+    if (distinct) queryBuilder.distinct(distinct);
+    if (sort) queryBuilder.sort(sort);
+    if (skip) queryBuilder.skip(skip);
+    if (limit) queryBuilder.limit(limit);
+}
+
+async function handle_tag_filtering(queryBuilder, model, tagName) {
+    if (tagName && model.schema.paths.tags) {
+        const tag = await models['Tag'].findOne({ name: tagName }, '_id');
+        if (tag) {
+            queryBuilder.where('tags', tag._id);
+        }
+    }
+}
+
+function apply_populate(queryBuilder, populate) {
+    if (!populate) return;
+
+    if (typeof populate === 'string') {
+        queryBuilder.populate(populate);
+    } else if (Array.isArray(populate)) {
+        populate.forEach(popObj => {
+            if (typeof popObj === 'string') {
+                queryBuilder.populate(popObj);
+            } else if (typeof popObj === 'object' && popObj.path) {
+                queryBuilder.populate(popObj);
+            }
+        });
+    } else if (typeof populate === 'object' && populate.path) {
+        queryBuilder.populate(populate);
     }
 }
 

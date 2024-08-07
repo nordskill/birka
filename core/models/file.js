@@ -35,7 +35,8 @@ const FileSchema = new Schema({
     used: {
         type: Number,
         default: 0
-    }
+    },
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 const File = mongoose.model('File', FileSchema);

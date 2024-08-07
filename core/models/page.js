@@ -30,10 +30,20 @@ const PageSchema = new Schema({
     is_home: Boolean,
     author:         { ref: 'Member',type: Schema.Types.ObjectId },
     img_preview:    { ref: 'File', type: Schema.Types.ObjectId },
-    tags: [         { ref: 'Tag', type: Schema.Types.ObjectId }]
+    tags: [         { ref: 'Tag', type: Schema.Types.ObjectId }],
+    content: [Schema.Types.Mixed],
+    draft: [Schema.Types.Mixed],
+    content_rendered: String,
+    draft_rendered: String,
+    custom: [Schema.Types.Mixed],
+    seo: {
+        title: String,
+        description: String,
+        jsonld_template: String
+    }
 }, options);
 
-PageSchema.index({ slug: 1 });
+PageSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Page = mongoose.model('Page', PageSchema);
 

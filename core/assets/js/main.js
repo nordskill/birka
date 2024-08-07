@@ -5,10 +5,15 @@ import cms_product from './pages/product';
 import cms_blogpost from './pages/blogpost';
 import cms_pages from './pages/pages';
 import cms_page from './pages/page';
+import cms_blog from './pages/blog';
 import cms_files from './pages/files';
 import cms_menus from './pages/menus';
 import cms_menu from './pages/menu';
 import cms_settings from './pages/settings';
+import cms_new_member from './pages/new-member';
+import cms_member from './pages/member';
+import cms_custom_model_items from './pages/custom-model-items';
+import cms_custom_model_item from './pages/custom-model-item';
 
 import 'bootstrap';
 import bootstrapFormsValidation from './functions/bootstrap-forms-validation';
@@ -22,9 +27,14 @@ const page = {
     cms_files,
     cms_pages,
     cms_page,
+    cms_blog,
     cms_menus,
     cms_menu,
-    cms_settings
+    cms_settings,
+    cms_new_member,
+    cms_member,
+    cms_custom_model_items,
+    cms_custom_model_item
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,6 +62,7 @@ function determineCurrentPage() {
 function autoUpdates() {
 
     const navItem = document.querySelector('.nav-item.update');
+    if (!navItem) return;
     const btnCheckUpdates = navItem.querySelector('.action');
     const navName = navItem.querySelector('.nav_name');
     const action = navItem.querySelector('.action');

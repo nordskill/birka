@@ -5,94 +5,134 @@
             Dashboard
         </a>
     </li>
+    <% if (auth_user.permissions.includes('orders')) { %>
     <li class="nav-item">
         <a href="/cms/orders" class="nav-link <%= active === 'orders' ? 'active' : '' %>">
             <%- icon({ name: 'orders' }) %>
             Orders
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('products')) { %>
     <li class="nav-item">
         <a href="/cms/products" class="nav-link <%= active === 'products' ? 'active' : '' %>">
             <%- icon({ name: 'box' }) %>
             Products
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('users')) { %>
     <li class="nav-item">
         <a href="/cms/customers" class="nav-link <%= active === 'customers' ? 'active' : '' %>">
             <%- icon({ name: 'customer' }) %>
             Customers
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('pages')) { %>
     <li class="nav-item">
         <a href="/cms/pages" class="nav-link <%= active === 'pages' ? 'active' : '' %>">
             <%- icon({ name: 'page' }) %>
             Pages
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('blog')) { %>
     <li class="nav-item">
         <a href="/cms/blog" class="nav-link <%= active === 'blog' ? 'active' : '' %>">
             <%- icon({ name: 'chat' }) %>
             Blog
         </a>
     </li>
+    <% } %>
+
+    
+
+    <% if (auth_user.permissions.includes('custom_models')) { %>
+        <% Object.keys(global.customModels).forEach(modelName => { %>
+            <% const modelMeta = global.customModels[modelName]; %>
+            <li class="nav-item">
+                <a href="/cms/custom/<%= modelMeta.slug %>" class="nav-link <%= active === modelMeta.slug ? 'active' : '' %>">
+                    <%- icon({ name:  modelMeta.icon }) %>
+                    <%= modelMeta.menuName %>
+                </a>
+            </li>
+        <% }); %>
+    <% } %>
+
+
+
+
+    <% if (auth_user.permissions.includes('files')) { %>
     <li class="nav-item">
         <a href="/cms/files" class="nav-link <%= active === 'files' ? 'active' : '' %>">
             <%- icon({ name: 'file' }) %>
             Files
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('tags')) { %>
     <li class="nav-item">
         <a href="/cms/tags" class="nav-link <%= active === 'tags' ? 'active' : '' %>">
             <%- icon({ name: 'tag' }) %>
             Tags
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('statuses')) { %>
     <li class="nav-item">
         <a href="/cms/statuses" class="nav-link <%= active === 'statuses' ? 'active' : '' %>">
             <%- icon({ name: 'check-round' }) %>
             Statuses
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('notifications')) { %>
     <li class="nav-item">
         <a href="/cms/notifications" class="nav-link <%= active === 'notifications' ? 'active' : '' %>">
             <%- icon({ name: 'bell' }) %>
             Notifications
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('email_templates')) { %>
     <li class="nav-item">
         <a href="/cms/email-templates" class="nav-link <%= active === 'email-templates' ? 'active' : '' %>">
             <%- icon({ name: 'email' }) %>
             Email Templates
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('menus')) { %>
     <li class="nav-item">
         <a href="/cms/menus" class="nav-link <%= active === 'menus' ? 'active' : '' %>">
             <%- icon({ name: 'menu' }) %>
             Menus
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('team')) { %>
     <li class="nav-item">
         <a href="/cms/team" class="nav-link <%= active === 'team-members' ? 'active' : '' %>">
             <%- icon({ name: 'team' }) %>
             Team
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('settings')) { %>
     <li class="nav-item">
         <a href="/cms/settings" class="nav-link <%= active === 'settings' ? 'active' : '' %>">
             <%- icon({ name: 'gear' }) %>
             Settings
         </a>
     </li>
+    <% } %>
+    <% if (auth_user.permissions.includes('updates')) { %>
     <li class="nav-item update">
         <span class="nav-link <%= active === 'update' ? 'active' : '' %>">
             <%- icon({ name: 'cloud-down' }) %>
             <span class="nav_name">v.<%= project_version %></span><a href="/cms/update" class="action">check updates</a>
         </span>
     </li>
-    <!-- <li class="nav-item update available">
-        <span class="nav-link <%= active === 'update' ? 'active' : '' %>">
-            <%- icon({ name: 'cloud-down' }) %>
-            <span class="nav_name">Update to v.<%= project_version %></span><a href="/cms/update" class="action">check updates</a>
-        </span>
-    </li> -->
+    <% } %>
 </ul>

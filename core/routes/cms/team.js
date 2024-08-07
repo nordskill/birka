@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Member = require('../../models/member');
+const PERMISSIONS = require('../../../config/permissions');
 
 const SLUG = 'team-member';
 const TITLE = 'Team Member';
@@ -33,6 +34,28 @@ router.get('/', async (req, res, next) => {
     });
 });
 
+router.get('/new', async (req, res, next) => {
+    res.render(`cms/team-new`, {
+        title: `New Team Member`,
+        template_name: `cms_new_member`,
+        active: null,
+        PERMISSIONS,
+        breadcrumbs: [{
+                name: 'CMS',
+                href: '/cms'
+            },
+            {
+                name: `${TITLE}s`,
+                href: `/cms/team`
+            },
+            {
+                name: `New Team Member`,
+                href: `/cms/team/new`
+            }
+        ]
+    });
+});
+
 router.get(`/:id`, async (req, res, next) => {
     const id = req.params.id;
 
@@ -46,9 +69,10 @@ router.get(`/:id`, async (req, res, next) => {
         const userName = teamMember.username;
         res.render(`cms/${SLUG}`, {
             title: userName,
-            template_name: `cms_${SLUG}`,
+            template_name: `cms_member`,
             active: SLUG,
             team_member: teamMember,
+            PERMISSIONS,
             breadcrumbs: [{
                     name: 'CMS',
                     href: '/cms'
@@ -66,7 +90,6 @@ router.get(`/:id`, async (req, res, next) => {
                 'validation-form.js'
             ]
         });
-        // console.log(teamMember.shipping[0]._id);
     } catch (err) {
 
         next(err);

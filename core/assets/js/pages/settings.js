@@ -3,9 +3,11 @@ export default async function () {
     const token = document.querySelector('meta[name="csrf"]').content;
     const customHtmlForm = document.forms.custom_html;
     const identityBasicForm = document.forms.identity_basic;
+    const blogForm = document.forms.blog;
 
     customHtmlForm.addEventListener('submit', submitForm);
     identityBasicForm.addEventListener('submit', submitForm);
+    blogForm.addEventListener('submit', submitForm);
 
 
     const btnSitemap = document.querySelector('#regenerate_sitemap');

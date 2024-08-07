@@ -31,7 +31,7 @@ export default async function () {
 
     async function addNewPage() {
 
-        const type = document.querySelector('#page_submodels').value;
+        const type = document.querySelector('#page_submodels')?.value || '';
         const pageName = prompt('Enter the page name:');
     
         if (!pageName) {
@@ -53,10 +53,10 @@ export default async function () {
             body: JSON.stringify(pageData)
         });
     
-        const data = await resp.json();
+        const payload = await resp.json();
     
-        if (data.success) {
-            window.location.href = `pages/${data.page._id}`;
+        if (payload.success) {
+            window.location.href = `/cms/pages/${payload.data._id}`;
         }
     
         if (!resp.ok) {

@@ -70,10 +70,15 @@ class SiteMap {
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
         for (const doc of documents) {
             sitemap += `<url>\n`;
-            sitemap += `  <loc>${this.config.protocol}://${SS.domain}/${doc.slug}</loc>\n`;
+            if (modelConfig.model === 'Page' && doc.is_home) {
+                sitemap += `  <loc>${this.config.protocol}://${SS.domain}/</loc>\n`;
+                sitemap += `  <priority>1</priority>\n`;
+            } else {
+                sitemap += `  <loc>${this.config.protocol}://${SS.domain}/${doc.slug}</loc>\n`;
+                sitemap += `  <priority>${modelConfig.priority}</priority>\n`;
+            }
             sitemap += `  <lastmod>${doc.updatedAt.toISOString()}</lastmod>\n`;
             sitemap += `  <changefreq>${modelConfig.changefreq}</changefreq>\n`;
-            sitemap += `  <priority>${modelConfig.priority}</priority>\n`;
             sitemap += `</url>\n`;
         }
         sitemap += `</urlset>\n`;
@@ -104,13 +109,13 @@ class SiteMap {
         }
         sitemapindex += `</sitemapindex>\n`;
 
-        await fs.writeFile(path.join(this.basePath, 'sitemap_index.xml'), sitemapindex, 'utf8');
+        await fs.writeFile(path.join(this.basePath, 'sitemap.xml'), sitemapindex, 'utf8');
         await this.#update_robots();
     }
 
     async #update_robots() {
         const robotsPath = path.join(this.basePath, 'robots.txt');
-        const sitemapLine = `Sitemap: ${this.config.protocol}://${SS.domain}/sitemap_index.xml`;
+        const sitemapLine = `Sitemap: ${this.config.protocol}://${SS.domain}/sitemap.xml`;
 
         try {
             const robotsExists = await fs.stat(robotsPath);

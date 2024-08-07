@@ -6,14 +6,16 @@
                     <div class="card bg-light">
                         <div class="card-body d-flex flex-wrap justify-content-between">
                             <div class="col-auto d-flex align-items-center">
+                                <% if (locals.submodels?.length) { %>
                                 <select class="form-select me-2" name="author" id="page_submodels"n style="width: 130px">
                                     <option value="">Common</option>
                                     <% submodels.forEach(model => { %>
                                         <option value="<%= model %>"><%= model %></option>
                                     <% }) %>
                                 </select>
+                                <% } %>
                                 <button class="btn btn-primary me-2" id="add_page" style="height: 38px;">Add New</button>
-                                <button class="btn btn-danger" id="delete_page" style="height: 38px;display:none">Delete <span>2</span> Selected</button>
+                                <button class="btn btn-danger" id="delete_page" style="height: 38px;display:none">Delete Selected</button>
                             </div>
                             <div class="col-auto">
                                 <form action="#" class="needs-validation" novalidate="">
@@ -58,7 +60,11 @@
                                         </td>
                                         <td><%= page.type %></td>
                                         <td><%= formatDate(page.createdAt, 'dd mon yyyy') %></td>
-                                        <td><a href="/cms/team/<%= page.author._id %>"><%= page.author.username %></a></td>
+                                        <% if (page.author) { %>
+                                            <td><a href="/cms/team/<%= page.author._id %>"><%= page.author.username %></a></td>
+                                        <% } else { %>
+                                            <td>unknown</td>
+                                        <% } %>
                                         <td><%- page.tags.map(tag => tag.name).join(', ') %></td>
                                     </tr>
                                 <% } %>

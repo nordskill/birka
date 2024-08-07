@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
+const { checkPermissions, checkDynamicPermissions } = require('../middleware/permissions');
 
 // Navigation
 const index = require('./index');
+const blog = require('./blog');
 const cookies = require('./cookies');
 
 // CMS
@@ -23,6 +25,7 @@ const cmsMenus = require('./cms/menus');
 const cmsTeam = require('./cms/team');
 const cmsSettings = require('./cms/settings');
 const cmsUpdate = require('./cms/update');
+const customModelRouter = require('./cms/custom-model-router');
 
 // JSON API
 const apiAuth = require('./api/auth');
@@ -33,9 +36,11 @@ const apiMenu = require('./api/menus');
 const apiBlog = require('./api/blog');
 const apiProducts = require('./api/products');
 const apiSend = require('./api/send');
+const apiMembers = require('./api/members');
 const apiSitemap = require('./api/sitemap');
+const apiCustom = require('./api/custom');
 
-module.exports = (app) => {
+module.exports = (app, SS) => {
 
     // protect static folder pubblic/css-assets/ with cmsAuthentication
     app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../../public/cms-assets')));
@@ -51,37 +56,56 @@ module.exports = (app) => {
     cmsRoutes.use(checkAuthentication);
 
     cmsRoutes.use('/', cmsIndex);
-    cmsRoutes.use('/files', cmsFiles);
-    cmsRoutes.use('/tags', cmsTags);
-    cmsRoutes.use('/customers', cmsCustomers);
-    cmsRoutes.use('/products', cmsProducts);
-    cmsRoutes.use('/orders', cmsOrders);
-    cmsRoutes.use('/statuses', cmsStatuses);
-    cmsRoutes.use('/pages', cmsPages);
-    cmsRoutes.use('/blog', cmsBlog);
-    cmsRoutes.use('/notifications', cmsNotifications);
-    cmsRoutes.use('/email-templates', cmsEmails);
-    cmsRoutes.use('/menus', cmsMenus);
-    cmsRoutes.use('/team', cmsTeam);
-    cmsRoutes.use('/settings', cmsSettings);
-    cmsRoutes.use('/update', cmsUpdate);
+    cmsRoutes.use('/files', checkPermissions(['files']), cmsFiles);
+    cmsRoutes.use('/tags', checkPermissions(['tags']), cmsTags);
+    cmsRoutes.use('/customers', checkPermissions(['users']), cmsCustomers);
+    cmsRoutes.use('/products', checkPermissions(['products']), cmsProducts);
+    cmsRoutes.use('/orders', checkPermissions(['orders']), cmsOrders);
+    cmsRoutes.use('/statuses', checkPermissions(['statuses']), cmsStatuses);
+    cmsRoutes.use('/pages', checkPermissions(['pages']), cmsPages);
+    cmsRoutes.use('/blog', checkPermissions(['blog']), cmsBlog);
+    cmsRoutes.use('/notifications', checkPermissions(['notifications']), cmsNotifications);
+    cmsRoutes.use('/email-templates', checkPermissions(['email_templates']), cmsEmails);
+    cmsRoutes.use('/menus', checkPermissions(['menus']), cmsMenus);
+    cmsRoutes.use('/team', checkPermissions(['team']), cmsTeam);
+    cmsRoutes.use('/settings', checkPermissions(['settings']), cmsSettings);
+    cmsRoutes.use('/update', checkPermissions(['updates']), cmsUpdate);
+
+    // Custom Model Routes
+    cmsRoutes.use('/custom', checkDynamicPermissions(['custom_models']), customModelRouter);
 
     app.use('/cms', cmsRoutes);
 
     // JSON API
-    app.use('/api/auth', apiAuth);
-    app.use('/api/tags', apiTag);
-    app.use('/api/files', apiFile);
-    app.use('/api/pages', apiPage);
-    app.use('/api/menus', apiMenu);
-    app.use('/api/blog', apiBlog);
-    app.use('/api/products', apiProducts);
-    app.use('/api/send', apiSend);
-    app.use('/api/sitemap', apiSitemap);
+    const apiRoutes = express.Router();
+
+    // Apply authentication check to all API routes except '/auth'
+    apiRoutes.use((req, res, next) => {
+        if (req.path === '/auth/login' && req.method === 'POST') {
+            next();
+        } else {
+            checkAPIAuthentication(req, res, next);
+        }
+    });
+
+    apiRoutes.use('/auth', apiAuth);
+    apiRoutes.use('/tags', checkPermissions(['tags']), apiTag);
+    apiRoutes.use('/files', checkPermissions(['files']), apiFile);
+    apiRoutes.use('/pages', checkPermissions(['pages']), apiPage);
+    apiRoutes.use('/menus', checkPermissions(['menus']), apiMenu);
+    apiRoutes.use('/blog', checkPermissions(['blog']), apiBlog);
+    apiRoutes.use('/products', checkPermissions(['products']), apiProducts);
+    apiRoutes.use('/send', checkPermissions(['send']), apiSend);
+    apiRoutes.use('/members', checkPermissions(['team']), apiMembers);
+    apiRoutes.use('/sitemap', checkPermissions(['sitemap']), apiSitemap);
+    apiRoutes.use('/custom', checkPermissions(['custom_models']), apiCustom);
+
+    app.use('/api', apiRoutes);
 
     // Navigation
-    app.use('/', index);
+    app.use('/' + SS.blog_slug, blog);
     app.use('/cookies', cookies);
+    app.use('/', index);
 
 };
 
@@ -90,6 +114,18 @@ function checkAuthentication(req, res, next) {
         next();
     } else {
         res.redirect('/cms/login');
+    }
+}
+
+function checkAPIAuthentication(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        console.log('Unauthorized');
+        res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
     }
 }
 

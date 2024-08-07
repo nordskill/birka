@@ -23,7 +23,8 @@ const categorySchema = new Schema({
     isActive: {
         type: Boolean,
         default: true
-    }
+    },
+    custom: [Schema.Types.Mixed]
 }, { timestamps: true });
 
 // Auto-update the updatedAt field before save

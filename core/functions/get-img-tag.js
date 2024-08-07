@@ -39,19 +39,47 @@
  */
 function getImgTag(imageData, options = {}) {
     const {
-        sizes = '100vw',
+        figureTag = false,
+        caption,
+        sizes,
         maxWidth = 1024,
         size,
         attributes = {}
     } = options;
 
-    if (!imageData || !imageData.hash || !imageData.file_name || !imageData.optimized_format) {
+    if (!imageData || !imageData.hash || !imageData.file_name) {
         console.error('Missing required image data');
         return '';
     }
 
     const baseUrl = `/files/${imageData.hash.slice(0, 2)}`;
-    const { file_name, optimized_format, sizes: imageSizes, alt, width, height } = imageData;
+    const {
+        file_name,
+        extension,
+        optimized_format,
+        sizes: imageSizes,
+        alt,
+        width,
+        height
+    } = imageData;
+
+    // Escape function for attribute values
+    const escape_attr_value = (str) => {
+        return str.replace(/&/g, '&amp;')
+                  .replace(/'/g, '&#39;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/\s+/g, ' '); // Replace multiple spaces with a single space
+    };
+
+    // Check if the image is an SVG
+    if (extension === 'svg') {
+        const src = `${baseUrl}/${file_name}.${extension}`;
+        const additionalAttributes = getAdditionalAttributes(attributes, escape_attr_value);
+
+        return `<img src="${src}" alt="${escape_attr_value(alt || '')}" ${additionalAttributes}/>`;
+    }
 
     let srcset = '';
     let largestSrc = '';
@@ -74,21 +102,23 @@ function getImgTag(imageData, options = {}) {
         largestSrc = `${baseUrl}/${selectedSize}/${file_name}.${optimized_format}`;
     }
 
-    const additionalAttributes = Object.entries(attributes)
-        .filter(([key, value]) => value !== false)
-        .map(([key, value]) => value === true ? key : `${key}="${value}"`)
-        .join(' ');
+    const additionalAttributes = getAdditionalAttributes(attributes, escape_attr_value);
+    const sizesAttribute = sizes ? `sizes="${escape_attr_value(sizes)}"` : '';
 
-    return `<img 
-    src="${largestSrc}" 
-    srcset="${srcset}" 
-    sizes="${sizes}" 
-    alt="${alt || ''}" 
-    width="${selectedSize}" 
-    height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}"
-    ${additionalAttributes}
-/>`;
+    const imgTag = `<img src="${largestSrc}" srcset="${escape_attr_value(srcset)}" ${sizesAttribute} alt="${escape_attr_value(alt || '')}" width="${selectedSize}" height="${selectedSize ? Math.round((selectedSize / width) * height) : height || ''}" ${additionalAttributes}/>`;
+
+    if (figureTag || caption != null) {
+        let figureContent = '<figure>' + imgTag;
+        if (caption != null) {
+            figureContent += `<figcaption>${escape_attr_value(caption)}</figcaption>`;
+        }
+        figureContent += '</figure>';
+        return figureContent;
+    }
+
+    return imgTag;
 }
+
 
 /**
  * Finds the closest size in the array to the target size.
@@ -102,5 +132,20 @@ function getClosestSize(targetSize, sizesArray) {
         Math.abs(curr - targetSize) < Math.abs(prev - targetSize) ? curr : prev
     );
 }
+
+/**
+ * Generates a string of additional HTML attributes from an object.
+ * 
+ * @param {Object} attributes - An object of attribute key-value pairs.
+ * @returns {string} - A string of HTML attributes.
+ */
+function getAdditionalAttributes(attributes) {
+    return Object.entries(attributes)
+        .filter(([key, value]) => value !== false)
+        .map(([key, value]) => value === true ? key : `${key}="${value}"`)
+        .join(' ');
+}
+
+
 
 module.exports = getImgTag;

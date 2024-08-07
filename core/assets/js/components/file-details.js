@@ -1,6 +1,7 @@
 import Debouncer from '../functions/debouncer';
 import TagsCRUD from './tags-crud';
 
+
 /**
  * FileDetails class for handling file details in a modal.
  * 
@@ -22,6 +23,7 @@ class FileDetails {
         this.modal.setAttribute('hidden', '');
         this._opened = false;
         this.token = options.token;
+        this.data = {};
         document.body.appendChild(this.modal);
 
         // Close window
@@ -46,25 +48,27 @@ class FileDetails {
             this.modal.removeAttribute('hidden');
             this._opened = true;
             const response = await fetch(`/api/files/${id}`);
-            const data = await response.json();
-            const html = this._compileTemplate(data);
+            this.data = await response.json();
+            const html = this._compileTemplate(this.data);
             this.win.innerHTML = html;
             new TagsCRUD({
                 container: '#file_tags_container',
                 endpoint: `/api/files/${id}/tags`,
-                tags: data.tags,
+                tags: this.data.tags,
                 token: this.token
             });
             this._initFieldUpdates(id);
+            window.fileDetailsEvents?.emit('file-details:open', this.data);
         } catch (error) {
             console.error('Error fetching file details:', error);
         }
     }
 
-    close() {
+    close = () => {
         this.modal.setAttribute('hidden', '');
         this.win.innerHTML = '';
         this._opened = false;
+        window.fileDetailsEvents?.emit('file-details:close', this.data);
     }
 
     get element() {
@@ -101,7 +105,7 @@ class FileDetails {
                 fileName = file_name + '.' + optimized_format;
                 filePath = folder + IMG_SIZE + '/' + fileName;
             }
-            
+
             media = `<img src="${filePath}" alt="${alt}">`;
 
             if (data.mime_type === 'image/svg+xml') {
@@ -179,6 +183,7 @@ class FileDetails {
     }
 
     _initFieldUpdates(id) {
+
         const fields = this.win.querySelectorAll('input, textarea');
         const endpoint = `/api/files/${id}`;
         const token = document.querySelector('meta[name="csrf"]').content;
@@ -210,8 +215,6 @@ class FileDetails {
             });
         });
     }
-
-
 
 }
 

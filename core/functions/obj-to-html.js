@@ -1,7 +1,25 @@
-function OBJtoHTML(body) {
-	let html = '';
+const getData = require('./get-data');
+const getImgTag = require('./get-img-tag');
 
-	body.forEach((element) => {
+async function OBJtoHTML(body, options = {}) {
+
+	// default option vaolues
+	const {
+		imgIDs = false
+	} = options;
+
+	let html = '';
+	
+	if (!body || body.length === 0) return html;
+
+	for (const element of body) {
+
+		const contentFalsyValues = ['null', 'undefined'];
+		
+		if (!element.content || contentFalsyValues.includes(element.content)) {
+			continue;
+		}
+
 		switch (element.type) {
 			case 'paragraph':
 				const textAlign = element.attributes?.align ? `style="text-align: ${element.attributes.align}"` : '';
@@ -19,8 +37,18 @@ function OBJtoHTML(body) {
 				}
 				break;
 			case 'image':
-				const classAttr = element.attributes?.width ? `class="${element.attributes.width}"` : '';
-				html += `<picture ${classAttr}>\r\n\t<img src="${element.content}" alt="${element.attributes.alt}">\r\n\t<figcaption>${element.attributes.alt}</figcaption>\r\n</picture>\r\n`;
+				const imgObj = await getData('Image', { _id: element.content });
+				let attributes = {
+					'class': element.attributes.width
+				};
+				if (imgIDs) {
+					attributes['data-id'] = imgObj._id;
+				}
+				html += getImgTag(imgObj, {
+					figureTag: true,
+					caption: element.attributes.caption || '',
+					attributes
+				});
 				break;
 			case 'quote':
 				html += `<blockquote>\r\n\t<p>${element.content}</p>\r\n\t<cite>${element.attributes.author}</cite>\r\n</blockquote>\r\n`;
@@ -28,7 +56,7 @@ function OBJtoHTML(body) {
 			default:
 				break;
 		}
-	});
+	};
 
 	return html;
 }

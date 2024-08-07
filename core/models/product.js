@@ -69,7 +69,10 @@ const ProductSchema = new Schema({
 	// 	label: String,
     //     value: String
 	// }]
+    custom:             [Schema.Types.Mixed]
 }, { timestamps: true });
+
+ProductSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Product = mongoose.model('Product', ProductSchema);
 

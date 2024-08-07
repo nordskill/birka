@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-model="<%= JSON.stringify(model_meta) %>">
+    <%- include('partials/breadcrumbs') %>
+    <%- include('partials/title') %>
+        <div class="card bg-light">
+            <div class="card-body d-flex flex-wrap justify-content-between">
+                <div class="col-auto">
+                    <button class="btn btn-primary me-2" id="create_custom_item">Create New</button>
+                    <button class="btn btn-danger" style="display:none" id="delete_custom_items">Delete Selected</button>
+                </div>
+                <div class="col-auto">
+                    <form action="#" class="needs-validation" novalidate="">
+                        <div class="row align-content-center gx-2">
+                            <div class="col-auto position-relative">
+                                <label for="s_1" class="visually-hidden">Search</label>
+                                <input type="text" class="form-control" id="s_1"
+                                    aria-describedby="validationServer03Feedback" required=""
+                                    placeholder="Search...">
+                                <div class="invalid-tooltip">
+                                    Please provide a valid Search.
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive mt-4">
+            <table id="custom_model_items" class="table table-striped align-middle table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <input class="form-check-input" type="checkbox" value="" aria-label="...">
+                        </th>
+                        <th scope="col">Title</th>
+                        <% if (model_meta.table?.length) { %>
+                            <% for( const column of model_meta.table ) { %>
+                                <% if (column.field === 'title') continue; %>
+                                <th scope="col"><%= column.title %></th>
+                            <% } %>
+                        <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(item => { %>
+                        <tr data-id="<%= item._id %>">
+                            <td>
+                                <input class="form-check-input" type="checkbox" value="">
+                            </td>
+                            <td>
+                                <a href="<%= model_meta.slug + '/' + item._id %>"><%= item.title %></a>
+                            </td>
+                            <% for( const column of model_meta.table ) { %>
+                                <% if (column.field === 'title') continue; %>
+                                <% if (column.format === 'date') { %>
+                                    <td><%= formatDate(item[column.field], 'dd mon yyyy') %></td>
+                                <% } else if (column.format === 'link') {
+                                    const url = item[column.field]; %>
+                                    <td><a href="<%= url %>" target="_blank" rel="noopener noreferrer"><%= url %></a></td>
+                                <% } else { %>
+                                    <td><%= item[column.field] %></td>
+                                <% } %>
+                            <% } %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>        
+    </main>
+    <%- include('../partials/svg-sprite') %>
+    <%- include('partials/footer') %>

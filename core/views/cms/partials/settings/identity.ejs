@@ -1,0 +1,43 @@
+<form name="identity_basic" novalidate class="needs-validation">
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="pn" class="form-label">Shop Name:</label>
+            <input type="text" name="name" class="form-control" id="pn" value="<%= SS.name %>" required>
+            <div class="invalid-feedback">The field is required.</div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="brand" class="form-label">Brand Name:</label>
+            <input type="text" name="brand_name" value="<%= SS.brand_name %>" class="form-control" id="brand" required>
+                <div class="invalid-feedback">The field is required.</div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="domain" class="form-label">Domain Name:</label>
+            <input type="text" name="domain" value="<%= SS.domain %>" class="form-control" id="domain" required>
+                <div class="invalid-feedback">The field is required.</div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="language" class="form-label">Language</label>
+            <select name="language" class="form-select" id="language" required>
+                <option selected="" value="<%= SS.language %>">
+                    <%= SS.language %>
+                </option>
+                <option value="">De</option>
+                <option value="">De2</option>
+                <option value="">De3</option>
+            </select>
+            <div class="invalid-feedback">The field is required.</div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="skin" class="form-label">Skin</label>
+            <select class="form-select" name="skin" id="skin" required>
+                <% skins.forEach(skin => { %>
+                    <option value="<%= skin.name %>" <%= skin.name === SS.skin ? 'selected' : '' %>><%= skin.displayName %></option>
+                <% }); %>
+            </select>
+            <div class="invalid-feedback">The field is required.</div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </div>
+</form>

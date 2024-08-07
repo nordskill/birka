@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<main data-id="<%= item._id %>" data-model="<%= JSON.stringify(model_meta) %>" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    <%- include('partials/breadcrumbs') %>
+    <%- include('partials/title') %>
+
+    <div class="row" id="custom_model_fields">
+        <%- fields_html %>
+    </div>
+    
+</main>
+<%- include('../partials/svg-sprite') %>
+<%- include('partials/footer') %>

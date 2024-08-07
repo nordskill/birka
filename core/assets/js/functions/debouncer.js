@@ -97,8 +97,13 @@ class Debouncer {
     }
 
     async _send_request() {
-        const value = this.field_element.value;
+        
+        const path = this.field_element.dataset.path || this.field_element.name;
+        const isCheckbox = this.field_element.type === 'checkbox';
+        const value = isCheckbox ? this.field_element.checked : this.field_element.value;
         const name = this.field_element.name;
+        const payload = { [path]: value };
+
         let response;
 
         try {
@@ -118,7 +123,7 @@ class Debouncer {
                         'Content-Type': 'application/json',
                         'X-CSRF-Token': this.token
                     },
-                    body: JSON.stringify({ [name]: value })
+                    body: JSON.stringify(payload)
                 });
             }
 

@@ -1,111 +1,135 @@
 <%- include('partials/header') %>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-page-id="<%= page._id %>" data-page-type="<%= page.type %>">
-        <%- include('partials/breadcrumbs') %>
-            <%- include('partials/title') %>
-                <div class="pb-4">
-                    <div class="row">
-                        
-                        <% if (page.type) { %>
-                            <% const basePath = '../../../custom/' + SS.skin + '/views/cms/'; %>
-                            <%- include(basePath + 'page_' + page.type.toLowerCase()) %>
-                        <% } else { %>
-                            <div class="col-12 col-lg" id="page_custom_fields"></div>
-                        <% } %>
-
-                        <div class="col-12 col-lg-3 mt-5 mt-lg-0">
-                            <div class="card meta_block mb-4" id="page_fields">
-                                <div id="meta_preview" data-id="<%= page._id %>" data-img="<%= JSON.stringify(page.img_preview); %>"></div>
-                                <div class="card-body">
-                                    <label class="form-check-label d-flex user-select-none mb-3">
-                                        <input class="form-check-input" name="published" type="checkbox" <%= page.published ? 'checked' : '' %>>
-                                        <span class="ms-2">Published</span>
-                                    </label>
-                                    <dl class="d-table mb-3">
-                                        <div class="d-table-row">
-                                            <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
-                                            <dd class="d-table-cell"><%= formatDate(page.createdAt, 'dd mon yyyy') %></dd>
-                                        </div>
-                                        <div class="d-table-row">
-                                            <dt class="d-table-cell pe-2 fw-normal">Published:</dt>
-                                            <dd class="d-table-cell"><%= page.date_published ? formatDate(page.date_published, 'dd mon yyyy') : '' %></dd>
-                                        </div>
-                                        <div class="d-table-row">
-                                            <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
-                                            <dd class="d-table-cell"><%= formatDate(page.updatedAt, 'dd mon yyyy') %></dd>
-                                        </div>
-                                        <div class="d-table-row">
-                                            <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
-                                            <dd class="d-table-cell">
-                                                <a href="/cms/team/<%= page.author._id %>" class="link-underline link-underline-opacity-0"><%= page.author.username %></a>
-                                            </dd>
-                                        </div>
-                                    </dl>
-                                    <div class="mb-3">
-                                        <label for="meta_1" class="form-label">Page Name:</label>
-                                        <input type="text" value="<%= page.name %>" name="name" class="form-control form-control-sm" id="meta_1" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid Page Name.
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="meta_2" class="form-label">Slug:</label>
-                                        <input type="text" value="<%= page.slug %>" name="slug" class="form-control form-control-sm" id="meta_2"
-                                            required="">
-                                        <div class="invalid-feedback">
-                                            Please provide a valid Slug.
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="meta_3" class="form-label">Excerpt:</label>
-                                        <textarea class="form-control form-control-sm" name="excerpt" id="meta_3" rows="3">
-                                            <%= page.excerpt %>
-                                        </textarea>
-                                        <div class="invalid-feedback">
-                                            Please enter a message in the textarea.
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-check-label d-flex user-select-none mb-3">
-                                            <input class="form-check-input" name="is_home" type="checkbox" <%= page.is_home ? 'checked' : '' %>>
-                                            <span class="ms-2">Home page</span>
-                                        </label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="template" class="form-label">Template:</label>
-                                        <select class="form-select" name="template" id="template">
-                                            <option value="" <%= page.template ? '' : 'selected' %>>No Template</option>
-                                            <% templates.forEach(function(template) { %>
-                                                <option value="<%= template %>" <%= page.template === template ? 'selected' : '' %>><%= template %></option>
-                                            <% }); %>
-                                        </select>   
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="author" class="form-label">Author:</label>
-                                        <select class="form-select" name="author" id="author">
-                                            <% team.forEach(member => { %>
-                                                <option value="<%= member._id %>" <%= page.author._id.toString() === member._id.toString() ? 'selected' : '' %>><%= member.username %></option>
-                                            <% }); %>
-                                        </select>   
-                                    </div>
-                                    <div class="d-flex flex-wrap">
-                                        <button class="btn btn-primary me-2 mb-2" id="update_btn">Update</button>
-                                        <button class="btn btn-danger mb-2" id="delete_btn">Delete Page</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <%- include('partials/tags-crud', {
-                                endpoint: `/api/pages/${page._id}/tags`,
-                                tags: page.tags,
-                                token: locals.csrf_token
-                            }) %>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" data-page-id="<%= page._id %>" data-page-type="<%= page.type %>" data-data="<%= JSON.stringify(page) %>" data-model="<%= JSON.stringify(model) %>">
+    <%- include('partials/breadcrumbs') %>
+    <%- include('partials/title') %>
+        <div class="pb-4">
+            <div class="row">
+                <div class="col-12 col-lg">
+                    <div class="pb-3">
+                        <label for="details" class="form-label">Content:</label>
+                        <div class="editor" data-update-url="/api/pages/<%= page._id %>/draft">
+                            <%- content_rendered %>
                         </div>
                     </div>
+                    <% if (page.type) { %>
+                        <% const basePath = '../../../custom/' + SS.skin + '/views/cms/'; %>
+                        <%- include(basePath + 'page_' + page.type.toLowerCase()) %>
+                    <% } else { %>
+                        <div id="fields_extension"></div>
+                    <% } %>
+                    <div id="custom_fields" data-fields="<%= JSON.stringify(page.custom) %>"></div>
+
+                    <div class="row mt-5 mb-5">
+                        <div id="json_ld"></div>
+                    </div>
+        
                 </div>
-                <code>
-                    <pre>
-                        <%= JSON.stringify(page, null, 2) %>
-                    </pre>
-                </code>
+                <div class="col-12 col-lg-3 mt-5 mt-lg-0">
+                    <div class="card meta_block mb-4" id="page_fields">
+                        <div id="meta_preview" data-id="<%= page._id %>" data-img="<%= JSON.stringify(page.img_preview); %>"></div>
+                        <div class="card-body">
+                            <label class="form-check-label d-flex user-select-none mb-3">
+                                <input class="form-check-input" name="published" type="checkbox" <%= page.published ? 'checked' : '' %>>
+                                <span class="ms-2">Published</span>
+                            </label>
+                            <dl class="d-table mb-3">
+                                <div class="d-table-row">
+                                    <dt class="d-table-cell pe-2 fw-normal">Created:</dt>
+                                    <dd class="d-table-cell"><%= formatDate(page.createdAt, 'dd mon yyyy') %></dd>
+                                </div>
+                                <div class="d-table-row">
+                                    <dt class="d-table-cell pe-2 fw-normal">Published:</dt>
+                                    <dd class="d-table-cell"><%= page.date_published ? formatDate(page.date_published, 'dd mon yyyy') : '' %></dd>
+                                </div>
+                                <div class="d-table-row">
+                                    <dt class="d-table-cell pe-2 fw-normal">Updated:</dt>
+                                    <dd class="d-table-cell"><%= formatDate(page.updatedAt, 'dd mon yyyy') %></dd>
+                                </div>
+                                <div class="d-table-row">
+                                    <dt class="d-table-cell pe-2 fw-normal">Author:</dt>
+                                    <dd class="d-table-cell">
+                                        <% if (page.author) { %>
+                                            <a href="/cms/team/<%= page.author._id %>" class="link-underline link-underline-opacity-0"><%= page.author.username %></a>
+                                        <% } else { %>
+                                            unknown
+                                        <% } %>
+                                    </dd>
+                                </div>
+                            </dl>
+                            <div class="mb-3">
+                                <label for="meta_1" class="form-label">Page Name:</label>
+                                <input type="text" value="<%= page.name %>" name="name" class="form-control form-control-sm" id="meta_1" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid Page Name.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="meta_2" class="form-label">Slug:</label>
+                                <input type="text" value="<%= page.slug %>" name="slug" class="form-control form-control-sm" id="meta_2"
+                                    required="">
+                                <div class="invalid-feedback">
+                                    Please provide a valid Slug.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="meta_3" class="form-label">Excerpt:</label>
+                                <textarea class="form-control form-control-sm" name="excerpt" id="meta_3" rows="3">
+                                    <%= page.excerpt %>
+                                </textarea>
+                                <div class="invalid-feedback">
+                                    Please enter a message in the textarea.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-check-label d-flex user-select-none mb-3">
+                                    <input class="form-check-input" name="is_home" type="checkbox" <%= page.is_home ? 'checked' : '' %>>
+                                    <span class="ms-2">Home page</span>
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="template" class="form-label">Template:</label>
+                                <select class="form-select" name="template" id="template">
+                                    <option value="" <%= page.template ? '' : 'selected' %>>No Template</option>
+                                    <% templates.forEach(function(template) { %>
+                                        <option value="<%= template %>" <%= page.template === template ? 'selected' : '' %>><%= template %></option>
+                                    <% }); %>
+                                </select>   
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Author:</label>
+                                <select class="form-select" name="author" id="author">
+                                    <% team.forEach(member => { %>
+                                        <option value="<%= member._id %>" <%= page.author?._id.toString() === member._id.toString() ? 'selected' : '' %>><%= member.username %></option>
+                                    <% }); %>
+                                </select>   
+                            </div>
+                            <div class="d-flex flex-wrap">
+                                <button type="button" class="btn btn-primary me-2 mb-2" id="update_btn">Save</button>
+                                <button type="button" class="btn btn-danger mb-2" id="delete_btn">Delete Page</button>
+                            </div>
+                        </div>
+                    </div>
+                    <%- include('partials/tags-crud', {
+                        endpoint: `/api/pages/${page._id}/tags`,
+                        tags: page.tags,
+                        token: locals.csrf_token
+                    }) %>
+                </div>
+            </div>
+            
+            <% if (auth_user.permissions.includes('custom_fields_setup')) { %>
+                <div class="row" id="custom_fields_setup" data-endpoint="/api/pages/<%= page._id %>">
+                    <div class="pb-3">
+                        <label for="custom_fields_setup" class="form-label">Custom fields:</label>
+                        <textarea class="form-control code" rows="50"><%= JSON.stringify(page.custom, null, 2) %></textarea>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <button class="btn btn-primary me-2 mb-2" id="save_custom_fields">Save Custom Fields</button>
+                    </div>
+                </div>
+            <% } %>
+
+        </div>
     </main>
     <%- include('../partials/svg-sprite') %>
     <%- include('partials/footer') %>

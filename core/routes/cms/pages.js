@@ -6,7 +6,6 @@ const Page = require('../../models/page');
 const Member = require('../../models/member');
 const OBJtoHTML = require('../../functions/obj-to-html');
 const OperationalError = require('../../functions/operational-error');
-const { getSubmodels } = require('../../functions/model-loader');
 
 const SLUG = 'page';
 const TITLE = 'Page';
@@ -14,7 +13,14 @@ const TITLE = 'Page';
 // CMS Pages
 router.get('/', async (req, res, next) => {
 
-    const pageSubmodels = getSubmodels('Page');
+    const submodelTypes = [];
+
+    for (const key in global.subModels) {
+        if (Object.hasOwnProperty.call(global.subModels, key)) {
+            const element = global.subModels[key];
+            submodelTypes.push(element.type);
+        }
+    }
 
     try {
         const pages = await Page.find()
@@ -31,7 +37,7 @@ router.get('/', async (req, res, next) => {
             template_name: `cms_${SLUG}s`,
             active: `${SLUG}s`,
             pages,
-            submodels: pageSubmodels,
+            submodels: submodelTypes,
             breadcrumbs: [{
                 name: 'CMS',
                 href: '/cms'
@@ -70,6 +76,18 @@ router.get(`/:id`, async (req, res, next) => {
     const viewsPath = req.app.get('views')[0];
     const templates = [];
 
+    let content = page.content;
+    let content_rendered = '';
+
+    if (Array.isArray(page.draft) && page.draft.length > 0) {
+        const firstBlock = page.draft[0];
+        if (Object.keys(firstBlock).length > 0) {
+            content = page.draft;
+        }
+    }
+
+    if (content) content_rendered = await OBJtoHTML(content);
+
     try {
         const files = await fs.readdir(viewsPath);
 
@@ -88,9 +106,11 @@ router.get(`/:id`, async (req, res, next) => {
             title: page.name,
             template_name: `cms_${SLUG}`,
             active: `${SLUG}s`,
+            model: Page.schema.paths,
             page,
             templates,
             team,
+            content_rendered,
             renderHTML: OBJtoHTML,
             breadcrumbs: [{
                 name: 'CMS',
@@ -101,11 +121,7 @@ router.get(`/:id`, async (req, res, next) => {
             }, {
                 name: page.name,
                 href: `/cms/${SLUG}s/${page.slug}`
-            }],
-            scripts: [
-                'validation-form.js'
-            ]
-
+            }]
         });
 
     } catch (error) {

@@ -41,7 +41,8 @@ export default async function () {
         const fileCRUDs = {
             files_api: '/api/files/',
             endpoint: element.dataset.endpoint,
-            field_name: 'image'
+            field_name: 'image',
+            token: csrfToken
         }
 
         const ajaxTable = new AJAXTable(element, fieldsList, dropdownOptions, csrfToken, fileCRUDs);

@@ -1,0 +1,22 @@
+<form name="blog" novalidate class="needs-validation">
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="sb01" class="form-label">Blog slug:</label>
+            <input type="text" name="blog_slug" class="form-control" id="sb01" value="<%= SS.blog_slug %>">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="sb02" class="form-label">Blog title:</label>
+            <input type="text" name="blog_title" class="form-control" id="sb02" value="<%= SS.blog_title %>">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <label for="sb03" class="form-label">Posts per page:</label>
+            <input type="number" name="blog_posts_per_page" class="form-control" id="sb03" value="<%= SS.blog_posts_per_page %>">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </div>
+</form>
