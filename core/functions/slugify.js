@@ -1,10 +1,12 @@
-function slugify(str) {
-    return str
-        .toLowerCase() // Convert to lower case
-        .trim() // Remove spaces from both ends
-        .replace(/[^a-z0-9]+/g, '-') // Replace spaces and non-alphanumeric characters with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens with a single hyphen
-        .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
+function slugify(input) {
+    return String(input)
+        .normalize('NFKD')  // Normalize Unicode characters
+        .toLowerCase()
+        .trim()
+        .replace(/[\s_]+/g, '-')  // Replace spaces and underscores with hyphens
+        .replace(/[^\p{L}\p{N}-]+/gu, '')  // Remove all non-alphanumeric characters except hyphens
+        .replace(/-+/g, '-')  // Replace multiple hyphens with a single hyphen
+        .replace(/^-+|-+$/g, '');  // Remove leading and trailing hyphens
 }
 
 module.exports = slugify;
