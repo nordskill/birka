@@ -46,5 +46,8 @@
         "webpack": "^5.88.2",
         "webpack-bundle-analyzer": "^4.10.1",
         "webpack-cli": "^5.1.4"
+    },
+    "resolutions": {
+        "axios": "0.28.0"
     }
 }
