@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 
 const db = require('./core/functions/db-connect');
+const points = require('./core/functions/points');
 const packageJson = require('./package.json');
 const loadVars = require('./core/functions/vars');
 const loadData = require('./core/functions/data');
@@ -72,13 +73,21 @@ function setupApp(siteSettings) {
 
     const app = express();
 
+    loadPlugins(app);
+
     app.disable('x-powered-by');
 
     app.locals.rmWhitespace = true;
     app.locals.icon = icon;
 
+    points.emit('middleware:before', app);
     setupMiddleware(app);
+    points.emit('middleware:after', app);
+
+    points.emit('routes:before', app);
     setupRoutes(app, siteSettings);
+    points.emit('routes:after', app);
+
     setupErrorHandler(app);
 
     return app;
@@ -277,4 +286,31 @@ function csrfProtection(req, res, next) {
         }
     }
     next();
+}
+
+function loadPlugins(app) {
+    const pluginsPath = path.join(__dirname, 'plugins');
+
+    if (!fs.existsSync(pluginsPath)) {
+        console.warn(`Plugins directory not found at ${pluginsPath}`);
+        return;
+    }
+
+    const plugins = fs.readdirSync(pluginsPath);
+
+    for (const plugin of plugins) {
+        const pluginPath = path.join(pluginsPath, plugin);
+        const pluginIndex = path.join(pluginPath, 'index.js');
+
+        if (fs.existsSync(pluginIndex)) {
+            try {
+                require(pluginIndex);
+                console.log(`Plugin loaded: ${plugin}`);
+            } catch (error) {
+                console.error(`Error loading plugin ${plugin}:`, error.message);
+            }
+        } else {
+            console.warn(`No index.js found for plugin: ${plugin}`);
+        }
+    }
 }

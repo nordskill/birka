@@ -7,7 +7,8 @@
         "core/controllers/",
         "core/functions/",
         "core/utils/",
-        "data/"
+        "data/",
+        "plugins/"
     ],
     "ignore": [
         "node_modules/",
