@@ -179,6 +179,7 @@ async function insert_member_data() {
             return new model({
                 username: user.username,
                 password: hashedPassword,
+                permissions: user.permissions,
                 email: user.email,
                 role: user.role || 'Editor',
                 email_notifications: user.email_notifications || false,
