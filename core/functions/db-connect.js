@@ -11,8 +11,7 @@ module.exports = {
         const useSSL = process.env.DB_USE_SSL === 'true';
         const authMechanism = process.env.DB_AUTH_MECHANISM;
 
-        let dbLink = user && password ? `mongodb://${user}:${password}@${host}:${port}/${dbName}` : `mongodb://${host}:${port}/${dbName}`;
-
+        let dbLink = process.env.MONGODB_URI ?? (user && password ? `mongodb://${user}:${password}@${host}:${port}/${dbName}` : `mongodb://${host}:${port}/${dbName}`);
         let queryParams = [];
         queryParams.push(`authSource=${authSource}`);
         if (useSSL) queryParams.push('ssl=true');
