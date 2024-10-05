@@ -3,17 +3,20 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const SiteSettings = require('../../models/settings');
+
 const OperationalError = require('../../functions/operational-error');
+const { deepFreeze } = require('../../functions/deep-freeze');
+const copyFiles = require('../../functions/copy-files');
+
 const multer = require('multer');
 const upload = multer();
-const copyFiles = require('../../functions/copy-files');
+const cache = require('../../utils/cache');
 
 const SLUG = 'settings';
 const TITLE = 'Settings';
 
 
 const skinsFolder = path.join(__dirname, '../../../custom');
-// const defaultSkin = path.join(__dirname, '../../package.json');
 
 // CMS Tags
 router.get('/', async (req, res, next) => {
@@ -32,15 +35,6 @@ router.get('/', async (req, res, next) => {
             }
         }));
         availableSkins = skinData.filter(skin => skin !== null);
-
-        // Add default skin to the availableSkins array
-        // try {
-        //     const defaultPackage = await fs.readFile(defaultSkin, 'utf8');
-        //     const defaultSkinData = JSON.parse(defaultPackage);
-        //     availableSkins.push(defaultSkinData);
-        // } catch (error) {
-        //     return next(new OperationalError('Error reading default skin package.json', 500));
-        // }
 
         res.render(`cms/${SLUG}`, {
             title: TITLE,
@@ -77,11 +71,17 @@ router.patch('/', upload.none(), async (req, res, next) => {
     for (const key in req.body) {
         if (settings[key] !== undefined) {
             settings[key] = req.body[key];
-            SS[key] = req.body[key];
+            req.app.locals.GlobalSettings[key] = req.body[key];
         }
     }
 
     await settings.save();
+
+    // Update the cache
+    const settingsObject = deepFreeze(settings.toObject());
+    cache.clear();
+    cache.set('GlobalSettings', settingsObject);
+    req.app.locals.GlobalSettings = settingsObject;
 
     // Copy logo if the skin has been updated
     if (req.body.skin) {

@@ -22,6 +22,7 @@ async function renderTemplate(req, res, data, template, next) {
             title: data.title,
             json_ld: data.jsonLD,
             baseUrl: `${req.protocol}://${req.get('host')}`,
+            GlobalSettings: req.app.locals.GlobalSettings,
             data
         }, {
             async: true,
@@ -37,10 +38,12 @@ async function renderTemplate(req, res, data, template, next) {
 
 router.get('/', async (req, res, next) => {
 
+    const { GlobalSettings } = req.app.locals;
+
     try {
 
         const blogPosts = await BlogPost.find({ published: true })
-            .limit(SS.blog_posts_per_page)
+            .limit(GlobalSettings.blog_posts_per_page)
             .select('title slug excerpt img_preview date_published author tags custom -_id')
             .populate('author', 'username -_id')
             .populate('img_preview', '-_id -__v -createdAt -updatedAt -tags -used -__t')
@@ -55,28 +58,28 @@ router.get('/', async (req, res, next) => {
                 url: host
             },
             {
-                name: SS.blog_title,
-                url: `${host}/${SS.blog_slug}`
+                name: GlobalSettings.blog_title,
+                url: `${host}/${GlobalSettings.blog_slug}`
             }
         ];
         const jsonLDdata = {
             blogPosts,
             breadcrumbs,
             host,
-            blog_title: SS.blog_title,
-            blog_description: SS.blog_description || '',
-            blog_slug: SS.blog_slug,
-            website_name: SS.name
+            blog_title: GlobalSettings.blog_title,
+            blog_description: GlobalSettings.blog_description || '',
+            blog_slug: GlobalSettings.blog_slug,
+            website_name: GlobalSettings.name
         };
 
         const jsonLD = blogSchema(jsonLDdata);
         const templateFile = path.join(res.app.get('views')[0], 'blog.ejs');
 
         await renderTemplate(req, res, {
-            slug: SS.blog_slug,
-            title: SS.blog_title,
+            slug: GlobalSettings.blog_slug,
+            title: GlobalSettings.blog_title,
             blogPosts,
-            jsonLD
+            jsonLD,
         }, templateFile, next);
 
     } catch (error) {
@@ -85,6 +88,9 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:slug', async (req, res, next) => {
+
+    const { GlobalSettings } = req.app.locals;
+
     try {
 
         const slug = req.params.slug;
@@ -104,27 +110,27 @@ router.get('/:slug', async (req, res, next) => {
                 url: host
             },
             {
-                name: SS.blog_title,
-                url: `${host}/${SS.blog_slug}`
+                name: GlobalSettings.blog_title,
+                url: `${host}/${GlobalSettings.blog_slug}`
             },
             {
                 name: blogPost.title,
-                url: `${host}/${SS.blog_slug}/${blogPost.slug}`
+                url: `${host}/${GlobalSettings.blog_slug}/${blogPost.slug}`
             }
         ];
         const jsonLDdata = {
             breadcrumbs,
             host,
             post: blogPost,
-            blog_slug: SS.blog_slug,
-            website_name: SS.name
+            blog_slug: GlobalSettings.blog_slug,
+            website_name: GlobalSettings.name
         };
 
         const jsonLD = blogPostSchema(jsonLDdata);
         const templateFile = path.join(res.app.get('views')[0], 'blog-post.ejs');
 
         await renderTemplate(req, res, {
-            slug: SS.blog_slug,
+            slug: GlobalSettings.blog_slug,
             title: blogPost.title,
             blogPost,
             jsonLD

@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <% if (blog_post.type) { %>
-                        <% const basePath = '../../../custom/' + SS.skin + '/views/cms/'; %>
+                        <% const basePath = '../../../custom/' + GlobalSettings.skin + '/views/cms/'; %>
                         <%- include(basePath + 'blog-post_' + blog_post.type.toLowerCase()) %>
                     <% } else { %>
                         <div id="fields_extension"></div>

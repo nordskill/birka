@@ -4,6 +4,7 @@ const path = require('path');
 const ejs = require('ejs');
 const Page = require('../models/page');
 const OperationalError = require('../functions/operational-error');
+const cacheMiddleware = require('../middleware/cache');
 
 // Utility function to render EJS templates
 async function renderTemplate(req, res, page, next) {
@@ -30,7 +31,8 @@ async function renderTemplate(req, res, page, next) {
             template_name: page.template,
             data: page,
             baseUrl: `${req.protocol}://${req.get('host')}`,
-            json_ld
+            json_ld,
+            GlobalSettings: req.app.locals.GlobalSettings
         }, {
             async: true,
             rmWhitespace: true
@@ -44,7 +46,7 @@ async function renderTemplate(req, res, page, next) {
 }
 
 // Route for fetching a page based on its slug
-router.get('/:slug', async (req, res, next) => {
+router.get('/:slug', cacheMiddleware, async (req, res, next) => {
     try {
         const slug = req.params.slug;
         const page = await Page.findOne({ slug: slug })
@@ -59,7 +61,7 @@ router.get('/:slug', async (req, res, next) => {
 });
 
 // Route for fetching the homepage
-router.get('/', async (req, res, next) => {
+router.get('/', cacheMiddleware, async (req, res, next) => {
     try {
         const page = await Page.findOne({ is_home: true })
             .select('-__v')

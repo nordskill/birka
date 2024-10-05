@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { deepFreeze } = require('./deep-freeze');
 
 module.exports = function loadVars() {
 	const languagesPath = path.join(__dirname, '../../data/languages.json');
@@ -39,15 +40,3 @@ function loadFile(filePath) {
 	return null;
 }
 
-function deepFreeze(obj) {
-	Object.freeze(obj);
-	for (const prop of Object.getOwnPropertyNames(obj)) {
-		if (obj.hasOwnProperty(prop)
-			&& obj[prop] !== null
-			&& (typeof obj[prop] === 'object' || typeof obj[prop] === 'function')
-			&& !Object.isFrozen(obj[prop])) {
-			deepFreeze(obj[prop]);
-		}
-	}
-	return obj;
-}

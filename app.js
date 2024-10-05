@@ -27,6 +27,9 @@ const loadMenus = require('./core/functions/menus');
 const SiteSettings = require('./core/models/settings');
 const setupRoutes = require('./core/routes/_setup');
 const OperationalError = require('./core/functions/operational-error');
+const { deepFreeze } = require('./core/functions/deep-freeze');
+
+const cache = require('./core/utils/cache');
 
 const { loadModels, getAllSubmodels, getSubmodels, getCustomModel, getModelNameBySlug } = require('./core/functions/model-loader');
 
@@ -37,28 +40,38 @@ async function init() {
     loadVars();
     loadData();
     await db.connect();
-    const siteSettings = await getSiteSettings();
+    const siteSettings = await getGlobalSettings();
     global.ico = loadIcons();
     global.svg_sprites = generateSvgSprites();
     global.formatDate = formatDate;
     return setupApp(siteSettings);
 }
 
-async function getSiteSettings() {
+async function getGlobalSettings() {
     try {
-        global.SS = await SiteSettings
-            .findOne()
-            .populate('logo')
-            .lean();
+        let globalSettings = cache.get('GlobalSettings');
+        let immutableSettings = globalSettings;
+
+        if (!globalSettings) {
+            globalSettings = await SiteSettings
+                .findOne()
+                .populate('logo')
+                .lean();
+
+            immutableSettings = deepFreeze(globalSettings);
+            cache.set('GlobalSettings', immutableSettings);
+        }
+
         registerModels();
-        return SS;
+        return immutableSettings;
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
 }
 
 function registerModels() {
-    const customModelPath = path.join(__dirname, `./custom/${SS.skin}/models`);
+    const gs = cache.get('GlobalSettings');
+    const customModelPath = path.join(__dirname, `./custom/${gs.skin}/models`);
     const { coreModels, customModels, subModels } = loadModels(customModelPath);
 
     global.coreModels = coreModels;
@@ -77,6 +90,7 @@ function setupApp(siteSettings) {
 
     app.disable('x-powered-by');
 
+    app.locals.GlobalSettings = siteSettings;
     app.locals.rmWhitespace = true;
     app.locals.icon = icon;
 
@@ -211,7 +225,7 @@ async function setupMiddleware(app) {
 
     function skinSetter(req, res, next) {
         app.set('views', [
-            path.join(__dirname, `custom/${SS.skin}/views`),
+            path.join(__dirname, `custom/${app.locals.GlobalSettings.skin}/views`),
             path.join(__dirname, 'core/views')
         ]);
         next();

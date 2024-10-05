@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <% if (page.type) { %>
-                        <% const basePath = '../../../custom/' + SS.skin + '/views/cms/'; %>
+                        <% const basePath = '../../../custom/' + GlobalSettings.skin + '/views/cms/'; %>
                         <%- include(basePath + 'page_' + page.type.toLowerCase()) %>
                     <% } else { %>
                         <div id="fields_extension"></div>
