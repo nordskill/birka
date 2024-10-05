@@ -27,6 +27,7 @@ const loadMenus = require('./core/functions/menus');
 const SiteSettings = require('./core/models/settings');
 const setupRoutes = require('./core/routes/_setup');
 const OperationalError = require('./core/functions/operational-error');
+const { deepFreeze } = require('./core/functions/deep-freeze');
 
 const cache = require('./core/utils/cache');
 
@@ -49,16 +50,20 @@ async function init() {
 async function getGlobalSettings() {
     try {
         let globalSettings = cache.get('GlobalSettings');
+        let immutableSettings = globalSettings;
+
         if (!globalSettings) {
             globalSettings = await SiteSettings
                 .findOne()
                 .populate('logo')
                 .lean();
-            cache.set('GlobalSettings', globalSettings);
+
+            immutableSettings = deepFreeze(globalSettings);
+            cache.set('GlobalSettings', immutableSettings);
         }
 
         registerModels();
-        return globalSettings;
+        return immutableSettings;
     } catch (error) {
         console.error("Error fetching site settings:", error);
     }
