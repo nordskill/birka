@@ -1,6 +1,6 @@
 # Project "Birka"
 
-eCommerce platform.
+Web platform.
 
 ## Error Handling
 
