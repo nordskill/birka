@@ -5,7 +5,26 @@
         "email": "admin1@example.com",
         "role": "Super Administrator",
         "email_notifications": true,
-        "web_notifications": true
+        "web_notifications": true,
+        "permissions": [
+            "orders",
+            "products",
+            "users",
+            "pages",
+            "blog",
+            "files",
+            "tags",
+            "statuses",
+            "notifications",
+            "email_templates",
+            "menus",
+            "team",
+            "settings",
+            "sitemap",
+            "updates",
+            "custom_models",
+            "custom_fields_setup"
+          ]
     },
     {
         "username": "adminUser2",
@@ -13,6 +32,24 @@
         "email": "admin2@example.com",
         "role": "Administrator",
         "email_notifications": false,
-        "web_notifications": false
+        "web_notifications": false,
+        "permissions": [
+            "orders",
+            "products",
+            "users",
+            "pages",
+            "blog",
+            "files",
+            "tags",
+            "statuses",
+            "notifications",
+            "email_templates",
+            "menus",
+            "settings",
+            "sitemap",
+            "updates",
+            "custom_models",
+            "custom_fields_setup"
+          ]
     }
 ]

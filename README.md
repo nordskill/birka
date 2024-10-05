@@ -1,11 +1,12 @@
-# Birka
-eCommerse platform.
+# Project "Birka"
 
+Web platform.
 
 ## Error Handling
 
 in app.js:
-```
+
+```js
 const OperationalError = require('./functions/operational-error');
 
 // ...
@@ -45,8 +46,10 @@ function setupErrorHandler(app) {
 
 }
 ```
+
 operational-error.js:
-```
+
+```js
 class OperationalError extends Error {
     constructor(message, status = 400) {
         super(message);
@@ -57,9 +60,15 @@ class OperationalError extends Error {
 
 module.exports = OperationalError;
 ```
+
 ### Example of Usage
 
 1. import OperationalError module from `[project-root]/functions/operational-error`;
 2. Inside of a try/catch: `throw new OperationalError(`Not found.`, 404);`
 3. Outside of try/catch: `return next(new OperationalError('Not found.', 404));`
 4. Use only for operational errors, in the cases when you expect from user to make a certain mistake at the current point.
+
+### Ideas
+
+- create new theme generator with q-a logic
+- skin folder name must be the name as package.json.name
