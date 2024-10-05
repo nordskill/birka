@@ -30,7 +30,8 @@ async function renderTemplate(req, res, page, next) {
             template_name: page.template,
             data: page,
             baseUrl: `${req.protocol}://${req.get('host')}`,
-            json_ld
+            json_ld,
+            GlobalSettings: req.app.locals.GlobalSettings
         }, {
             async: true,
             rmWhitespace: true

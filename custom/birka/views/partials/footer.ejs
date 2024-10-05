@@ -7,12 +7,12 @@
         </div>
     </div>
 <% } else if (cookies_consent === true) { %>
-    <%- SS.custom_html_cookies %>
+    <%- GlobalSettings.custom_html_cookies %>
 <% } %>
 <% if (env === 'production') { %>
-    <script src="/<%= SS.skin %>/js/main.min.js"></script>
+    <script src="/<%= GlobalSettings.skin %>/js/main.min.js"></script>
 <% } else { %>
-    <script src="/dev/<%= SS.skin %>_main.js"></script>
+    <script src="/dev/<%= GlobalSettings.skin %>_main.js"></script>
 <% } %>
 </body>
 </html>

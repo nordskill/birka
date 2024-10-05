@@ -7,8 +7,8 @@ router.get('/', async (req, res, next) => {
     if (req.user) return res.redirect('/cms');
 
     let logoPath;
-    if (SS?.logo) {
-        const { hash, file_name, optimized_format, sizes } = SS.logo;
+    if (GlobalSettings?.logo) {
+        const { hash, file_name, optimized_format, sizes } = GlobalSettings.logo;
         const folder = hash.slice(0, 2);
         const size = findClosestNumber(150, sizes);
         logoPath = `/files/${folder}/${size}/${file_name}.${optimized_format}`;

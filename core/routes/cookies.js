@@ -13,7 +13,7 @@ router.post('/consent', (req, res) => {
 
     req.session.cookies_consent = consentGiven;
     if (consentGiven) {
-        res.send({ consent: true, html: SS.custom_html_cookies });
+        res.send({ consent: true, html: req.app.locals.GlobalSettings.custom_html_cookies });
     } else {
         res.send({ consent: false });
     }

@@ -40,7 +40,7 @@ const apiMembers = require('./api/members');
 const apiSitemap = require('./api/sitemap');
 const apiCustom = require('./api/custom');
 
-module.exports = (app, SS) => {
+module.exports = (app, GlobalSettings) => {
 
     // protect static folder pubblic/css-assets/ with cmsAuthentication
     app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../../public/cms-assets')));
@@ -103,7 +103,7 @@ module.exports = (app, SS) => {
     app.use('/api', apiRoutes);
 
     // Navigation
-    app.use('/' + SS.blog_slug, blog);
+    app.use('/' + GlobalSettings.blog_slug, blog);
     app.use('/cookies', cookies);
     app.use('/', index);
 
