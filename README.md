@@ -71,4 +71,4 @@ module.exports = OperationalError;
 ### Ideas
 
 - create new theme generator with q-a logic
-- name of folder ==== package.json.name
+- skin folder name must be the name as package.json.name
