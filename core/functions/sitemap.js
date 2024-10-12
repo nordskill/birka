@@ -12,7 +12,7 @@ class SiteMap {
         this.models_to_update = [];
     }
 
-    async regenerate_sitemaps({ check = true, notify_google = false }) {
+    async regenerate_sitemaps({ check = true, notify_google = false }, app) {
         if (check) {
             await this.#check_for_updates();
         }
@@ -22,20 +22,20 @@ class SiteMap {
             await this.#generate_sitemapindex(updatesNeeded.map(m => m.model));
         }
         if (notify_google) {
-            await this.#notify_google();
+            await this.#notify_google(app);
         }
     }
 
-    async #notify_google() {
-        const siteUrl = encodeURIComponent(GlobalSettings.seo.siteUrl);
-        const feedpath = encodeURIComponent(`${GlobalSettings.domain}/sitemap_index.xml`);
+    async #notify_google(app) {
+        const siteUrl = encodeURIComponent(app.locals.GlobalSettings.seo.siteUrl);
+        const feedpath = encodeURIComponent(`${app.locals.GlobalSettings.domain}/sitemap_index.xml`);
         const options = {
             hostname: 'www.googleapis.com',
             port: 443,
             path: `/webmasters/v3/sites/${siteUrl}/sitemaps/${feedpath}`,
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${GlobalSettings.seo.googleApiToken}`,
+                'Authorization': `Bearer ${app.locals.GlobalSettings.seo.googleApiToken}`,
                 'Content-Type': 'application/json'
             }
         };
@@ -71,10 +71,10 @@ class SiteMap {
         for (const doc of documents) {
             sitemap += `<url>\n`;
             if (modelConfig.model === 'Page' && doc.is_home) {
-                sitemap += `  <loc>${this.config.protocol}://${GlobalSettings.domain}/</loc>\n`;
+                sitemap += `  <loc>${this.config.protocol}://${app.locals.GlobalSettings.domain}/</loc>\n`;
                 sitemap += `  <priority>1</priority>\n`;
             } else {
-                sitemap += `  <loc>${this.config.protocol}://${GlobalSettings.domain}/${doc.slug}</loc>\n`;
+                sitemap += `  <loc>${this.config.protocol}://${app.locals.GlobalSettings.domain}/${doc.slug}</loc>\n`;
                 sitemap += `  <priority>${modelConfig.priority}</priority>\n`;
             }
             sitemap += `  <lastmod>${doc.updatedAt.toISOString()}</lastmod>\n`;
@@ -99,7 +99,7 @@ class SiteMap {
             try {
                 const stats = await fs.stat(filepath);
                 sitemapindex += `<sitemap>\n`;
-                sitemapindex += `  <loc>${this.config.protocol}://${GlobalSettings.domain}/${filename}</loc>\n`;
+                sitemapindex += `  <loc>${this.config.protocol}://${app.locals.GlobalSettings.domain}/${filename}</loc>\n`;
                 sitemapindex += `  <lastmod>${stats.mtime.toISOString()}</lastmod>\n`;
                 sitemapindex += `</sitemap>\n`;
             } catch (error) {
@@ -115,7 +115,7 @@ class SiteMap {
 
     async #update_robots() {
         const robotsPath = path.join(this.basePath, 'robots.txt');
-        const sitemapLine = `Sitemap: ${this.config.protocol}://${GlobalSettings.domain}/sitemap.xml`;
+        const sitemapLine = `Sitemap: ${this.config.protocol}://${app.locals.GlobalSettings.domain}/sitemap.xml`;
 
         try {
             const robotsExists = await fs.stat(robotsPath);
