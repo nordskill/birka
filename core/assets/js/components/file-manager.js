@@ -1,5 +1,5 @@
-import FilesSelectionManager from "../functions/file-selection-manager";
-import findClosestNumber from '../functions/find-closest-number';
+import FilesSelectionManager from '../functions/file-selection-manager.js';
+import findClosestNumber from '../functions/find-closest-number.js';
 
 class FileManager {
     constructor({ token, target, settings }) {

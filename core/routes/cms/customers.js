@@ -1,7 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../../models/user');
+import express from 'express';
 
+import OperationalError from '../../functions/operational-error.js';
+import User from '../../models/user.js';
+
+const router = express.Router();
 const SLUG = 'customer';
 const TITLE = 'Customer';
 
@@ -124,4 +126,4 @@ router.get(`/:id/:index`, async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

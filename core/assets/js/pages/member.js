@@ -1,4 +1,4 @@
-import Debouncer from '../functions/debouncer';
+import Debouncer from '../functions/debouncer.js';
 
 export default function () {
 

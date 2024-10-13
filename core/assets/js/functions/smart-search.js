@@ -1,4 +1,4 @@
-import Debouncer from './debouncer';
+import Debouncer from './debouncer.js';
 
 /**
  * SmartSearch class for creating a debounced search input field.

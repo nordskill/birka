@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const Status = require('../../models/status');
+import express from 'express';
 
+import Status from '../../models/status.js';
+
+const router = express.Router();
 const SLUG = 'status';
 const TITLE = 'Status';
 
@@ -77,4 +78,4 @@ router.get(`/:id`, async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

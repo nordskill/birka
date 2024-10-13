@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+
+import OperationalError from '../../functions/operational-error.js';
+
 const router = express.Router();
-const OperationalError = require('../../functions/operational-error');
 
 // Email validation function
 function validateEmail(email) {
@@ -33,4 +35,4 @@ router.post('/', async (req, res, next) => {
 
 
 
-module.exports = router;
+export default router;

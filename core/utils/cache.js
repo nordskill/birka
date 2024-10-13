@@ -67,4 +67,4 @@ const cacheInstance = new Cache({
     expiration: DEFAULT_EXPIRATION
 });
 
-module.exports = cacheInstance;
+export default cacheInstance;

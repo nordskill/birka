@@ -1,4 +1,5 @@
-const Menu = require('../models/menu'); // Ensure this path is correct
+import Menu from '../models/menu.js';
+
 
 // Middleware to attach menu data to the response
 async function attachMenuData(req, res, next) {
@@ -18,4 +19,4 @@ async function attachMenuData(req, res, next) {
     next();
 }
 
-module.exports = attachMenuData;
+export default attachMenuData;

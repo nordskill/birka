@@ -1,17 +1,20 @@
-const express = require('express');
+import express from 'express';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs/promises';
+import multer from 'multer';
+import crypto from 'crypto';
+
+import { File, Image, Video } from '../../models/file.js';
+import { addTags, removeTags } from '../../controllers/tag-controller.js';
+import OperationalError from '../../functions/operational-error.js';
+import generateHash from '../../functions/generate-hash.js';
+import resizeImage from '../../functions/image-resizer.js';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const router = express.Router();
-const path = require('path');
-const fs = require('fs').promises;
-const multer = require('multer');
-const crypto = require('crypto');
-
-const { File, Image, Video } = require('../../models/file');
-const { addTags, removeTags } = require('../../controllers/tag-controller');
-
-const OperationalError = require('../../functions/operational-error');
-const generateHash = require('../../functions/generate-hash');
-const resizeImage = require('../../functions/image-resizer');
-
 const filesDirectory = path.join(__dirname, '../../../public/files');
 const tempFilesDirectory = path.join(filesDirectory, '_temp');
 
@@ -301,7 +304,7 @@ router.delete('/', async (req, res, next) => {
 router.patch('/:id/tags', addTags(File));
 router.delete('/:id/tags', removeTags(File));
 
-module.exports = router;
+export default router;
 
 
 

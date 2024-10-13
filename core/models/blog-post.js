@@ -1,9 +1,7 @@
-const crypto = require('crypto');
-const mongoose = require('mongoose');
+import crypto from 'crypto';
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
-const {
-    Schema
-} = mongoose;
 
 const BlogPostSchema = new Schema({
     title: {
@@ -45,4 +43,4 @@ BlogPostSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const BlogPost = mongoose.model('BlogPost', BlogPostSchema);
 
-module.exports = BlogPost;
+export default BlogPost;

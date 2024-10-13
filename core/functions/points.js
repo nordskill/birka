@@ -1,3 +1,7 @@
-const EventEmitter = require('events');
+import EventEmitter from 'events';
+
+
 class Points extends EventEmitter { }
-module.exports = new Points();
+const points = new Points();
+
+export default points;

@@ -1,3 +1,10 @@
+import path from 'path';
+import sharp from 'sharp';
+import { performance } from 'perf_hooks';
+
+import ensurePathExists from './path-helper.js';
+
+
 /**
  * Resizes an image to specified widths and saves the resized images to a target path.
  *
@@ -18,11 +25,6 @@
  *     .then(() => console.log('Image resizing completed.'))
  *     .catch(err => console.error('Error resizing image:', err));
  */
-
-const sharp = require('sharp');
-const { performance } = require('perf_hooks');
-const ensurePathExists = require('./path-helper');
-const path = require('path');
 
 const FORMAT = 'webp';
 
@@ -80,4 +82,4 @@ async function resizeImage(originalPath, widths, targetPath) {
     }
 }
 
-module.exports = resizeImage;
+export default resizeImage;

@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const MemberSchema = new Schema({
 	username: {
@@ -26,4 +27,5 @@ const MemberSchema = new Schema({
 }, { timestamps: true });
 
 const Member = mongoose.model('Member', MemberSchema);
-module.exports = Member;
+
+export default Member;

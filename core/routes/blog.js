@@ -1,11 +1,12 @@
-const express = require('express');
-const path = require('path');
-const ejs = require('ejs');
-const router = express.Router();
-const BlogPost = require('../models/blog-post');
-const OperationalError = require('../functions/operational-error');
-const { blogSchema, blogPostSchema } = require('../../config/jsonld-blog');
+import express from 'express';
+import path from 'path';
+import ejs from 'ejs';
 
+import BlogPost from '../models/blog-post.js';
+import OperationalError from '../functions/operational-error.js';
+import { blogSchema, blogPostSchema } from '../../config/jsonld-blog.js';
+
+const router = express.Router();
 
 async function renderTemplate(req, res, data, template, next) {
 
@@ -141,4 +142,4 @@ router.get('/:slug', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import ejs from 'ejs';
+
+import Page from '../models/page.js';
+import OperationalError from '../functions/operational-error.js';
+import cacheMiddleware from '../middleware/cache.js';
+
 const router = express.Router();
-const path = require('path');
-const ejs = require('ejs');
-const Page = require('../models/page');
-const OperationalError = require('../functions/operational-error');
-const cacheMiddleware = require('../middleware/cache');
 
 // Utility function to render EJS templates
 async function renderTemplate(req, res, page, next) {
@@ -83,4 +85,4 @@ router.get('/', cacheMiddleware, async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

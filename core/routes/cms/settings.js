@@ -1,21 +1,22 @@
-const fs = require('fs').promises;
-const path = require('path');
-const express = require('express');
+import fs from 'fs/promises';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import express from 'express';
+import multer from 'multer';
+
+import SiteSettings from '../../models/settings.js';
+import OperationalError from '../../functions/operational-error.js';
+import { deepFreeze } from '../../functions/deep-freeze.js';
+import copyFiles from '../../functions/copy-files.js';
+import cache from '../../utils/cache.js';
+
+
 const router = express.Router();
-const SiteSettings = require('../../models/settings');
-
-const OperationalError = require('../../functions/operational-error');
-const { deepFreeze } = require('../../functions/deep-freeze');
-const copyFiles = require('../../functions/copy-files');
-
-const multer = require('multer');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const upload = multer();
-const cache = require('../../utils/cache');
-
 const SLUG = 'settings';
 const TITLE = 'Settings';
-
-
 const skinsFolder = path.join(__dirname, '../../../custom');
 
 // CMS Tags
@@ -26,10 +27,10 @@ router.get('/', async (req, res, next) => {
     try {
         // read package.json from every directory inside skins/ and if it exists add it to the array as JS object
         const skins = await fs.readdir(skinsFolder);
-        const skinData = await Promise.all(skins.map(async skin => {
+        const skinData = await Promise.all(skins.map(async (skin) => {
             try {
-                const package = await fs.readFile(path.join(`${skinsFolder}/${skin}/package.json`), 'utf8');
-                return JSON.parse(package);
+                const packageData = await fs.readFile(path.join(`${skinsFolder}/${skin}/package.json`), 'utf8');
+                return JSON.parse(packageData); // Manually parse the JSON
             } catch (error) {
                 return null;
             }
@@ -58,7 +59,6 @@ router.get('/', async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-
 
 });
 
@@ -111,4 +111,4 @@ router.patch('/', upload.none(), async (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

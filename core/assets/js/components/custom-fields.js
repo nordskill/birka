@@ -1,4 +1,4 @@
-const AJAXForms = require('ajaxforms');
+import AJAXForms from 'ajaxforms';
 
 class CustomFields {
 

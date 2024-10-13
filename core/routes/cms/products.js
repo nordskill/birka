@@ -1,8 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Category = require('../../models/category');
-const Product = require('../../models/product');
+import express from 'express';
 
+import Category from '../../models/category.js';
+import Product from '../../models/product.js';
+
+const router = express.Router();
 const SLUG = 'product';
 const TITLE = 'Product';
 
@@ -120,4 +121,4 @@ router.get(`/:id`, async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

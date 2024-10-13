@@ -9,4 +9,4 @@ function slugify(input) {
         .replace(/^-+|-+$/g, '');  // Remove leading and trailing hyphens
 }
 
-module.exports = slugify;
+export default slugify;

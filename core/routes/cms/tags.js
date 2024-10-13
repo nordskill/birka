@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const Tag = require('../../models/tag');
+import express from 'express';
 
+import Tag from '../../models/tag.js';
+
+const router = express.Router();
 const SLUG = 'tag';
 const TITLE = 'Tag';
 
@@ -39,4 +40,4 @@ router.get('/', async (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -1,7 +1,9 @@
-const express = require('express');
+import express from 'express';
+
+import passport from '../../../config/passport.js';
+import OperationalError from '../../functions/operational-error.js';
+
 const router = express.Router();
-const passport = require('../../../config/passport');
-const OperationalError = require('../../functions/operational-error');
 
 // /api/auth/login
 router.post('/login', async (req, res, next) => {
@@ -46,4 +48,4 @@ router.get('/logout', async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

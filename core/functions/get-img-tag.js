@@ -148,4 +148,4 @@ function getAdditionalAttributes(attributes) {
 
 
 
-module.exports = getImgTag;
+export default getImgTag;

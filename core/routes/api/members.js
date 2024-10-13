@@ -1,9 +1,11 @@
-const express = require('express');
+import express from 'express';
+import mongoose from 'mongoose';
+
+import Member from '../../models/member.js';
+import OperationalError from '../../functions/operational-error.js';
+import { hashPassword } from '../../functions/password-utils.js';
+
 const router = express.Router();
-const mongoose = require('mongoose');
-const Member = require('../../models/member');
-const OperationalError = require('../../functions/operational-error');
-const { hashPassword } = require('../../functions/password-utils');
 
 // Create a new member
 router.post('/', async (req, res, next) => {
@@ -128,5 +130,5 @@ router.delete('/:memberId', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;
 

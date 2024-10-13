@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const TagSchema = new Schema({
     name: {
@@ -23,4 +24,4 @@ TagSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Tag = mongoose.model('Tag', TagSchema);
 
-module.exports = Tag;
+export default Tag;

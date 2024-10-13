@@ -1,10 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
+import express from 'express';
+import mongoose from 'mongoose';
+
+import Page from '../../models/page.js';
+import OperationalError from '../../functions/operational-error.js';
+import { addTags, removeTags } from '../../controllers/tag-controller.js';
+import OBJtoHTML from '../../functions/obj-to-html.js';
+
 const router = express.Router();
-const Page = require('../../models/page');
-const OperationalError = require('../../functions/operational-error');
-const { addTags, removeTags } = require('../../controllers/tag-controller');
-const OBJtoHTML = require('../../functions/obj-to-html');
 
 router.get('/search', async (req, res, next) => {
     try {
@@ -216,4 +218,4 @@ async function update_page(id, updates, options = {}) {
     return updatedPage;
 }
 
-module.exports = router;
+export default router;

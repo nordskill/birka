@@ -1,5 +1,5 @@
-import findClosestNumber from '../functions/find-closest-number';
-import FilePicker from './file-picker';
+import findClosestNumber from '../functions/find-closest-number.js';
+import FilePicker from './file-picker.js';
 
 class FileCRUD {
     constructor(options) {

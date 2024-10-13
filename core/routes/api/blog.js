@@ -1,10 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
+import express from 'express';
+import mongoose from 'mongoose';
+
+import BlogPost from '../../models/blog-post.js';
+import OperationalError from '../../functions/operational-error.js';
+import { addTags, removeTags } from '../../controllers/tag-controller.js';
+import OBJtoHTML from '../../functions/obj-to-html.js';
+
 const router = express.Router();
-const BlogPost = require('../../models/blog-post');
-const OperationalError = require('../../functions/operational-error');
-const { addTags, removeTags } = require('../../controllers/tag-controller');
-const OBJtoHTML = require('../../functions/obj-to-html');
 
 router.get('/search', async (req, res, next) => {
     try {
@@ -227,4 +229,4 @@ async function updateBlogPost(id, updates, options = {}) {
     return updatedPost;
 }
 
-module.exports = router;
+export default router;

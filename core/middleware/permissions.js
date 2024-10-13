@@ -9,7 +9,6 @@ function checkPermissions(requiredPermissions) {
     };
 }
 
-// New function to handle dynamic model permissions
 function checkDynamicPermissions(permissionKey) {
     return function (req, res, next) {
         const userPermissions = req.user.permissions || [];
@@ -20,7 +19,7 @@ function checkDynamicPermissions(permissionKey) {
     };
 }
 
-module.exports = {
+export {
     checkPermissions,
     checkDynamicPermissions
 };

@@ -1,3 +1,11 @@
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Scans a specified directory for SVG files, reads their contents, and
  * compiles them into an object where each property key is the file name
@@ -14,10 +22,6 @@
  * // Returns: { home: '<svg ...></svg>', user: '<svg ...></svg>' }
  * loadSVGs();
  */
-
-const fs = require('fs');
-const path = require('path');
-
 function loadSVGs() {
 	const svgDir = path.join(__dirname, '../assets/svg');
 	const svgFiles = fs.readdirSync(svgDir).filter(file => file.endsWith('.svg'));
@@ -38,4 +42,4 @@ function readSVG(filePath) {
 	return svgContent;
 }
 
-module.exports = loadSVGs;
+export default loadSVGs;

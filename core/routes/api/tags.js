@@ -1,8 +1,10 @@
-const express = require('express');
+import express from 'express';
+
+import Tag from '../../models/tag.js';
+import slugify from '../../functions/slugify.js';
+import OperationalError from '../../functions/operational-error.js';
+
 const router = express.Router();
-const Tag = require('../../models/tag');
-const slugify = require('../../functions/slugify');
-const OperationalError = require('../../functions/operational-error');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -186,4 +188,4 @@ router.delete('/one/:slug', async (req, res, next) => {
 });
 
 
-module.exports = router;
+export default router;

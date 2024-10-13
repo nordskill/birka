@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 class ModelRegistry {
     constructor(Model, type, modelName, schemaDefinition) {
@@ -21,4 +21,4 @@ class ModelRegistry {
     }
 }
 
-module.exports = ModelRegistry;
+export default ModelRegistry;

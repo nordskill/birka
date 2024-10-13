@@ -1,4 +1,4 @@
-import FileCRUD from './file-crud';
+import FileCRUD from './file-crud.js';
 
 class AJAXTable {
     constructor(element, fieldsList, dropdownOptions, csrfToken, fc = null) {

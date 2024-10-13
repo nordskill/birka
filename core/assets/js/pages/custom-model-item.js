@@ -1,5 +1,5 @@
-import Debouncer from '../functions/debouncer';
-import FileCRUD from '../components/file-crud';
+import Debouncer from '../functions/debouncer.js';
+import FileCRUD from '../components/file-crud.js';
 
 export default async function () {
 

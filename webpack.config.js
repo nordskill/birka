@@ -1,11 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin'); // Import TerserPlugin
-const copyFiles = require('./core/functions/copy-files');
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
-module.exports = async (env, argv) => {
+import copyFiles from './core/functions/copy-files.js';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default async (env, argv) => {
     const isProduction = argv.mode === 'production';
     const skinEntries = await generateThemeEntries();
 

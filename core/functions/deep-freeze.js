@@ -76,4 +76,4 @@ function deepFreeze(object) {
 	return Object.freeze(object);
 }
 
-exports.deepFreeze = deepFreeze;
+export { deepFreeze };

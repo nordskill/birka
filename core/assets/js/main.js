@@ -1,22 +1,22 @@
-import cms_tags from './pages/tags';
-import cms_dashboard from './pages/dashboard';
-import cms_customer from './pages/customer';
-import cms_product from './pages/product';
-import cms_blogpost from './pages/blogpost';
-import cms_pages from './pages/pages';
-import cms_page from './pages/page';
-import cms_blog from './pages/blog';
-import cms_files from './pages/files';
-import cms_menus from './pages/menus';
-import cms_menu from './pages/menu';
-import cms_settings from './pages/settings';
-import cms_new_member from './pages/new-member';
-import cms_member from './pages/member';
-import cms_custom_model_items from './pages/custom-model-items';
-import cms_custom_model_item from './pages/custom-model-item';
+import cms_tags from './pages/tags.js';
+import cms_dashboard from './pages/dashboard.js';
+import cms_customer from './pages/customer.js';
+import cms_product from './pages/product.js';
+import cms_blogpost from './pages/blogpost.js';
+import cms_pages from './pages/pages.js';
+import cms_page from './pages/page.js';
+import cms_blog from './pages/blog.js';
+import cms_files from './pages/files.js';
+import cms_menus from './pages/menus.js';
+import cms_menu from './pages/menu.js';
+import cms_settings from './pages/settings.js';
+import cms_new_member from './pages/new-member.js';
+import cms_member from './pages/member.js';
+import cms_custom_model_items from './pages/custom-model-items.js';
+import cms_custom_model_item from './pages/custom-model-item.js';
 
 import 'bootstrap';
-import bootstrapFormsValidation from './functions/bootstrap-forms-validation';
+import bootstrapFormsValidation from './functions/bootstrap-forms-validation.js';
 
 const page = {
     cms_tags,

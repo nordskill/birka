@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const StatusSchema = new Schema({
     name: {
@@ -26,4 +27,4 @@ const StatusSchema = new Schema({
 
 const Status = mongoose.model('Status', StatusSchema);
 
-module.exports = Status;
+export default Status;

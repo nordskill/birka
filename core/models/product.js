@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const ProductSchema = new Schema({
 	title: {
@@ -76,4 +77,4 @@ ProductSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Product = mongoose.model('Product', ProductSchema);
 
-module.exports = Product;
+export default Product;

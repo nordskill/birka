@@ -1,8 +1,14 @@
-const fs = require('fs').promises;
-const https = require('https');
-const path = require('path');
-const mongoose = require('mongoose');
-const sitemapConfig = require('../../config/sitemap.json');
+import fs from 'fs/promises';
+import https from 'https';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+import mongoose from 'mongoose';
+
+import sitemapConfig from '../../config/sitemap.json' assert { type: 'json' };
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class SiteMap {
     constructor() {
@@ -170,4 +176,4 @@ class SiteMap {
     }
 }
 
-module.exports = SiteMap;
+export default SiteMap;

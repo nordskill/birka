@@ -1,5 +1,5 @@
-import FileCRUD from './file-crud';
-import EventBus from '../../../utils/events';
+import FileCRUD from './file-crud.js';
+import EventBus from '../../../utils/events.js';
 
 const blockEvents = new EventBus();
 

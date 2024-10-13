@@ -1,5 +1,5 @@
-const crypto = require('crypto');
-const util = require('util');
+import crypto from 'crypto';
+import util from 'util';
 
 // Promisify the pbkdf2 function to use it with async/await
 const pbkdf2Async = util.promisify(crypto.pbkdf2);
@@ -25,7 +25,4 @@ async function verifyPassword(password, hash) {
 
 }
 
-module.exports = {
-    hashPassword,
-    verifyPassword
-};
+export { hashPassword, verifyPassword };

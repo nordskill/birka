@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const FileSchema = new Schema({
     type: {
@@ -67,11 +68,7 @@ const VideoSchema = new Schema({
     duration: Number
 });
 
-File.discriminator('Image', ImageSchema);
-File.discriminator('Video', VideoSchema);
+const Image = File.discriminator('Image', ImageSchema);
+const Video = File.discriminator('Video', VideoSchema);
 
-module.exports = {
-    File,
-    Image: mongoose.model('Image'),
-    Video: mongoose.model('Video')
-};
+export { File, Image, Video };

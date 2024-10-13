@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const EmailTemplateSchema = new Schema({
     name: {
@@ -19,4 +20,4 @@ const EmailTemplateSchema = new Schema({
 
 const EmailTemplate = mongoose.model('EmailTemplate', EmailTemplateSchema);
 
-module.exports = EmailTemplate;
+export default EmailTemplate;

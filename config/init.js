@@ -8,4 +8,4 @@ const INIT_CONFIG = {
     }
 };
 
-module.exports = INIT_CONFIG;
+export default INIT_CONFIG;

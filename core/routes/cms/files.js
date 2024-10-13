@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const { File } = require('../../models/file');
+import express from 'express';
 
+import { File } from '../../models/file.js';
+
+const router = express.Router();
 const AMOUNT_OF_FILES_PER_PAGE = 30;
 
 // GET /cms/files?page=1&type=video
@@ -73,4 +74,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

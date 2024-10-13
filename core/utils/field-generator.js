@@ -203,4 +203,4 @@ function getAdditionalAttributes(uiOptions = {}) {
     }).join(' ');
 }
 
-module.exports = FieldGenerator;
+export default FieldGenerator;

@@ -1,4 +1,4 @@
-import FileDetails from "../components/file-details";
+import FileDetails from '../components/file-details.js';
 
 class FilesSelectionManager {
 

@@ -1,60 +1,79 @@
-const express = require('express');
-const path = require('path');
-const { checkPermissions, checkDynamicPermissions } = require('../middleware/permissions');
+// Import core modules
+import express from 'express';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// Navigation
-const index = require('./index');
-const blog = require('./blog');
-const cookies = require('./cookies');
+// Import middleware
+import { checkPermissions, checkDynamicPermissions } from '../middleware/permissions.js';
 
-// CMS
-const cmsIndex = require('./cms/index');
-const cmsLogin = require('./cms/login');
-const cmsLogout = require('./cms/logout');
-const cmsFiles = require('./cms/files');
-const cmsTags = require('./cms/tags');
-const cmsCustomers = require('./cms/customers');
-const cmsProducts = require('./cms/products');
-const cmsOrders = require('./cms/orders');
-const cmsStatuses = require('./cms/statuses');
-const cmsPages = require('./cms/pages');
-const cmsBlog = require('./cms/blog');
-const cmsNotifications = require('./cms/notifications');
-const cmsEmails = require('./cms/email-templates');
-const cmsMenus = require('./cms/menus');
-const cmsTeam = require('./cms/team');
-const cmsSettings = require('./cms/settings');
-const cmsUpdate = require('./cms/update');
-const customModelRouter = require('./cms/custom-model-router');
+// Import Navigation Routes
+import index from './index.js';
+import blog from './blog.js';
+import cookies from './cookies.js';
 
-// JSON API
-const apiAuth = require('./api/auth');
-const apiTag = require('./api/tags');
-const apiFile = require('./api/files');
-const apiPage = require('./api/pages');
-const apiMenu = require('./api/menus');
-const apiBlog = require('./api/blog');
-const apiProducts = require('./api/products');
-const apiSend = require('./api/send');
-const apiMembers = require('./api/members');
-const apiSitemap = require('./api/sitemap');
-const apiCustom = require('./api/custom');
+// Import CMS Routes
+import cmsIndex from './cms/index.js';
+import cmsLogin from './cms/login.js';
+import cmsLogout from './cms/logout.js';
+import cmsFiles from './cms/files.js';
+import cmsTags from './cms/tags.js';
+import cmsCustomers from './cms/customers.js';
+import cmsProducts from './cms/products.js';
+import cmsOrders from './cms/orders.js';
+import cmsStatuses from './cms/statuses.js';
+import cmsPages from './cms/pages.js';
+import cmsBlog from './cms/blog.js';
+import cmsNotifications from './cms/notifications.js';
+import cmsEmails from './cms/email-templates.js';
+import cmsMenus from './cms/menus.js';
+import cmsTeam from './cms/team.js';
+import cmsSettings from './cms/settings.js';
+import cmsUpdate from './cms/update.js';
+import customModelRouter from './cms/custom-model-router.js';
 
-module.exports = (app, GlobalSettings) => {
+// Import JSON API Routes
+import apiAuth from './api/auth.js';
+import apiTag from './api/tags.js';
+import apiFile from './api/files.js';
+import apiPage from './api/pages.js';
+import apiMenu from './api/menus.js';
+import apiBlog from './api/blog.js';
+import apiProducts from './api/products.js';
+import apiSend from './api/send.js';
+import apiMembers from './api/members.js';
+import apiSitemap from './api/sitemap.js';
+import apiCustom from './api/custom.js';
 
-    // protect static folder pubblic/css-assets/ with cmsAuthentication
-    app.use('/cms-assets', cmsAuthentication, express.static(path.join(__dirname, '../../public/cms-assets')));
+// __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+/**
+ * Main function to set up routes and middleware.
+ * @param {express.Application} app - The Express application instance.
+ * @param {Object} GlobalSettings - Global settings object.
+ */
+export default (app, GlobalSettings) => {
+
+    // Protect static folder public/cms-assets/ with cmsAuthentication
+    app.use(
+        '/cms-assets',
+        cmsAuthentication,
+        express.static(path.join(__dirname, '../../public/cms-assets'))
+    );
 
     // Serve other static files in public directory
     app.use(express.static(path.join(__dirname, '../../public')));
 
-    // CMS
-    app.use('/cms/login', cmsLogin)
+    // CMS Authentication Routes
+    app.use('/cms/login', cmsLogin);
     app.use('/cms/logout', cmsLogout);
 
+    // CMS Router with authentication
     const cmsRoutes = express.Router();
     cmsRoutes.use(checkAuthentication);
 
+    // Define CMS routes with permission checks
     cmsRoutes.use('/', cmsIndex);
     cmsRoutes.use('/files', checkPermissions(['files']), cmsFiles);
     cmsRoutes.use('/tags', checkPermissions(['tags']), cmsTags);
@@ -71,23 +90,24 @@ module.exports = (app, GlobalSettings) => {
     cmsRoutes.use('/settings', checkPermissions(['settings']), cmsSettings);
     cmsRoutes.use('/update', checkPermissions(['updates']), cmsUpdate);
 
-    // Custom Model Routes
+    // Custom Model Routes with dynamic permissions
     cmsRoutes.use('/custom', checkDynamicPermissions(['custom_models']), customModelRouter);
 
+    // Mount CMS routes
     app.use('/cms', cmsRoutes);
 
-    // JSON API
+    // JSON API Router
     const apiRoutes = express.Router();
 
-    // Apply authentication check to all API routes except '/auth'
+    // Apply authentication check to all API routes except '/auth/login' POST
     apiRoutes.use((req, res, next) => {
         if (req.path === '/auth/login' && req.method === 'POST') {
-            next();
-        } else {
-            checkAPIAuthentication(req, res, next);
+            return next();
         }
+        return checkAPIAuthentication(req, res, next);
     });
 
+    // Define API routes with permission checks
     apiRoutes.use('/auth', apiAuth);
     apiRoutes.use('/tags', checkPermissions(['tags']), apiTag);
     apiRoutes.use('/files', checkPermissions(['files']), apiFile);
@@ -100,39 +120,48 @@ module.exports = (app, GlobalSettings) => {
     apiRoutes.use('/sitemap', checkPermissions(['sitemap']), apiSitemap);
     apiRoutes.use('/custom', checkPermissions(['custom_models']), apiCustom);
 
+    // Mount API routes
     app.use('/api', apiRoutes);
 
-    // Navigation
-    app.use('/' + GlobalSettings.blog_slug, blog);
+    // Navigation Routes
+    app.use(`/${GlobalSettings.blog_slug}`, blog);
     app.use('/cookies', cookies);
     app.use('/', index);
-
 };
 
+/**
+ * Middleware to check if the user is authenticated for CMS routes.
+ * Redirects to '/cms/login' if not authenticated.
+ */
 function checkAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
-        next();
-    } else {
-        res.redirect('/cms/login');
+        return next();
     }
+    return res.redirect('/cms/login');
 }
 
+/**
+ * Middleware to check if the user is authenticated for API routes.
+ * Sends a 401 Unauthorized response if not authenticated.
+ */
 function checkAPIAuthentication(req, res, next) {
     if (req.isAuthenticated()) {
-        next();
-    } else {
-        console.log('Unauthorized');
-        res.status(401).json({
-            success: false,
-            message: 'Unauthorized'
-        });
+        return next();
     }
+    console.log('Unauthorized');
+    return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+    });
 }
 
-// Custom middleware to handle CMS static files and page requests
+/**
+ * Middleware to protect CMS static files.
+ * Sends a 403 Forbidden response if not authenticated.
+ */
 function cmsAuthentication(req, res, next) {
     if (!req.isAuthenticated()) {
         return res.status(403).send('Access Denied');
     }
-    next();
+    return next();
 }

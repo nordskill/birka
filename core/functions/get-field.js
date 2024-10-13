@@ -47,4 +47,4 @@ function getField(pageData, fieldName) {
     return result.length === 1 ? result[0] : (result.length > 0 ? result : undefined);
 }
 
-module.exports = getField;
+export default getField;

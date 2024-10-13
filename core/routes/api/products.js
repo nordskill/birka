@@ -1,9 +1,11 @@
-const express = require('express');
+import express from 'express';
+import mongoose from 'mongoose';
+
+import Product from '../../models/product.js';
+import OperationalError from '../../functions/operational-error.js';
+import { addTags, removeTags } from '../../controllers/tag-controller.js';
+
 const router = express.Router();
-const mongoose = require('mongoose');
-const Product = require('../../models/product');
-const OperationalError = require('../../functions/operational-error');
-const { addTags, removeTags } = require('../../controllers/tag-controller');
 
 // get product by id
 router.get('/:id', async (req, res, next) => {
@@ -78,4 +80,4 @@ router.patch('/:id', async (req, res, next) => {
 router.patch('/:id/tags', addTags(Product));
 router.delete('/:id/tags', removeTags(Product));
 
-module.exports = router;
+export default router;

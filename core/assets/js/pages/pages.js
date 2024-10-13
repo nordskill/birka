@@ -1,4 +1,4 @@
-const slugify = require('../../../functions/slugify');
+import slugify from '../../../functions/slugify.js';
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 

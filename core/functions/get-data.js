@@ -1,4 +1,4 @@
-const models = require('../models');
+import * as models from '../models/index.js';
 
 /**
  * Loads data from a specified model with optional query parameters and options.
@@ -145,4 +145,4 @@ function apply_populate(queryBuilder, populate) {
     }
 }
 
-module.exports = getData;
+export default getData;

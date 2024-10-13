@@ -1,3 +1,11 @@
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Reads SVG files from a specified directory, processes their content, and generates
  * SVG sprites based on the icons used in the template files. It returns an object
@@ -23,11 +31,7 @@
  * <!-- include sprinte once at the page bottom: -->
  * <%- include('partials/svg-sprite') %>
  */
-
-const fs = require('fs');
-const path = require('path');
-
-const generateSvgSprites = () => {
+function generateSvgSprites() {
 
     const readSVG = (filePath) => {
         let svgContent = fs.readFileSync(filePath, 'utf-8');
@@ -102,5 +106,5 @@ const generateSvgSprites = () => {
     return templateSprites;
 };
 
-module.exports = generateSvgSprites;
+export default generateSvgSprites;
 

@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const options = {
     discriminatorKey: 'type',
@@ -47,4 +48,4 @@ PageSchema.index({ slug: 1 }, { unique: true, background: true });
 
 const Page = mongoose.model('Page', PageSchema);
 
-module.exports = Page;
+export default Page;

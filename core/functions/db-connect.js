@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = {
-    connect: function () {
+const db = {
+    getMongoUri: function () {
         const host = process.env.DB_HOST || '127.0.0.1';
         const port = process.env.DB_PORT || 27017;
         const dbName = process.env.DB_NAME || 'birka';
@@ -17,19 +17,30 @@ module.exports = {
         if (useSSL) queryParams.push('ssl=true');
         if (authMechanism) queryParams.push(`authMechanism=${authMechanism}`);
 
-        // Append query parameters to the URI
         dbLink += '?' + queryParams.join('&');
 
-        console.log(`Connecting to "${dbName}" DB...`);
-        mongoose.connect(dbLink)
-        .then(() => console.log('DB Connected.'))
-        .catch(error => console.error('Connection error:', error));
-
-        module.exports.connection = mongoose.connection;
+        return dbLink;
     },
+
+    connect: async function () {
+        const dbLink = this.getMongoUri();
+
+        console.log(`Connecting to DB at ${dbLink}...`);
+        try {
+            await mongoose.connect(dbLink);
+            console.log('DB Connected.');
+        } catch (error) {
+            console.error('Connection error:', error);
+        }
+
+        return mongoose.connection;
+    },
+
     disconnect: function () {
         if (mongoose.connection) {
             mongoose.connection.close();
         }
     }
-}
+};
+
+export default db;

@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
+
+import BlogPost from '../../models/blog-post.js';
+import OBJtoHTML from '../../functions/obj-to-html.js';
+import mongoose from 'mongoose';
+import OperationalError from '../../functions/operational-error.js';
+
 const router = express.Router();
-const BlogPost = require('../../models/blog-post');
-const OBJtoHTML = require('../../functions/obj-to-html');
-const mongoose = require('mongoose');
-const OperationalError = require('../../functions/operational-error');
-
-
 const SLUG = 'blog';
 const TITLE = 'Blog';
 
@@ -114,4 +114,4 @@ router.get('/:id', async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
-import Debouncer from '../functions/debouncer';
-import TagsCRUD from './tags-crud';
+import Debouncer from '../functions/debouncer.js';
+import TagsCRUD from './tags-crud.js';
 
 
 /**

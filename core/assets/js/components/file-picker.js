@@ -1,5 +1,5 @@
-import FileManager from "./file-manager";
-import EventBus from '../../../utils/events';
+import FileManager from './file-manager.js';
+import EventBus from '../../../utils/events.js';
 
 const csrfToken = document.querySelector('meta[name="csrf"]').content;
 

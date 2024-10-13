@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const OperationalError = require('../functions/operational-error');
+import express from 'express';
 
+import OperationalError from '../functions/operational-error.js';
+
+const router = express.Router();
 
 router.post('/consent', (req, res) => {
 
@@ -21,4 +22,4 @@ router.post('/consent', (req, res) => {
 
 });
 
-module.exports = router;
+export default router;

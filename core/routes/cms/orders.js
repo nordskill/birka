@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
 
+const router = express.Router();
 const SLUG = 'order';
 const TITLE = 'Order';
 
@@ -49,4 +49,4 @@ router.get(`/${SLUG}`, async (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

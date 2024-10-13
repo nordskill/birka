@@ -1,9 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-const Menu = require('../../models/menu');
-const OperationalError = require('../../functions/operational-error');
+import express from 'express';
+import mongoose from 'mongoose';
 
+import Menu from '../../models/menu.js';
+import OperationalError from '../../functions/operational-error.js';
+
+const router = express.Router();
 const SLUG = 'menu';
 const TITLE = 'Menu';
 
@@ -79,7 +80,7 @@ router.get(`/:id`, async (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;
 
 function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;

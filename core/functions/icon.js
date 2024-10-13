@@ -38,4 +38,4 @@ function icon(options) {
     return svg;
 }
 
-module.exports = icon;
+export default icon;

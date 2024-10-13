@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+
+import Sitemap from '../../functions/sitemap.js';
+
 const router = express.Router();
-const Sitemap = require('../../functions/sitemap');
 
 router.post('/', async (req, res, next) => {
     try {
@@ -26,4 +28,4 @@ router.patch('/', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

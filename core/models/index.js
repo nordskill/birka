@@ -1,19 +1,19 @@
-const BlogPost = require('./blog-post');
-const Category = require('./category');
-const Menu = require('./menu');
-const Order = require('./order');
-const Page = require('./page');
-const Product = require('./product');
-const Settings = require('./settings');
-const Tag = require('./tag');
-const User = require('./user');
-const Status = require('./status');
-const EmailTemplate = require('./email-template');
-const Member = require('./member');
-const Notification = require('./notification');
-const { File, Image, Video } = require('./file');
+import BlogPost from './blog-post.js';
+import Category from './category.js';
+import Menu from './menu.js';
+import Order from './order.js';
+import Page from './page.js';
+import Product from './product.js';
+import Settings from './settings.js';
+import Tag from './tag.js';
+import User from './user.js';
+import Status from './status.js';
+import EmailTemplate from './email-template.js';
+import Member from './member.js';
+import Notification from './notification.js';
+import { File, Image, Video } from './file.js';
 
-module.exports = {
+export {
     BlogPost,
     Category,
     File,

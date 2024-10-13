@@ -1,5 +1,6 @@
-const getData = require('./get-data');
-const getImgTag = require('./get-img-tag');
+import getData from './get-data.js';
+import getImgTag from './get-img-tag.js';
+
 
 async function OBJtoHTML(body, options = {}) {
 
@@ -60,4 +61,5 @@ async function OBJtoHTML(body, options = {}) {
 
 	return html;
 }
-module.exports = OBJtoHTML;
+
+export default OBJtoHTML;

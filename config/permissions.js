@@ -18,4 +18,4 @@ const PERMISSIONS = {
     CUSTOM_FIELDS_SETUP: { key: 'custom_fields_setup', label: 'Custom Fields Setup' }
 };
 
-module.exports = PERMISSIONS;
+export default PERMISSIONS;

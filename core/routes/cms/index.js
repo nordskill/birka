@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // CMS Home Page
@@ -17,4 +18,4 @@ router.get('/', async (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -6,4 +6,4 @@ class OperationalError extends Error {
     }
 }
 
-module.exports = OperationalError;
+export default OperationalError;

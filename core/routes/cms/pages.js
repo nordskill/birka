@@ -1,12 +1,13 @@
-const fs = require('fs').promises;
-const path = require('path');
-const express = require('express');
-const router = express.Router();
-const Page = require('../../models/page');
-const Member = require('../../models/member');
-const OBJtoHTML = require('../../functions/obj-to-html');
-const OperationalError = require('../../functions/operational-error');
+import fs from 'fs/promises';
+import path from 'path';
+import express from 'express';
 
+import Page from '../../models/page.js';
+import Member from '../../models/member.js';
+import OBJtoHTML from '../../functions/obj-to-html.js';
+import OperationalError from '../../functions/operational-error.js';
+
+const router = express.Router();
 const SLUG = 'page';
 const TITLE = 'Page';
 
@@ -129,4 +130,4 @@ router.get(`/:id`, async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

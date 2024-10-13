@@ -1,8 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Member = require('../../models/member');
-const PERMISSIONS = require('../../../config/permissions');
+import express from 'express';
 
+import Member from '../../models/member.js';
+import PERMISSIONS from '../../../config/permissions.js';
+
+const router = express.Router();
 const SLUG = 'team-member';
 const TITLE = 'Team Member';
 
@@ -98,4 +99,4 @@ router.get(`/:id`, async (req, res, next) => {
 
 });
 
-module.exports = router;
+export default router;

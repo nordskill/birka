@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
 
 const OrderSchema = new Schema({
     status:             { ref: 'Status', type: Schema.Types.ObjectId },
@@ -76,4 +77,4 @@ const OrderSchema = new Schema({
 
 const Order = mongoose.model('Order', OrderSchema);
 
-module.exports = Order;
+export default Order;

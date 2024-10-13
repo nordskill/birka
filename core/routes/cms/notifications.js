@@ -1,10 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const fs = require('fs').promises;
-const Notification = require('../../models/notification');
-const User = require('../../models/user');
+import express from 'express';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs/promises';
 
+import Notification from '../../models/notification.js';
+import User from '../../models/user.js';
+
+
+const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const SLUG = 'notification';
 const TITLE = 'Notification';
 
@@ -96,7 +101,7 @@ router.get(`/:id`, async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;
 
 async function readFilesFromDirectory(dirPath) {
     const fileObjects = [];

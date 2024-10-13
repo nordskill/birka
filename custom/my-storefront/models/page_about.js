@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
-const Page = require('../../../core/models/page');
-const ModelRegistry = require('../../../core/functions/model-registry');
+import mongoose from 'mongoose';
+
+import Page from '../../../core/models/page.js';
+import ModelRegistry from '../../../core/functions/model-registry.js';
+
 
 const TYPE = 'About';
 const modelName = `${TYPE}Page`;
@@ -32,4 +34,4 @@ class AboutPagePlugin extends ModelRegistry {
     }
 }
 
-module.exports = AboutPagePlugin;
+export default AboutPagePlugin;

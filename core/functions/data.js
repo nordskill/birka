@@ -1,8 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-const { deepFreeze } = require('./deep-freeze');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = function loadVars() {
+import { deepFreeze } from './deep-freeze.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+function loadVars() {
 	const languagesPath = path.join(__dirname, '../../data/languages.json');
 	const countriesPath = path.join(__dirname, '../../data/countries.json');
 	const currenciesPath = path.join(__dirname, '../../data/currencies.json');
@@ -40,3 +46,4 @@ function loadFile(filePath) {
 	return null;
 }
 
+export default loadVars;

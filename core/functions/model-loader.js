@@ -1,7 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const mongoose = require('mongoose');
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const coreModelsPath = path.join(__dirname, '../models');
 const pluginRegistry = {};
 const customModels = {};
@@ -16,18 +19,30 @@ function loadModels(modelsPath) {
 
 function loadCoreModels(directory) {
     const models = {};
-    fs.readdirSync(directory).forEach(file => {
+    fs.readdirSync(directory).forEach(async file => {
         if (file.endsWith('.js')) {
             const modelPath = path.join(directory, file);
-            const model = require(modelPath);
-            models[model.modelName] = model;
+            try {
+                const { default: model } = await import(modelPath);
+
+                if (model && model.modelName) {
+                    models[model.modelName] = model;
+                } else {
+                    console.error(`Model in file ${file} does not have a modelName property.`);
+                }
+            } catch (error) {
+                console.error(`Error loading model from file ${file}:`, error);
+            }
         }
     });
     return models;
 }
 
-function loadCustomModels(directory, coreModels) {
-    fs.readdirSync(directory).forEach(file => {
+
+async function loadCustomModels(directory, coreModels) {
+    const files = fs.readdirSync(directory);
+
+    for (const file of files) {
         if (file.endsWith('.js')) {
             const modelName = file.split('.')[0];
             const coreModelMatch = Object.keys(coreModels).some(coreModel => {
@@ -35,57 +50,68 @@ function loadCustomModels(directory, coreModels) {
                 return modelName.toLowerCase().startsWith(coreModelName + '_');
             });
 
-            if (coreModelMatch) {
-                // This is a submodel
-                const modelPath = path.join(directory, file);
-                console.log('Loading custom submodel:', modelPath);
-                const SubModelClass = require(modelPath);
-                console.log(SubModelClass);
+            const modelPath = path.join(directory, file);
 
-                if (typeof SubModelClass === 'function') {
-                    const subModelInstance = new SubModelClass();
-                    if (typeof subModelInstance.register === 'function') {
-                        const model = subModelInstance.register();
-                        subModels[subModelInstance.modelName] = model;
-                        pluginRegistry[subModelInstance.modelName] = subModelInstance.type; // Store submodel
+            try {
+                if (coreModelMatch) {
+                    // This is a submodel
+                    console.log('Loading custom submodel:', modelPath);
+                    const { default: SubModelClass } = await import(modelPath);
+
+                    if (typeof SubModelClass === 'function') {
+                        const subModelInstance = new SubModelClass();
+                        if (typeof subModelInstance.register === 'function') {
+                            const model = subModelInstance.register();
+                            if (subModelInstance.modelName) {
+                                subModels[subModelInstance.modelName] = model;
+                                pluginRegistry[subModelInstance.modelName] = subModelInstance.type; // Store submodel
+                            } else {
+                                console.error(`Submodel ${file} does not have a modelName property.`);
+                            }
+                        } else {
+                            console.error(`Submodel ${file} does not have a register method.`);
+                        }
                     } else {
-                        console.error(`Submodel ${file} does not have a register method.`);
+                        console.error(`Submodel ${file} is not a class or constructor function.`);
                     }
                 } else {
-                    console.error(`Submodel ${file} is not a class or constructor function.`);
-                }
-            } else {
-                // This is a custom model
-                const modelPath = path.join(directory, file);
-                console.log('Loading custom model:', modelPath);
-                const CustomModelClass = require(modelPath);
-                console.log(CustomModelClass);
+                    // This is a custom model
+                    console.log('Loading custom model:', modelPath);
+                    const { default: CustomModelClass } = await import(modelPath);
 
-                if (typeof CustomModelClass === 'function') {
-                    const customModelInstance = new CustomModelClass();
-                    if (typeof customModelInstance.register === 'function') {
-                        const model = customModelInstance.register();
-                        customModels[customModelInstance.modelName] = {
-                            model,
-                            modelName: customModelInstance.modelName,
-                            title: customModelInstance.title,
-                            menuName: customModelInstance.menuName,
-                            icon: customModelInstance.icon,
-                            position: customModelInstance.position,
-                            slug: customModelInstance.slug,
-                            table: customModelInstance.table
-                        };
-                        modelSlugs[customModelInstance.slug] = customModelInstance.modelName; // Store slug
+                    if (typeof CustomModelClass === 'function') {
+                        const customModelInstance = new CustomModelClass();
+                        if (typeof customModelInstance.register === 'function') {
+                            const model = customModelInstance.register();
+                            if (customModelInstance.modelName) {
+                                customModels[customModelInstance.modelName] = {
+                                    model,
+                                    modelName: customModelInstance.modelName,
+                                    title: customModelInstance.title,
+                                    menuName: customModelInstance.menuName,
+                                    icon: customModelInstance.icon,
+                                    position: customModelInstance.position,
+                                    slug: customModelInstance.slug,
+                                    table: customModelInstance.table
+                                };
+                                modelSlugs[customModelInstance.slug] = customModelInstance.modelName; // Store slug
+                            } else {
+                                console.error(`Custom model ${file} does not have a modelName property.`);
+                            }
+                        } else {
+                            console.error(`Custom model ${file} does not have a register method.`);
+                        }
                     } else {
-                        console.error(`Custom model ${file} does not have a register method.`);
+                        console.error(`Custom model ${file} is not a class or constructor function.`);
                     }
-                } else {
-                    console.error(`Custom model ${file} is not a class or constructor function.`);
                 }
+            } catch (error) {
+                console.error(`Error loading model from file ${file}:`, error);
             }
         }
-    });
+    }
 }
+
 
 function getSubmodels(modelName) {
     return pluginRegistry[modelName] || [];
@@ -107,7 +133,7 @@ function getCustomModelMeta(modelName) {
     return customModels[modelName] || {};
 }
 
-module.exports = {
+export {
     loadModels,
     getSubmodels,
     getAllSubmodels,

@@ -132,4 +132,4 @@ function html_to_text(html) {
         .trim();
 }
 
-module.exports = { blogSchema, blogPostSchema };
+export { blogSchema, blogPostSchema };

@@ -1,11 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-const Menu = require('../../models/menu');
-const updateDoc = require('../../controllers/update-doc');
-const updateSubDoc = require('../../controllers/update-subdoc');
-const OperationalError = require('../../functions/operational-error');
+import express from 'express';
+import mongoose from 'mongoose';
 
+import Menu from '../../models/menu.js';
+import updateDoc from '../../controllers/update-doc.js';
+import updateSubDoc from '../../controllers/update-subdoc.js';
+import OperationalError from '../../functions/operational-error.js';
+
+const router = express.Router();
 
 router.get('/', async (req, res, next) => {
     try {
@@ -160,7 +161,7 @@ router.delete('/:menuId/items/:itemId', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;
 
 
 function isValidObjectId(id) {

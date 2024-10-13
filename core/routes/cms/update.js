@@ -1,12 +1,14 @@
-const express = require('express');
+import express from 'express';
+import https from 'https';
+import { exec } from 'child_process';
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+
 const router = express.Router();
-const https = require('https');
-const OperationalError = require('../../functions/operational-error');
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const repoPath = path.join(__dirname, '../../../');
 const logDirectory = path.join(__dirname, '../../../logs');
 const backupDirectory = path.join(__dirname, '../../../_backup');
@@ -15,7 +17,6 @@ fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 fs.existsSync(backupDirectory) || fs.mkdirSync(backupDirectory);
 
 const updateUpstream = 'https://github.com/nordskill/birka.git';
-
 const updateLogStream = fs.createWriteStream(path.join(logDirectory, 'update.log'), { flags: 'a' });
 
 // Check for updates
@@ -148,4 +149,4 @@ function execLog(command, options = {}) {
 }
 
 
-module.exports = router;
+export default router;

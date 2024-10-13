@@ -1,4 +1,4 @@
-const cache = require('../utils/cache');
+import cache from '../utils/cache.js';
 
 function cacheMiddleware(req, res, next) {
     const key = '__express__' + req.originalUrl || req.url;
@@ -16,4 +16,4 @@ function cacheMiddleware(req, res, next) {
     }
 }
 
-module.exports = cacheMiddleware;
+export default cacheMiddleware;

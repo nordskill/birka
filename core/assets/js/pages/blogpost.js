@@ -1,9 +1,9 @@
-import BibeEditor from '../components/bibe-editor';
-import FileCRUD from '../components/file-crud';
-import TagsCRUD from "../components/tags-crud";
-import CustomFields from '../components/custom-fields';
-import Debouncer from '../functions/debouncer';
-const slugify = require('../../../functions/slugify');
+import BibeEditor from '../components/bibe-editor.js';
+import FileCRUD from '../components/file-crud.js';
+import TagsCRUD from '../components/tags-crud.js';
+import CustomFields from '../components/custom-fields.js';
+import Debouncer from '../functions/debouncer.js';
+import slugify from '../../../functions/slugify.js';
 
 const token = document.querySelector('meta[name="csrf"]').content;
 

@@ -1,6 +1,7 @@
-const Tag = require('../models/tag');
-const OperationalError = require('../functions/operational-error');
-const slugify = require('../functions/slugify');
+import Tag from '../models/tag.js';
+import OperationalError from '../functions/operational-error.js';
+import slugify from '../functions/slugify.js';
+
 
 function addTags(Model) {
     return async (req, res, next) => {
@@ -84,4 +85,4 @@ function removeTags(Model) {
 }
 
 
-module.exports = { addTags, removeTags };
+export { addTags, removeTags };

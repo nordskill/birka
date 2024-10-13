@@ -1,7 +1,9 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const Member = require('../core/models/member');
-const passwordUtils = require('../core/functions/password-utils');
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+
+import Member from '../core/models/member.js';
+import { verifyPassword } from '../core/functions/password-utils.js';
+
 
 passport.use(new LocalStrategy(
     {
@@ -22,7 +24,7 @@ passport.use(new LocalStrategy(
                 return done(null, false, { message: 'Incorrect username or password.' });
             }
             
-            const isValid = await passwordUtils.verifyPassword(password, member.password);
+            const isValid = await verifyPassword(password, member.password);
             if (!isValid) {
                 return done(null, false, { message: 'Incorrect username or password.' });
             }
@@ -47,4 +49,4 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-module.exports = passport;
+export default passport;

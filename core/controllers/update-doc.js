@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const OperationalError = require('../functions/operational-error');
+import mongoose from 'mongoose';
+
+import OperationalError from '../functions/operational-error.js';
 
 const updateDocument = Model => async (req, res, next) => {
     const { id } = req.params;
@@ -34,4 +35,4 @@ const updateDocument = Model => async (req, res, next) => {
     }
 };
 
-module.exports = updateDocument;
+export default updateDocument;

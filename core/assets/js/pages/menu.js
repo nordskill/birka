@@ -1,6 +1,6 @@
 import AJAXTable from '../components/ajax-table.js';
 import SmartSearch from '../functions/smart-search.js';
-import FileCRUD from '../components/file-crud';
+import FileCRUD from '../components/file-crud.js';
 
 const csrfToken = document.head.querySelector('meta[name="csrf"]').content;
 

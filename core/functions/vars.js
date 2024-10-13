@@ -1,3 +1,11 @@
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Loads variables from a .vars file and sets them as environment variables.
  * The .vars file should be in the parent directory of this module and should contain a JSON object.
@@ -7,11 +15,7 @@
  * @returns {void}
  * @throws {Error} If there is an error reading the .vars file.
  */
-
-const fs = require('fs');
-const path = require('path');
-
-module.exports = function loadVars() {
+export default function loadVars() {
 	const filePath = path.join(__dirname, '../../.vars');
 	try {
 		if (fs.existsSync(filePath)) {
