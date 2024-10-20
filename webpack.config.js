@@ -41,11 +41,17 @@ export default async (env, argv) => {
                 {
                     test: /\.(scss|sass)$/,
                     use: [
-                        isProduction
-                            ? MiniCssExtractPlugin.loader
-                            : 'style-loader', // Use style-loader in development
+                        isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
                         'css-loader',
-                        'sass-loader'
+                        'sass-loader',
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sassOptions: {
+                                    quietDeps: true
+                                }
+                            }
+                        }
                     ],
                 },
                 {
