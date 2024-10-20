@@ -323,18 +323,34 @@ function csrfToken(req, res, next) {
 }
 
 function csrfProtection(req, res, next) {
-  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-    const clientCsrfToken =
-      req.body._csrf || req.query._csrf || req.headers['x-csrf-token'];
-    if (!clientCsrfToken || req.session.csrfToken !== clientCsrfToken) {
-      console.error(
-        `CSRF token mismatch for request on ${req.path} from IP: ${req.ip}`
-      );
-      const error = new OperationalError('CSRF token mismatch', 403);
-      return next(error);
+
+    const { method, path, ip, headers, query, body, rawBody } = req;
+
+    if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+        return next();
     }
-  }
-  next();
+
+    const getTokenFromMultipart = () => {
+        if (req.is('multipart/form-data') && rawBody) {
+            const bodyString = rawBody.toString();
+            const csrfMatch = bodyString.match(/_csrf=([^&\n]+)/);
+            return csrfMatch ? decodeURIComponent(csrfMatch[1]) : null;
+        }
+        return null;
+    };
+
+    const clientCsrfToken = headers['x-csrf-token'] ?? query?._csrf ?? body?._csrf ?? getTokenFromMultipart();
+
+    if (!clientCsrfToken) {
+        console.error(`No CSRF token found for request on ${path} from IP: ${ip}`);
+        return next(new OperationalError('CSRF token missing', 403));
+    }
+
+    if (req.session.csrfToken !== clientCsrfToken) {
+        console.error(`CSRF token mismatch for request on ${path} from IP: ${ip}`);
+        return next(new OperationalError('CSRF token mismatch', 403));
+    }
+    next();
 }
 
 async function loadPlugins(app) {
