@@ -9,7 +9,10 @@
         "prod": "cross-env NODE_ENV=production node ./bin/www",
         "build": "webpack --config webpack.config.js --mode production && npm run scalepage",
         "scalepage": "node scripts/scalepage ./public/birka/css/style.min.css 19.2",
-        "demo-content": "node ./scripts/demo-content.js"
+        "demo-content": "node ./scripts/demo-content.js",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+        "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
     },
     "dependencies": {
         "ajaxforms": "^1.1.1",
@@ -37,8 +40,15 @@
         "browser-sync-webpack-plugin": "^2.3.0",
         "concurrently": "^8.2.1",
         "css-loader": "^6.9.0",
+        "eslint": "^8.50.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
         "mini-css-extract-plugin": "^2.7.7",
         "nodemon": "^3.1.3",
+        "prettier": "^3.3.3",
         "sass": "^1.69.7",
         "sass-loader": "^16.0.2",
         "style-loader": "^3.3.4",
